@@ -144,8 +144,8 @@ export default function Home() {
             Engineered fabric, tailored cut, made for twelve hours on your feet.
           </p>
           <div style={s.heroActions}>
-            <a href="#men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
-            <a href="#women" style={{ ...btnGhost, ...s.heroBtn }}>Shop women</a>
+       <a href="/men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
+<a href="/women" style={{ ...btnGhost, ...s.heroBtn }}>Shop women</a>
           </div>
         </div>
         <span style={s.heroScroll} aria-hidden="true" />
