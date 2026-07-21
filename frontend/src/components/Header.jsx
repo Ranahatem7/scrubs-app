@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import { theme, metalText } from "../theme";
 
 const s = {
@@ -24,12 +26,16 @@ const s = {
     placeItems: "center",
     position: "relative",
     cursor: "pointer",
+    background: "none",
+    border: "none",
+    color: "inherit",
+    padding: 0,
   },
   burger: { display: "block", width: 20 },
   bar: { display: "block", height: 1, background: theme.bone, margin: "5px 0" },
   barShort: { display: "block", height: 1, width: 13, background: theme.bronze, margin: "5px 0" },
   icon: { width: 21, height: 21 },
-  wordmark: { display: "flex", flexDirection: "column", alignItems: "center", gap: 1, lineHeight: 1 },
+  wordmark: { display: "flex", flexDirection: "column", alignItems: "center", gap: 1, lineHeight: 1, textDecoration: "none" },
   mt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 17, fontWeight: 600, letterSpacing: "0.04em" },
   name: { fontSize: 8, letterSpacing: "0.42em", textIndent: "0.42em", color: theme.muted },
   count: {
@@ -49,7 +55,10 @@ const s = {
   },
 };
 
-export default function Header({ onOpenMenu, cartCount = 0 }) {
+export default function Header({ onOpenMenu }) {
+  const { totalItems } = useCart();
+  const navigate = useNavigate();
+
   return (
     <header style={s.header}>
       <button style={s.btn} onClick={onOpenMenu} aria-label="Open menu">
@@ -60,17 +69,17 @@ export default function Header({ onOpenMenu, cartCount = 0 }) {
         </span>
       </button>
 
-      <a href="#top" style={s.wordmark}>
+      <a href="/" style={s.wordmark}>
         <span style={s.mt}>MT</span>
         <span style={s.name}>MEDTRACK</span>
       </a>
 
-      <button style={s.btn} aria-label="Open cart">
+      <button style={s.btn} onClick={() => navigate("/cart")} aria-label="Open cart">
         <svg style={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
           <path d="M6 8h12l-1 12H7L6 8Z" />
           <path d="M9.5 8V6.5a2.5 2.5 0 0 1 5 0V8" />
         </svg>
-        {cartCount > 0 && <span style={s.count}>{cartCount}</span>}
+        {totalItems > 0 && <span style={s.count}>{totalItems}</span>}
       </button>
     </header>
   );
