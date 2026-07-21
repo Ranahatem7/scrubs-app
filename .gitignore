@@ -2,6 +2,7 @@
 node_modules/
 frontend/node_modules/
 server/node_modules/
+server/seed/.tmp/
 
 # env files
 .env

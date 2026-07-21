@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { theme } from "../theme";
 import { formatPrice } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const SIZES = ["S", "M", "L", "XL"];
 
@@ -78,6 +80,9 @@ const s = {
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Pick first color/size as default if available
   const firstColor = product.colors?.[0] ?? null;
@@ -88,17 +93,23 @@ export default function ProductCard({ product }) {
   const sizes = product.sizes ?? SIZES;
 
   const handleAdd = () => {
+    if (!user) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
     if (!selectedSize) return; // must pick a size
     addItem(product, selectedSize, selectedColor?.name ?? selectedColor ?? "");
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   };
 
+  const image = product.images?.[0];
+
   return (
     <article style={s.card}>
-      <a href={`#product-${product.id}`} style={s.media}>
-        {product.image ? (
-          <img src={product.image} alt={product.name} loading="lazy" style={s.img} />
+      <a href={`#product-${product.slug ?? product._id}`} style={s.media}>
+        {image ? (
+          <img src={image} alt={product.name} loading="lazy" style={s.img} />
         ) : (
           <span style={s.swatch(product.tone)} aria-hidden="true" />
         )}
@@ -147,10 +158,16 @@ export default function ProductCard({ product }) {
         <button
           style={s.addBtn(added)}
           onClick={handleAdd}
-          disabled={!selectedSize}
-          title={!selectedSize ? "Pick a size first" : ""}
+          disabled={user && !selectedSize}
+          title={!user ? "Log in to add to cart" : !selectedSize ? "Pick a size first" : ""}
         >
-          {added ? "Added ✓" : !selectedSize ? "Select a size" : "Add to cart"}
+          {added
+            ? "Added ✓"
+            : !user
+            ? "Log in to add"
+            : !selectedSize
+            ? "Select a size"
+            : "Add to cart"}
         </button>
       </div>
     </article>

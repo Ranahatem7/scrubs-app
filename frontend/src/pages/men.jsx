@@ -2,24 +2,25 @@ import { useState } from "react";
 import PulseDivider from "../components/PulseDivider";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { products } from "../data/products";
+import useProducts from "../hooks/useProducts";
 import { images } from "../data/images";
 import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
 
-// Filter categories for men's page
+// Filter categories for men's page — ids match Product.category in the backend
 const MEN_FILTERS = [
   { id: "all", name: "All" },
-  { id: "scrub-top", name: "Scrub Tops" },
-  { id: "scrub-pant", name: "Scrub Pants" },
-  { id: "lab-coat", name: "Lab Coats" },
-  { id: "set", name: "Sets" },
+  { id: "tops", name: "Scrub Tops" },
+  { id: "pants", name: "Scrub Pants" },
+  { id: "lab-coats", name: "Lab Coats" },
+  { id: "full-scrub", name: "Sets" },
 ];
 
 export default function Men() {
   const isDesktop = useIsDesktop(700);
   const [activeFilter, setActiveFilter] = useState("all");
+  const { products, loading, error, retry } = useProducts();
 
-  // Filter products for men — adjust the condition to match your data shape
+  // Men's page shows men's + unisex pieces
   const menProducts = products.filter(
     (p) => p.gender === "men" || p.gender === "unisex" || !p.gender
   );
@@ -103,7 +104,7 @@ export default function Men() {
       padding: `0 ${theme.pad}px`,
     },
 
-    // Empty state
+    // Empty / loading / error states
     empty: {
       padding: `56px ${theme.pad}px`,
       textAlign: "center",
@@ -111,6 +112,8 @@ export default function Men() {
       fontSize: 13,
       letterSpacing: "0.12em",
     },
+    errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
+    retryBtn: { ...btnGhost, display: "inline-flex" },
 
     // ── Brand statement ───────────────────────────────────────────────────
     statement: { padding: `64px ${theme.pad}px`, textAlign: "center" },
@@ -216,18 +219,31 @@ export default function Men() {
               ? "All pieces"
               : MEN_FILTERS.find((f) => f.id === activeFilter)?.name}
           </h2>
-          <p style={s.countNote}>
-            {filtered.length} {filtered.length === 1 ? "item" : "items"}
-          </p>
+          {!loading && !error && (
+            <p style={s.countNote}>
+              {filtered.length} {filtered.length === 1 ? "item" : "items"}
+            </p>
+          )}
         </div>
 
-        {filtered.length > 0 ? (
+        {loading && <p style={s.empty}>Loading products…</p>}
+
+        {!loading && error && (
+          <div style={s.empty}>
+            <p style={s.errorText}>{error}</p>
+            <button style={s.retryBtn} onClick={retry}>Try again</button>
+          </div>
+        )}
+
+        {!loading && !error && filtered.length > 0 && (
           <div style={s.grid}>
             {filtered.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
-        ) : (
+        )}
+
+        {!loading && !error && filtered.length === 0 && (
           <p style={s.empty}>No items in this category yet.</p>
         )}
       </section>
