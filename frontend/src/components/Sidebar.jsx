@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import PulseDivider from "./PulseDivider";
 import { theme, label, btnGhost, metalText } from "../theme";
+import { useAuth } from "../context/AuthContext";
 
 const LINKS = [
-  { label: "Home", href: "#top" },
-  { label: "Men", href: "#men" },
-  { label: "Women", href: "#women" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Men", href: "/men" },
+  { label: "Women", href: "/women" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 const s = {
@@ -77,6 +78,8 @@ const s = {
 };
 
 export default function Sidebar({ open, onClose }) {
+  const { user } = useAuth();
+
   // Lock background scroll while the drawer is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -124,7 +127,9 @@ export default function Sidebar({ open, onClose }) {
         </ul>
 
         <div style={s.foot}>
-          <a href="#account" style={s.account}>Log in</a>
+          <a href={user ? "/profile" : "/login"} style={s.account} onClick={onClose}>
+            {user ? "My account" : "Log in"}
+          </a>
           <div style={s.social}>
             <a href="#instagram">Instagram</a>
             <a href="#tiktok">TikTok</a>

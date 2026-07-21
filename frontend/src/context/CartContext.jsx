@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext(null);
+const STORAGE_KEY = "medtrack_cart";
 
 /**
  * Wrap your app with <CartProvider> to give every page access to the cart.
@@ -10,13 +11,24 @@ const CartContext = createContext(null);
  * so the same product in two different sizes = two separate lines.
  */
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
 
   // ── Helpers ────────────────────────────────────────────────────────────
   const lineKey = (id, size, color) => `${id}__${size}__${color}`;
 
   const addItem = (product, size, color, qty = 1) => {
-    const key = lineKey(product.id, size, color);
+    const key = lineKey(product._id, size, color);
     setItems((prev) => {
       const existing = prev.find((i) => lineKey(i.id, i.size, i.color) === key);
       if (existing) {
@@ -29,10 +41,10 @@ export function CartProvider({ children }) {
       return [
         ...prev,
         {
-          id: product.id,
+          id: product._id,
           name: product.name,
           price: product.price,
-          image: product.image,
+          image: product.images?.[0],
           size,
           color,
           quantity: qty,

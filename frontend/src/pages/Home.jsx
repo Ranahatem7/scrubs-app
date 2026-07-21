@@ -1,12 +1,14 @@
 import PulseDivider from "../components/PulseDivider";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { categories, products } from "../data/products";
+import useProducts from "../hooks/useProducts";
+import { categories } from "../data/products";
 import { images } from "../data/images";
 import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
 
 export default function Home() {
   const isDesktop = useIsDesktop(700);
+  const { products, loading, error, retry } = useProducts();
 
   const s = {
     hero: {
@@ -82,6 +84,17 @@ export default function Home() {
       gap: "22px 12px",
       padding: `0 ${theme.pad}px`,
     },
+
+    // Products states
+    stateBlock: {
+      padding: `56px ${theme.pad}px`,
+      textAlign: "center",
+      color: theme.muted,
+      fontSize: 13,
+      letterSpacing: "0.1em",
+    },
+    errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
+    retryBtn: { ...btnGhost, display: "inline-flex" },
 
     statement: { padding: `72px ${theme.pad}px`, textAlign: "center" },
     statementText: {
@@ -180,11 +193,26 @@ export default function Home() {
           <h2 style={s.title}>This season</h2>
         </div>
 
-        <div style={s.grid}>
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {loading && <p style={s.stateBlock}>Loading products…</p>}
+
+        {!loading && error && (
+          <div style={s.stateBlock}>
+            <p style={s.errorText}>{error}</p>
+            <button style={s.retryBtn} onClick={retry}>Try again</button>
+          </div>
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <p style={s.stateBlock}>No products yet — check back soon.</p>
+        )}
+
+        {!loading && !error && products.length > 0 && (
+          <div style={s.grid}>
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        )}
 
         <a href="#all" style={s.sectionCta}>View all products</a>
       </section>

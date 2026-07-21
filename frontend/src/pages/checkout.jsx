@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { createOrder } from "../services/orders";
 
 const PAYMENT_METHODS = [
   {
@@ -28,11 +31,13 @@ const PAYMENT_METHODS = [
 export default function Checkout() {
   const isDesktop = useIsDesktop(700);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { items, totalItems, totalPrice, clearCart } = useCart();
 
   const [form, setForm] = useState({
-    name: "",
+    name: user?.name ?? "",
     phone: "",
-    email: "",
+    email: user?.email ?? "",
     street: "",
     city: "",
     governorate: "",
@@ -40,10 +45,11 @@ export default function Checkout() {
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const update = (field, value) => {
     setForm((f) => ({ ...f, [field]: value }));
-    setErrors((e) => ({ ...e, [field]: undefined }));
+    setErrors((e) => ({ ...e, [field]: undefined, form: undefined }));
   };
 
   const validate = () => {
@@ -60,15 +66,33 @@ export default function Checkout() {
     return e;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
-    // Pass order data to payment page via navigation state
-    navigate("/payment", { state: { form, paymentMethod } });
+
+    setSubmitting(true);
+    try {
+      const order = await createOrder({
+        items: items.map((i) => ({
+          product: i.id,
+          size: i.size,
+          color: i.color,
+          quantity: i.quantity,
+        })),
+        shipping: form,
+        paymentMethod,
+      });
+      clearCart();
+      navigate("/payment", { state: { form, paymentMethod, order } });
+    } catch (err) {
+      setErrors({ form: err.message });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const s = {
@@ -230,7 +254,26 @@ export default function Checkout() {
       fontSize: 13,
       letterSpacing: "0.14em",
       justifyContent: "center",
+      opacity: submitting ? 0.6 : 1,
+      cursor: submitting ? "default" : "pointer",
     },
+
+    formError: {
+      padding: "12px 14px",
+      marginBottom: 20,
+      background: "rgba(192,82,74,0.1)",
+      border: "1px solid rgba(192,82,74,0.35)",
+      borderRadius: 8,
+      color: "#e0847c",
+      fontSize: 13,
+    },
+
+    empty: {
+      padding: `80px ${theme.pad}px`,
+      textAlign: "center",
+    },
+    emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px" },
+    emptyText: { fontSize: 14, color: theme.silver, margin: "0 0 28px" },
 
     backLink: {
       ...btnGhost,
@@ -265,6 +308,25 @@ export default function Checkout() {
     legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.muted },
   };
 
+  if (items.length === 0) {
+    return (
+      <main style={s.page}>
+        <div style={s.pageHead}>
+          <span style={label}>Almost there</span>
+          <h1 style={s.pageTitle}>Checkout</h1>
+        </div>
+        <PulseDivider />
+        <div style={s.empty}>
+          <h2 style={s.emptyTitle}>Your cart is empty</h2>
+          <p style={s.emptyText}>Add some scrubs before checking out.</p>
+          <a href="/men" style={{ ...btnSolid, paddingInline: 32 }}>Shop men</a>
+          {"  "}
+          <a href="/women" style={{ ...btnGhost, paddingInline: 32, marginLeft: 10 }}>Shop women</a>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main style={s.page}>
       {/* Page header */}
@@ -280,6 +342,8 @@ export default function Checkout() {
 
           {/* ── Left: form ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+            {errors.form && <p style={s.formError}>{errors.form}</p>}
 
             {/* Contact */}
             <div style={s.card}>
@@ -395,21 +459,21 @@ export default function Checkout() {
             <p style={s.summaryTitle}>Order summary</p>
 
             <div style={s.summaryRow}>
-              <span>Subtotal</span>
-              <span>EGP —</span>
+              <span>Subtotal ({totalItems} items)</span>
+              <span>EGP {totalPrice.toLocaleString()}</span>
             </div>
             <div style={s.summaryRow}>
               <span>Shipping</span>
-              <span>EGP —</span>
+              <span>Calculated at checkout</span>
             </div>
 
             <div style={s.summaryTotal}>
               <span>Total</span>
-              <span style={s.totalAmount}>EGP —</span>
+              <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
             </div>
 
-            <button type="submit" style={s.submitBtn}>
-              Place order
+            <button type="submit" style={s.submitBtn} disabled={submitting}>
+              {submitting ? "Placing order…" : "Place order"}
             </button>
             <a href="/men" style={s.backLink}>← Continue shopping</a>
           </div>
