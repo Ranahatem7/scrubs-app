@@ -129,17 +129,23 @@ export default function Men() {
     // ── Footer ────────────────────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      borderTop: `1px solid ${theme.hairline}`,
-      background: theme.ink2,
+      background: theme.white,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     footMt: {
-      ...strongText,
       fontFamily: theme.fontDisplay,
       fontSize: 26,
       fontWeight: 700,
       lineHeight: 1,
+      color: theme.forest,
+    },
+    footTagline: {
+      fontSize: 10,
+      fontWeight: 500,
+      letterSpacing: "0.32em",
+      textTransform: "uppercase",
+      color: "rgba(11, 31, 24, 0.55)",
     },
     footCols: {
       display: "grid",
@@ -154,23 +160,23 @@ export default function Men() {
       fontWeight: 500,
       letterSpacing: "0.28em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.forest,
     },
-    footLink: { fontSize: 13, color: theme.lightGray },
+    footLink: { fontSize: 13, color: theme.ink2 },
     footContact: {
       display: "flex",
       flexDirection: "column",
       gap: 6,
       paddingTop: 24,
-      borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+      borderTop: "1px solid rgba(11, 31, 24, 0.1)",
     },
-    footText: { margin: 0, fontSize: 13, color: theme.lightGray },
+    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
     legal: {
       margin: "28px 0 0",
       fontSize: 10,
       letterSpacing: "0.18em",
       textTransform: "uppercase",
-      color: theme.muted,
+      color: "rgba(11, 31, 24, 0.5)",
     },
   };
 
@@ -263,7 +269,7 @@ export default function Men() {
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={label}>Medical Wear</span>
+          <span style={s.footTagline}>Medical Wear</span>
         </div>
 
         <div style={s.footCols}>

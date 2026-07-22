@@ -6,7 +6,7 @@ export const theme = {
   forestDeep: "#0A3F31", // darker forest, for pressed/hover states
   white: "#FFFFFF",
   lightGray: "#E8EDF5", // secondary text / muted-on-dark
-  muted: "rgba(232, 237, 245, 0.55)", // lower-emphasis text, derived from lightGray
+  muted: "rgba(232, 237, 245, 0.7)", // lower-emphasis text, derived from lightGray
   hairline: "rgba(15, 91, 70, 0.35)", // forest-tinted separator lines
 
   fontDisplay: '"Satoshi", "Inter", system-ui, sans-serif',
@@ -23,7 +23,7 @@ export const label = {
   fontWeight: 500,
   letterSpacing: "0.32em",
   textTransform: "uppercase",
-  color: theme.lightGray,
+  color: theme.white,
 };
 
 export const display = {
