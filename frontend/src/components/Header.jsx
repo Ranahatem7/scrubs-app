@@ -35,6 +35,7 @@ const s = {
   bar: { display: "block", height: 1, background: theme.bone, margin: "5px 0" },
   barShort: { display: "block", height: 1, width: 13, background: theme.bronze, margin: "5px 0" },
   icon: { width: 21, height: 21 },
+  actions: { display: "flex", alignItems: "center" },
   wordmark: { display: "flex", flexDirection: "column", alignItems: "center", gap: 1, lineHeight: 1, textDecoration: "none" },
   mt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 17, fontWeight: 600, letterSpacing: "0.04em" },
   name: { fontSize: 8, letterSpacing: "0.42em", textIndent: "0.42em", color: theme.muted },
@@ -74,13 +75,22 @@ export default function Header({ onOpenMenu }) {
         <span style={s.name}>MEDTRACK</span>
       </a>
 
-      <button style={s.btn} onClick={() => navigate("/cart")} aria-label="Open cart">
-        <svg style={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
-          <path d="M6 8h12l-1 12H7L6 8Z" />
-          <path d="M9.5 8V6.5a2.5 2.5 0 0 1 5 0V8" />
-        </svg>
-        {totalItems > 0 && <span style={s.count}>{totalItems}</span>}
-      </button>
+      <span style={s.actions}>
+        <button style={s.btn} onClick={() => navigate("/profile")} aria-label="Open profile">
+          <svg style={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5 20c0-3.6 3.1-6.5 7-6.5s7 2.9 7 6.5" />
+          </svg>
+        </button>
+
+        <button style={s.btn} onClick={() => navigate("/cart")} aria-label="Open cart">
+          <svg style={s.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3">
+            <path d="M6 8h12l-1 12H7L6 8Z" />
+            <path d="M9.5 8V6.5a2.5 2.5 0 0 1 5 0V8" />
+          </svg>
+          {totalItems > 0 && <span style={s.count}>{totalItems}</span>}
+        </button>
+      </span>
     </header>
   );
 }
