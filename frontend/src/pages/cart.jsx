@@ -2,7 +2,7 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
 export default function Cart() {
   const isDesktop = useIsDesktop(700);
@@ -64,7 +64,7 @@ export default function Cart() {
       letterSpacing: "0.1em",
       textTransform: "uppercase",
     },
-    itemPrice: { ...metalText, fontSize: 15, marginTop: "auto" },
+    itemPrice: { ...strongText, fontSize: 15, marginTop: "auto" },
 
     // Quantity controls
     qtyRow: { display: "flex", alignItems: "center", gap: 0, marginTop: 8 },
@@ -109,7 +109,7 @@ export default function Cart() {
       textAlign: "center",
     },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px" },
-    emptyText: { fontSize: 14, color: theme.silver, margin: "0 0 28px" },
+    emptyText: { fontSize: 14, color: theme.lightGray, margin: "0 0 28px" },
 
     // ── Order summary sidebar ─────────────────────────────────────────────
     summary: {
@@ -126,13 +126,13 @@ export default function Cart() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
     },
     summaryRow: {
       display: "flex",
       justifyContent: "space-between",
       fontSize: 13,
-      color: theme.silver,
+      color: theme.lightGray,
       marginBottom: 12,
     },
     summaryTotal: {
@@ -145,7 +145,7 @@ export default function Cart() {
       fontSize: 15,
       color: "#fff",
     },
-    totalAmount: { ...metalText, fontSize: 18 },
+    totalAmount: { ...strongText, fontSize: 18 },
 
     checkoutBtn: {
       ...btnSolid,
@@ -181,19 +181,20 @@ export default function Cart() {
       marginTop: 80,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    footMt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 600, lineHeight: 1 },
+    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
+    footMt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.bronze,
+      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.lightGray,
     },
-    footLink: { fontSize: 13, color: theme.silver },
+    footLink: { fontSize: 13, color: theme.lightGray },
     footContact: {
       display: "flex", flexDirection: "column", gap: 6,
       paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)",
     },
-    footText: { margin: 0, fontSize: 13, color: theme.silver },
+    footText: { margin: 0, fontSize: 13, color: theme.lightGray },
     legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.muted },
   };
 
@@ -217,7 +218,7 @@ export default function Cart() {
         <footer style={s.footer}>
           <div style={s.footBrand}>
             <span style={s.footMt}>MT</span>
-            <span style={label}>Built for more</span>
+            <span style={label}>Medical Wear</span>
           </div>
           <div style={s.footCols}>
             <div style={s.footCol}>
@@ -338,7 +339,7 @@ export default function Cart() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={label}>Built for more</span>
+          <span style={label}>Medical Wear</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>

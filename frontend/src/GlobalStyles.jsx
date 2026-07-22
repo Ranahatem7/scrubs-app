@@ -9,7 +9,7 @@ export default function GlobalStyles() {
         margin: 0;
         padding: 0;
         background: ${theme.ink};
-        color: ${theme.bone};
+        color: ${theme.white};
         font-family: ${theme.fontBody};
         font-size: 15px;
         line-height: 1.6;
@@ -24,7 +24,7 @@ export default function GlobalStyles() {
       .no-scrollbar { scrollbar-width: none; }
       .no-scrollbar::-webkit-scrollbar { display: none; }
 
-      :focus-visible { outline: 2px solid ${theme.bronze}; outline-offset: 3px; }
+      :focus-visible { outline: 2px solid ${theme.white}; outline-offset: 3px; }
 
       @media (prefers-reduced-motion: reduce) {
         * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

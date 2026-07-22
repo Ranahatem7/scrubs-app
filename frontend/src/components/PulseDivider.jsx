@@ -27,7 +27,7 @@ export default function PulseDivider() {
       <svg style={s.wave} viewBox="0 0 120 24" fill="none" aria-hidden="true">
         <path
           d="M0 12h34l6-9 7 18 6-13 5 8 5-4h52"
-          stroke={theme.bronze}
+          stroke={theme.forest}
           strokeWidth="1.2"
           strokeLinecap="round"
           strokeLinejoin="round"

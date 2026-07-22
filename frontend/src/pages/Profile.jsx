@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnGhost, btnSolid, metalText } from "../theme";
+import { theme, label, display, btnGhost, btnSolid, strongText } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { getMyOrders } from "../services/orders";
 
 const STATUS_STYLES = {
-  pending: { color: theme.bronze, border: "rgba(192,142,90,0.35)", bg: "rgba(192,142,90,0.10)" },
+  pending: { color: theme.white, border: "rgba(15,91,70,0.5)", bg: "rgba(15,91,70,0.25)" },
   confirmed: { color: "#8fb8a8", border: "rgba(143,184,168,0.35)", bg: "rgba(143,184,168,0.08)" },
   shipped: { color: "#8fb0c9", border: "rgba(143,176,201,0.35)", bg: "rgba(143,176,201,0.08)" },
   delivered: { color: "#8fc98f", border: "rgba(143,201,143,0.35)", bg: "rgba(143,201,143,0.08)" },
@@ -88,19 +88,19 @@ export default function Profile() {
       width: 52,
       height: 52,
       borderRadius: "50%",
-      background: `linear-gradient(135deg, ${theme.bronze}, ${theme.bronzeDeep})`,
+      background: theme.forest,
       display: "grid",
       placeItems: "center",
       fontFamily: theme.fontDisplay,
       fontSize: 22,
-      fontWeight: 600,
-      color: theme.ink,
+      fontWeight: 700,
+      color: theme.white,
       flexShrink: 0,
     },
-    accountName: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 19, margin: 0, lineHeight: 1.25 },
+    accountName: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 19, margin: 0, lineHeight: 1.25 },
     accountEmail: {
       fontSize: 12,
-      color: theme.silver,
+      color: theme.lightGray,
       margin: "3px 0 0",
       wordBreak: "break-word",
     },
@@ -127,7 +127,7 @@ export default function Profile() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
       margin: 0,
     },
     orderCountNote: { fontSize: 12, color: theme.muted },
@@ -164,7 +164,7 @@ export default function Profile() {
     orderBody: { flex: 1, minWidth: 0 },
     orderHead: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
     orderRefDate: { minWidth: 0 },
-    orderRef: { fontSize: 11, color: theme.silver, letterSpacing: "0.04em", fontFamily: theme.fontBody },
+    orderRef: { fontSize: 11, color: theme.lightGray, letterSpacing: "0.04em", fontFamily: theme.fontBody },
     orderDate: { fontSize: 11, color: theme.muted, marginTop: 2 },
     statusPill: (status) => ({
       flexShrink: 0,
@@ -176,12 +176,12 @@ export default function Profile() {
       borderRadius: 999,
       whiteSpace: "nowrap",
       border: `1px solid ${STATUS_STYLES[status]?.border ?? theme.hairline}`,
-      color: STATUS_STYLES[status]?.color ?? theme.silver,
+      color: STATUS_STYLES[status]?.color ?? theme.lightGray,
       background: STATUS_STYLES[status]?.bg ?? "transparent",
     }),
     orderItemsText: {
       fontSize: 13,
-      color: theme.silver,
+      color: theme.lightGray,
       margin: "8px 0 0",
       overflow: "hidden",
       textOverflow: "ellipsis",
@@ -196,7 +196,7 @@ export default function Profile() {
       borderTop: "1px solid rgba(255,255,255,0.06)",
     },
     orderCount: { fontSize: 11, color: theme.muted },
-    orderTotal: { ...metalText, fontSize: 16, fontFamily: theme.fontDisplay },
+    orderTotal: { ...strongText, fontSize: 16, fontFamily: theme.fontDisplay },
   };
 
   return (

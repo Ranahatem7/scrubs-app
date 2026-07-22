@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../services/orders";
@@ -133,7 +133,7 @@ export default function Checkout() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
     },
 
     // ── Field ─────────────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ export default function Checkout() {
       fontSize: 10,
       letterSpacing: "0.2em",
       textTransform: "uppercase",
-      color: theme.silver,
+      color: theme.lightGray,
     },
     input: (hasError) => ({
       padding: "11px 14px",
@@ -180,9 +180,9 @@ export default function Checkout() {
       alignItems: "center",
       gap: 14,
       padding: "14px 16px",
-      border: `1px solid ${active ? theme.bronze : "rgba(255,255,255,0.1)"}`,
+      border: `1px solid ${active ? theme.forest : "rgba(255,255,255,0.1)"}`,
       borderRadius: 10,
-      background: active ? "rgba(192,142,90,0.10)" : "transparent",
+      background: active ? "rgba(15,91,70,0.35)" : "transparent",
       cursor: "pointer",
       transition: "border-color 0.18s, background 0.18s",
     }),
@@ -202,8 +202,8 @@ export default function Checkout() {
       width: 16,
       height: 16,
       borderRadius: "50%",
-      border: `2px solid ${active ? theme.bronze : "rgba(255,255,255,0.25)"}`,
-      background: active ? theme.bronze : "transparent",
+      border: `2px solid ${active ? theme.white : "rgba(255,255,255,0.25)"}`,
+      background: active ? theme.white : "transparent",
       flexShrink: 0,
       transition: "background 0.18s, border-color 0.18s",
     }),
@@ -223,7 +223,7 @@ export default function Checkout() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
     },
     summaryRow: {
       display: "flex",
@@ -231,7 +231,7 @@ export default function Checkout() {
       alignItems: "center",
       marginBottom: 12,
       fontSize: 13,
-      color: theme.silver,
+      color: theme.lightGray,
     },
     summaryTotal: {
       display: "flex",
@@ -244,7 +244,7 @@ export default function Checkout() {
       color: "#fff",
       fontFamily: theme.fontDisplay,
     },
-    totalAmount: { ...metalText, fontSize: 18 },
+    totalAmount: { ...strongText, fontSize: 18 },
 
     submitBtn: {
       ...btnSolid,
@@ -273,7 +273,7 @@ export default function Checkout() {
       textAlign: "center",
     },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px" },
-    emptyText: { fontSize: 14, color: theme.silver, margin: "0 0 28px" },
+    emptyText: { fontSize: 14, color: theme.lightGray, margin: "0 0 28px" },
 
     backLink: {
       ...btnGhost,
@@ -292,19 +292,20 @@ export default function Checkout() {
       marginTop: 80,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    footMt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 600, lineHeight: 1 },
+    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
+    footMt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.bronze,
+      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.lightGray,
     },
-    footLink: { fontSize: 13, color: theme.silver },
+    footLink: { fontSize: 13, color: theme.lightGray },
     footContact: {
       display: "flex", flexDirection: "column", gap: 6,
       paddingTop: 24, borderTop: "1px solid rgba(255, 255, 255, 0.06)",
     },
-    footText: { margin: 0, fontSize: 13, color: theme.silver },
+    footText: { margin: 0, fontSize: 13, color: theme.lightGray },
     legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.muted },
   };
 
@@ -485,7 +486,7 @@ export default function Checkout() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={label}>Built for more</span>
+          <span style={label}>Medical Wear</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>

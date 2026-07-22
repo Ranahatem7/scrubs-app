@@ -4,7 +4,7 @@ import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import { images } from "../data/images";
-import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
 // Filter categories for men's page — ids match Product.category in the backend
 const MEN_FILTERS = [
@@ -42,8 +42,8 @@ export default function Men() {
     heroBg: {
       position: "absolute",
       inset: 0,
-      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,11,12,0.80) 34%, rgba(11,11,12,0.38) 100%),
-        radial-gradient(90% 60% at 20% 30%, rgba(192,142,90,0.18), transparent 60%),
+      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,31,24,0.80) 34%, rgba(11,31,24,0.38) 100%),
+        radial-gradient(90% 60% at 20% 30%, rgba(15,91,70,0.35), transparent 60%),
         url(${images.menHero ?? images.hero}) center 30% / cover no-repeat`,
     },
     heroInner: { position: "relative", zIndex: 1, maxWidth: 480 },
@@ -52,12 +52,12 @@ export default function Men() {
       margin: "14px 0 0",
       fontSize: "clamp(40px, 12vw, 62px)",
     },
-    heroEm: { ...metalText, fontStyle: "italic" },
+    heroEm: { ...strongText, fontStyle: "normal" },
     heroSub: {
       margin: "16px 0 0",
       maxWidth: "32ch",
       fontSize: 14,
-      color: theme.silver,
+      color: theme.lightGray,
     },
     heroActions: { display: "flex", gap: 10, marginTop: 28 },
     heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
@@ -75,9 +75,9 @@ export default function Men() {
       scrollSnapAlign: "start",
       padding: "7px 18px",
       borderRadius: 999,
-      border: `1px solid ${active ? theme.bronze : "rgba(255,255,255,0.12)"}`,
-      background: active ? `rgba(192,142,90,0.14)` : "transparent",
-      color: active ? theme.bronze : theme.silver,
+      border: `1px solid ${active ? theme.forest : "rgba(255,255,255,0.12)"}`,
+      background: active ? `rgba(15,91,70,0.35)` : "transparent",
+      color: active ? theme.white : theme.lightGray,
       fontSize: 12,
       fontFamily: theme.fontBody,
       letterSpacing: "0.08em",
@@ -133,11 +133,12 @@ export default function Men() {
       background: theme.ink2,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
+    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     footMt: {
-      ...metalText,
+      ...strongText,
       fontFamily: theme.fontDisplay,
       fontSize: 26,
-      fontWeight: 600,
+      fontWeight: 700,
       lineHeight: 1,
     },
     footCols: {
@@ -153,9 +154,9 @@ export default function Men() {
       fontWeight: 500,
       letterSpacing: "0.28em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
     },
-    footLink: { fontSize: 13, color: theme.silver },
+    footLink: { fontSize: 13, color: theme.lightGray },
     footContact: {
       display: "flex",
       flexDirection: "column",
@@ -163,7 +164,7 @@ export default function Men() {
       paddingTop: 24,
       borderTop: "1px solid rgba(255, 255, 255, 0.06)",
     },
-    footText: { margin: 0, fontSize: 13, color: theme.silver },
+    footText: { margin: 0, fontSize: 13, color: theme.lightGray },
     legal: {
       margin: "28px 0 0",
       fontSize: 10,
@@ -262,7 +263,7 @@ export default function Men() {
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={label}>Built for more</span>
+          <span style={label}>Medical Wear</span>
         </div>
 
         <div style={s.footCols}>

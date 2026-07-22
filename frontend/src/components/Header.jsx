@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { theme, metalText } from "../theme";
+import { theme, strongText } from "../theme";
 
 const s = {
   header: {
@@ -14,7 +14,7 @@ const s = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "0 12px",
-    background: "rgba(11, 11, 12, 0.72)",
+    background: "rgba(11, 31, 24, 0.72)",
     backdropFilter: "blur(14px)",
     WebkitBackdropFilter: "blur(14px)",
     borderBottom: `1px solid ${theme.hairline}`,
@@ -32,11 +32,12 @@ const s = {
     padding: 0,
   },
   burger: { display: "block", width: 20 },
-  bar: { display: "block", height: 1, background: theme.bone, margin: "5px 0" },
-  barShort: { display: "block", height: 1, width: 13, background: theme.bronze, margin: "5px 0" },
+  bar: { display: "block", height: 1, background: theme.white, margin: "5px 0" },
+  barShort: { display: "block", height: 1, width: 13, background: theme.forest, margin: "5px 0" },
   icon: { width: 21, height: 21 },
   wordmark: { display: "flex", flexDirection: "column", alignItems: "center", gap: 1, lineHeight: 1, textDecoration: "none" },
-  mt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 17, fontWeight: 600, letterSpacing: "0.04em" },
+  // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
+  mt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 17, fontWeight: 700, letterSpacing: "0.04em" },
   name: { fontSize: 8, letterSpacing: "0.42em", textIndent: "0.42em", color: theme.muted },
   count: {
     position: "absolute",
@@ -46,8 +47,8 @@ const s = {
     height: 15,
     padding: "0 4px",
     borderRadius: 8,
-    background: theme.bronze,
-    color: theme.ink,
+    background: theme.forest,
+    color: theme.white,
     fontSize: 9,
     fontWeight: 600,
     display: "grid",

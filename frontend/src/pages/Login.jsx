@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
-import { theme, label, display, btnSolid, metalText } from "../theme";
+import { theme, label, display, btnSolid, strongText } from "../theme";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -49,7 +49,7 @@ export default function Login() {
   const s = {
     page: {
       minHeight: "100vh",
-      background: `radial-gradient(65% 40% at 50% 0%, ${theme.bronzeGlow}, transparent 70%), ${theme.ink}`,
+      background: theme.ink,
       paddingBottom: 80,
     },
     pageHead: {
@@ -71,12 +71,11 @@ export default function Login() {
       border: `1px solid ${theme.hairline}`,
       borderRadius: theme.radius,
       padding: 24,
-      boxShadow: `0 24px 60px -20px ${theme.bronzeGlow}`,
     },
     cardAccent: {
-      height: 3,
+      height: 2,
       margin: "-24px -24px 24px",
-      background: `linear-gradient(90deg, ${theme.bronzeDeep}, ${theme.bronze}, ${theme.silver})`,
+      background: theme.forest,
     },
     cardBrand: {
       display: "flex",
@@ -85,11 +84,12 @@ export default function Login() {
       gap: 4,
       marginBottom: 22,
     },
+    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     cardBrandMt: {
-      ...metalText,
+      ...strongText,
       fontFamily: theme.fontDisplay,
       fontSize: 32,
-      fontWeight: 600,
+      fontWeight: 700,
       lineHeight: 1,
     },
 
@@ -109,18 +109,18 @@ export default function Login() {
       fontSize: 10,
       letterSpacing: "0.2em",
       textTransform: "uppercase",
-      color: theme.silver,
+      color: theme.lightGray,
     },
     input: (hasError) => ({
       padding: "11px 14px",
       background: "rgba(255,255,255,0.04)",
-      border: `1px solid ${hasError ? "#c0524a" : "rgba(192,142,90,0.2)"}`,
+      border: `1px solid ${hasError ? "#c0524a" : "rgba(255,255,255,0.1)"}`,
       borderRadius: 8,
       color: "#fff",
       fontSize: 14,
       fontFamily: theme.fontBody,
       outline: "none",
-      transition: "border-color 0.18s, box-shadow 0.18s",
+      transition: "border-color 0.18s",
       width: "100%",
     }),
     fieldError: {
@@ -139,7 +139,6 @@ export default function Login() {
       letterSpacing: "0.14em",
       opacity: submitting ? 0.6 : 1,
       cursor: submitting ? "default" : "pointer",
-      boxShadow: submitting ? "none" : `0 10px 28px ${theme.bronzeGlow}`,
     },
 
     switchRow: {
@@ -148,7 +147,7 @@ export default function Login() {
       fontSize: 13,
       color: theme.muted,
     },
-    switchLink: { color: theme.bronze },
+    switchLink: { color: theme.white, textDecoration: "underline" },
   };
 
   return (
@@ -165,7 +164,7 @@ export default function Login() {
           <div style={s.cardAccent} aria-hidden="true" />
           <div style={s.cardBrand}>
             <span style={s.cardBrandMt}>MT</span>
-            <span style={label}>Built for more</span>
+            <span style={label}>Medical Wear</span>
           </div>
 
           {errors.form && <p style={s.formError}>{errors.form}</p>}

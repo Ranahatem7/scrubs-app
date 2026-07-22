@@ -4,7 +4,7 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import { categories } from "../data/products";
 import { images } from "../data/images";
-import { theme, label, display, btnSolid, btnGhost, metalText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
 export default function Home() {
   const isDesktop = useIsDesktop(700);
@@ -19,18 +19,18 @@ export default function Home() {
       padding: `0 ${theme.pad}px 72px`,
       overflow: "hidden",
     },
-    // Photo, then a bronze wash, then a bottom-heavy scrim for legibility
+    // Photo, then a forest-green wash, then a bottom-heavy scrim for legibility
     heroBg: {
       position: "absolute",
       inset: 0,
-      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,11,12,0.82) 34%, rgba(11,11,12,0.42) 100%),
-        radial-gradient(90% 60% at 80% 20%, rgba(192,142,90,0.22), transparent 60%),
+      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,31,24,0.82) 34%, rgba(11,31,24,0.42) 100%),
+        radial-gradient(90% 60% at 80% 20%, rgba(15,91,70,0.35), transparent 60%),
         url(${images.hero}) center 20% / cover no-repeat`,
     },
     heroInner: { position: "relative", zIndex: 1, maxWidth: 460 },
     heroTitle: { ...display, margin: "14px 0 0", fontSize: "clamp(46px, 15vw, 68px)" },
-    heroEm: { ...metalText, fontStyle: "italic" },
-    heroSub: { margin: "16px 0 0", maxWidth: "30ch", fontSize: 14, color: theme.silver },
+    heroEm: { ...strongText, fontStyle: "normal" },
+    heroSub: { margin: "16px 0 0", maxWidth: "30ch", fontSize: 14, color: theme.lightGray },
     heroActions: { display: "flex", gap: 10, marginTop: 28 },
     heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
     heroScroll: {
@@ -39,7 +39,7 @@ export default function Home() {
       left: "50%",
       width: 1,
       height: 34,
-      background: `linear-gradient(to bottom, ${theme.bronze}, transparent)`,
+      background: `linear-gradient(to bottom, ${theme.white}, transparent)`,
     },
 
     section: { padding: "56px 0" },
@@ -64,7 +64,7 @@ export default function Home() {
       padding: 16,
       border: "1px solid rgba(255, 255, 255, 0.06)",
       borderRadius: theme.radius,
-      background: `linear-gradient(to top, rgba(11,11,12,0.94) 6%, rgba(11,11,12,0.2) 62%),
+      background: `linear-gradient(to top, rgba(11,31,24,0.94) 6%, rgba(11,31,24,0.2) 62%),
         url(${image}) center / cover no-repeat`,
       overflow: "hidden",
     }),
@@ -72,11 +72,11 @@ export default function Home() {
       position: "absolute",
       inset: "auto -20% -40% -20%",
       height: "60%",
-      background: `radial-gradient(50% 100% at 50% 100%, ${theme.bronzeGlow}, transparent)`,
+      background: `radial-gradient(50% 100% at 50% 100%, rgba(15,91,70,0.35), transparent)`,
     },
     railMeta: { position: "relative", display: "flex", flexDirection: "column", gap: 3 },
-    railName: { fontFamily: theme.fontDisplay, fontSize: 24, fontWeight: 400 },
-    railNote: { fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.bronze },
+    railName: { fontFamily: theme.fontDisplay, fontSize: 24, fontWeight: 500 },
+    railNote: { fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.lightGray },
 
     grid: {
       display: "grid",
@@ -112,7 +112,8 @@ export default function Home() {
       background: theme.ink2,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    footMt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 600, lineHeight: 1 },
+    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
+    footMt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
@@ -121,9 +122,9 @@ export default function Home() {
       fontWeight: 500,
       letterSpacing: "0.28em",
       textTransform: "uppercase",
-      color: theme.bronze,
+      color: theme.lightGray,
     },
-    footLink: { fontSize: 13, color: theme.silver },
+    footLink: { fontSize: 13, color: theme.lightGray },
     footContact: {
       display: "flex",
       flexDirection: "column",
@@ -131,7 +132,7 @@ export default function Home() {
       paddingTop: 24,
       borderTop: "1px solid rgba(255, 255, 255, 0.06)",
     },
-    footText: { margin: 0, fontSize: 13, color: theme.silver },
+    footText: { margin: 0, fontSize: 13, color: theme.lightGray },
     legal: {
       margin: "28px 0 0",
       fontSize: 10,
@@ -147,7 +148,7 @@ export default function Home() {
       <section style={s.hero}>
         <div style={s.heroBg} aria-hidden="true" />
         <div style={s.heroInner}>
-          <span style={label}>Built for more</span>
+          <span style={label}>Medical Wear</span>
           <h1 style={s.heroTitle}>
             Scrubs for the
             <br />
@@ -231,7 +232,7 @@ export default function Home() {
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={label}>Built for more</span>
+          <span style={label}>Medical Wear</span>
         </div>
 
         <div style={s.footCols}>

@@ -1,16 +1,15 @@
-// Design tokens — pulled from the MedTrack logo.
+// Design tokens — MedTrack brand refresh (deep green / white / forest accent).
 export const theme = {
-  ink: "#0b0b0c",
-  ink2: "#151517",
-  bronze: "#c08e5a",
-  bronzeDeep: "#8a5f35",
-  bronzeGlow: "rgba(192, 142, 90, 0.18)",
-  silver: "#c9ccd1",
-  bone: "#f1eee9",
-  muted: "#8b8b90",
-  hairline: "rgba(192, 142, 90, 0.22)",
+  ink: "#0B1F18", // Deep Green — darkest background
+  ink2: "#22252A", // Charcoal — raised panels / cards
+  forest: "#0F5B46", // Forest Green — primary brand color: buttons, active fills, borders, the pulse line
+  forestDeep: "#0A3F31", // darker forest, for pressed/hover states
+  white: "#FFFFFF",
+  lightGray: "#E8EDF5", // secondary text / muted-on-dark
+  muted: "rgba(232, 237, 245, 0.55)", // lower-emphasis text, derived from lightGray
+  hairline: "rgba(15, 91, 70, 0.35)", // forest-tinted separator lines
 
-  fontDisplay: '"Cormorant Garamond", Georgia, serif',
+  fontDisplay: '"Satoshi", "Inter", system-ui, sans-serif',
   fontBody: '"Inter", system-ui, -apple-system, sans-serif',
 
   barH: 58,
@@ -24,14 +23,14 @@ export const label = {
   fontWeight: 500,
   letterSpacing: "0.32em",
   textTransform: "uppercase",
-  color: theme.bronze,
+  color: theme.lightGray,
 };
 
 export const display = {
   fontFamily: theme.fontDisplay,
-  fontWeight: 300,
+  fontWeight: 700,
   lineHeight: 1.05,
-  letterSpacing: "0.01em",
+  letterSpacing: "-0.01em",
 };
 
 export const btn = {
@@ -50,20 +49,17 @@ export const btn = {
 
 export const btnSolid = {
   ...btn,
-  background: `linear-gradient(135deg, ${theme.bronze}, ${theme.bronzeDeep})`,
-  color: theme.ink,
+  background: theme.forest,
+  color: theme.white,
 };
 
 export const btnGhost = {
   ...btn,
-  border: `1px solid ${theme.hairline}`,
-  color: theme.bone,
+  border: `1px solid rgba(255, 255, 255, 0.3)`,
+  color: theme.white,
 };
 
-// The silver-to-bronze wordmark gradient from the logo
-export const metalText = {
-  background: `linear-gradient(100deg, ${theme.silver} 40%, ${theme.bronze} 60%)`,
-  WebkitBackgroundClip: "text",
-  backgroundClip: "text",
-  color: "transparent",
+// Plain bright emphasis text for wordmarks, totals, and other high-emphasis values.
+export const strongText = {
+  color: theme.white,
 };

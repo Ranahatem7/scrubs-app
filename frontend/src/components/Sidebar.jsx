@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PulseDivider from "./PulseDivider";
-import { theme, label, btnGhost, metalText } from "../theme";
+import { theme, label, btnGhost, strongText } from "../theme";
 import { useAuth } from "../context/AuthContext";
 
 const LINKS = [
@@ -44,7 +44,8 @@ const s = {
     padding: `0 ${theme.pad}px 22px`,
   },
   brand: { display: "flex", flexDirection: "column", gap: 6 },
-  mt: { ...metalText, fontFamily: theme.fontDisplay, fontSize: 30, fontWeight: 600, lineHeight: 1 },
+  // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
+  mt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 30, fontWeight: 700, lineHeight: 1 },
   close: { width: 34, height: 34, display: "grid", placeItems: "center", color: theme.muted, cursor: "pointer" },
   closeIcon: { width: 18, height: 18 },
   list: { listStyle: "none", margin: "26px 0 0", padding: 0, flex: 1 },
@@ -64,7 +65,7 @@ const s = {
     fontWeight: 300,
     letterSpacing: "0.02em",
   },
-  index: { fontFamily: theme.fontBody, fontSize: 9, letterSpacing: "0.16em", color: theme.bronzeDeep },
+  index: { fontFamily: theme.fontBody, fontSize: 9, letterSpacing: "0.16em", color: theme.muted },
   foot: { padding: `0 ${theme.pad}px`, display: "flex", flexDirection: "column", gap: 18 },
   account: { ...btnGhost, width: "100%" },
   social: {
@@ -104,7 +105,7 @@ export default function Sidebar({ open, onClose }) {
         <div style={s.top}>
           <div style={s.brand}>
             <span style={s.mt}>MT</span>
-            <span style={label}>Built for more</span>
+            <span style={label}>Medical Wear</span>
           </div>
           <button style={s.close} onClick={onClose} aria-label="Close menu">
             <svg style={s.closeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
