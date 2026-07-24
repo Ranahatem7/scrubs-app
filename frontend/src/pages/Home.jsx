@@ -11,6 +11,7 @@ export default function Home() {
   const { products, loading, error, retry } = useProducts();
 
   const s = {
+    // ── Hero (dark bookend) ──────────────────────────────────────────────
     hero: {
       position: "relative",
       minHeight: "92vh",
@@ -28,9 +29,9 @@ export default function Home() {
         url(${images.hero}) center 20% / cover no-repeat`,
     },
     heroInner: { position: "relative", zIndex: 1, maxWidth: 460 },
-    heroTitle: { ...display, margin: "14px 0 0", fontSize: "clamp(46px, 15vw, 68px)" },
-    heroEm: { ...strongText, fontStyle: "normal" },
-    heroSub: { margin: "16px 0 0", maxWidth: "30ch", fontSize: 14, color: theme.lightGray },
+    heroTitle: { ...display, margin: "14px 0 0", fontSize: "clamp(46px, 15vw, 68px)", color: theme.textOnDark },
+    heroEm: { ...strongText("dark"), fontStyle: "normal" },
+    heroSub: { margin: "16px 0 0", maxWidth: "30ch", fontSize: 14, color: theme.textOnDarkMuted },
     heroActions: { display: "flex", gap: 10, marginTop: 28 },
     heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
     heroScroll: {
@@ -39,13 +40,14 @@ export default function Home() {
       left: "50%",
       width: 1,
       height: 34,
-      background: `linear-gradient(to bottom, ${theme.white}, transparent)`,
+      background: `linear-gradient(to bottom, ${theme.textOnDark}, transparent)`,
     },
 
-    section: { padding: "56px 0" },
+    // ── Light content sections ───────────────────────────────────────────
+    section: { padding: "56px 0", background: theme.surfaceLight },
     head: { padding: `0 ${theme.pad}px`, marginBottom: 24 },
-    title: { ...display, margin: "8px 0 0", fontSize: 34 },
-    sectionCta: { ...btnGhost, display: "flex", margin: `28px ${theme.pad}px 0` },
+    title: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.accent },
+    sectionCta: { ...btnGhost("light"), display: "flex", margin: `28px ${theme.pad}px 0` },
 
     rail: {
       display: "flex",
@@ -62,7 +64,7 @@ export default function Home() {
       display: "flex",
       alignItems: "flex-end",
       padding: 16,
-      border: "1px solid rgba(255, 255, 255, 0.06)",
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
       background: `linear-gradient(to top, rgba(11,31,24,0.94) 6%, rgba(11,31,24,0.2) 62%),
         url(${image}) center / cover no-repeat`,
@@ -74,9 +76,10 @@ export default function Home() {
       height: "60%",
       background: `radial-gradient(50% 100% at 50% 100%, rgba(15,91,70,0.35), transparent)`,
     },
+    // Collection cards keep a photo + dark overlay, so their titles stay white regardless of page tone
     railMeta: { position: "relative", display: "flex", flexDirection: "column", gap: 3 },
-    railName: { fontFamily: theme.fontDisplay, fontSize: 24, fontWeight: 500 },
-    railNote: { fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.lightGray },
+    railName: { fontFamily: theme.fontDisplay, fontSize: 24, fontWeight: 500, color: theme.textOnDark },
+    railNote: { fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.textOnDarkMuted },
 
     grid: {
       display: "grid",
@@ -89,14 +92,15 @@ export default function Home() {
     stateBlock: {
       padding: `56px ${theme.pad}px`,
       textAlign: "center",
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       fontSize: 13,
       letterSpacing: "0.1em",
     },
     errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
-    retryBtn: { ...btnGhost, display: "inline-flex" },
+    retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
-    statement: { padding: `72px ${theme.pad}px`, textAlign: "center" },
+    // ── Brand statement ───────────────────────────────────────────────────
+    statement: { padding: `72px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
     statementText: {
       ...display,
       margin: "0 auto 18px",
@@ -104,22 +108,17 @@ export default function Home() {
       fontStyle: "italic",
       lineHeight: 1.25,
       maxWidth: isDesktop ? "18ch" : "none",
+      color: theme.accent,
     },
 
+    // ── Footer (dark bookend) ────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.white,
+      background: theme.surfaceDark,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.forest },
-    footTagline: {
-      fontSize: 10,
-      fontWeight: 500,
-      letterSpacing: "0.32em",
-      textTransform: "uppercase",
-      color: "rgba(11, 31, 24, 0.55)",
-    },
+    footMt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
@@ -128,23 +127,23 @@ export default function Home() {
       fontWeight: 500,
       letterSpacing: "0.28em",
       textTransform: "uppercase",
-      color: theme.forest,
+      color: theme.textOnDark,
     },
-    footLink: { fontSize: 13, color: theme.ink2 },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
     footContact: {
       display: "flex",
       flexDirection: "column",
       gap: 6,
       paddingTop: 24,
-      borderTop: "1px solid rgba(11, 31, 24, 0.1)",
+      borderTop: `1px solid ${theme.hairlineOnDark}`,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
     legal: {
       margin: "28px 0 0",
       fontSize: 10,
       letterSpacing: "0.18em",
       textTransform: "uppercase",
-      color: "rgba(11, 31, 24, 0.5)",
+      color: theme.textOnDarkMuted,
     },
   };
 
@@ -154,7 +153,7 @@ export default function Home() {
       <section style={s.hero}>
         <div style={s.heroBg} aria-hidden="true" />
         <div style={s.heroInner}>
-          <span style={label}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
           <h1 style={s.heroTitle}>
             Scrubs for the
             <br />
@@ -165,7 +164,7 @@ export default function Home() {
           </p>
           <div style={s.heroActions}>
        <a href="/men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
-<a href="/women" style={{ ...btnGhost, ...s.heroBtn }}>Shop women</a>
+<a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
           </div>
         </div>
         <span style={s.heroScroll} aria-hidden="true" />
@@ -176,7 +175,7 @@ export default function Home() {
       {/* Categories — horizontal rail reads naturally on a phone */}
       <section style={s.section} id="collections">
         <div style={s.head}>
-          <span style={label}>Collections</span>
+          <span style={label("light")}>Collections</span>
           <h2 style={s.title}>Shop by piece</h2>
         </div>
 
@@ -196,7 +195,7 @@ export default function Home() {
       {/* Featured products */}
       <section style={s.section} id="men">
         <div style={s.head}>
-          <span style={label}>New in</span>
+          <span style={label("light")}>New in</span>
           <h2 style={s.title}>This season</h2>
         </div>
 
@@ -231,14 +230,14 @@ export default function Home() {
         <p style={s.statementText}>
           Every stitch is measured against a shift that doesn't end when you're tired.
         </p>
-        <span style={label}>MedTrack · Cairo</span>
+        <span style={label("light")}>MedTrack · Cairo</span>
       </section>
 
       {/* Footer */}
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={s.footTagline}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
         </div>
 
         <div style={s.footCols}>

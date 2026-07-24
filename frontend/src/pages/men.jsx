@@ -30,7 +30,7 @@ export default function Men() {
       : menProducts.filter((p) => p.category === activeFilter);
 
   const s = {
-    // ── Hero ──────────────────────────────────────────────────────────────
+    // ── Hero (dark bookend) ──────────────────────────────────────────────
     hero: {
       position: "relative",
       minHeight: "72vh",
@@ -51,33 +51,35 @@ export default function Men() {
       ...display,
       margin: "14px 0 0",
       fontSize: "clamp(40px, 12vw, 62px)",
+      color: theme.textOnDark,
     },
-    heroEm: { ...strongText, fontStyle: "normal" },
+    heroEm: { ...strongText("dark"), fontStyle: "normal" },
     heroSub: {
       margin: "16px 0 0",
       maxWidth: "32ch",
       fontSize: 14,
-      color: theme.lightGray,
+      color: theme.textOnDarkMuted,
     },
     heroActions: { display: "flex", gap: 10, marginTop: 28 },
     heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
 
-    // ── Filter bar ────────────────────────────────────────────────────────
+    // ── Filter bar (light) ────────────────────────────────────────────────
     filterBar: {
       display: "flex",
       gap: 8,
       overflowX: "auto",
       padding: `28px ${theme.pad}px 0`,
       scrollSnapType: "x mandatory",
+      background: theme.surfaceLight,
     },
     filterPill: (active) => ({
       flex: "0 0 auto",
       scrollSnapAlign: "start",
       padding: "7px 18px",
       borderRadius: 999,
-      border: `1px solid ${active ? theme.forest : "rgba(255,255,255,0.12)"}`,
-      background: active ? `rgba(15,91,70,0.35)` : "transparent",
-      color: active ? theme.white : theme.lightGray,
+      border: `1px solid ${active ? theme.accent : theme.lightGray}`,
+      background: active ? theme.accent : theme.surfaceLight,
+      color: active ? theme.textOnDark : theme.textOnLight,
       fontSize: 12,
       fontFamily: theme.fontBody,
       letterSpacing: "0.08em",
@@ -86,14 +88,14 @@ export default function Men() {
       whiteSpace: "nowrap",
     }),
 
-    // ── Product section ───────────────────────────────────────────────────
-    section: { padding: "40px 0 64px" },
+    // ── Product section (light) ───────────────────────────────────────────
+    section: { padding: "40px 0 64px", background: theme.surfaceLight },
     head: { padding: `0 ${theme.pad}px`, marginBottom: 24 },
-    title: { ...display, margin: "8px 0 0", fontSize: 34 },
+    title: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.accent },
     countNote: {
       marginTop: 4,
       fontSize: 12,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       letterSpacing: "0.1em",
     },
 
@@ -108,15 +110,15 @@ export default function Men() {
     empty: {
       padding: `56px ${theme.pad}px`,
       textAlign: "center",
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       fontSize: 13,
       letterSpacing: "0.12em",
     },
     errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
-    retryBtn: { ...btnGhost, display: "inline-flex" },
+    retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
     // ── Brand statement ───────────────────────────────────────────────────
-    statement: { padding: `64px ${theme.pad}px`, textAlign: "center" },
+    statement: { padding: `64px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
     statementText: {
       ...display,
       margin: "0 auto 18px",
@@ -124,28 +126,22 @@ export default function Men() {
       fontStyle: "italic",
       lineHeight: 1.3,
       maxWidth: isDesktop ? "20ch" : "none",
+      color: theme.accent,
     },
 
-    // ── Footer ────────────────────────────────────────────────────────────
+    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.white,
+      background: theme.surfaceDark,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     footMt: {
+      ...strongText("dark"),
       fontFamily: theme.fontDisplay,
       fontSize: 26,
       fontWeight: 700,
       lineHeight: 1,
-      color: theme.forest,
-    },
-    footTagline: {
-      fontSize: 10,
-      fontWeight: 500,
-      letterSpacing: "0.32em",
-      textTransform: "uppercase",
-      color: "rgba(11, 31, 24, 0.55)",
     },
     footCols: {
       display: "grid",
@@ -160,23 +156,23 @@ export default function Men() {
       fontWeight: 500,
       letterSpacing: "0.28em",
       textTransform: "uppercase",
-      color: theme.forest,
+      color: theme.textOnDark,
     },
-    footLink: { fontSize: 13, color: theme.ink2 },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
     footContact: {
       display: "flex",
       flexDirection: "column",
       gap: 6,
       paddingTop: 24,
-      borderTop: "1px solid rgba(11, 31, 24, 0.1)",
+      borderTop: `1px solid ${theme.hairlineOnDark}`,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
     legal: {
       margin: "28px 0 0",
       fontSize: 10,
       letterSpacing: "0.18em",
       textTransform: "uppercase",
-      color: "rgba(11, 31, 24, 0.5)",
+      color: theme.textOnDarkMuted,
     },
   };
 
@@ -186,7 +182,7 @@ export default function Men() {
       <section style={s.hero}>
         <div style={s.heroBg} aria-hidden="true" />
         <div style={s.heroInner}>
-          <span style={label}>Men&rsquo;s collection</span>
+          <span style={label("dark")}>Men&rsquo;s collection</span>
           <h1 style={s.heroTitle}>
             Dressed for the
             <br />
@@ -197,7 +193,7 @@ export default function Men() {
           </p>
           <div style={s.heroActions}>
             <a href="#products" style={{ ...btnSolid, ...s.heroBtn }}>Shop now</a>
-            <a href="/women" style={{ ...btnGhost, ...s.heroBtn }}>Shop women</a>
+            <a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
           </div>
         </div>
       </section>
@@ -220,7 +216,7 @@ export default function Men() {
       {/* Products */}
       <section style={s.section} id="products">
         <div style={s.head}>
-          <span style={label}>Men&rsquo;s scrubs</span>
+          <span style={label("light")}>Men&rsquo;s scrubs</span>
           <h2 style={s.title}>
             {activeFilter === "all"
               ? "All pieces"
@@ -262,14 +258,14 @@ export default function Men() {
         <p style={s.statementText}>
           Precision stitching. Fabric that breathes. A fit that moves with you.
         </p>
-        <span style={label}>MedTrack · Cairo</span>
+        <span style={label("light")}>MedTrack · Cairo</span>
       </section>
 
       {/* Footer */}
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={s.footTagline}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
         </div>
 
         <div style={s.footCols}>

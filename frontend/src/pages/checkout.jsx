@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../services/orders";
@@ -98,16 +98,16 @@ export default function Checkout() {
   const s = {
     page: {
       minHeight: "100vh",
-      background: theme.ink,
+      background: theme.surfaceLight,
       paddingBottom: 80,
     },
 
     // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairline}`,
+      borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30 },
+    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
 
     // ── Layout ────────────────────────────────────────────────────────────
     layout: {
@@ -122,9 +122,10 @@ export default function Checkout() {
 
     // ── Form card ─────────────────────────────────────────────────────────
     card: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: isDesktop ? 36 : 24,
     },
     cardTitle: {
@@ -133,7 +134,7 @@ export default function Checkout() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
     },
 
     // ── Field ─────────────────────────────────────────────────────────────
@@ -148,14 +149,14 @@ export default function Checkout() {
       fontSize: 10,
       letterSpacing: "0.2em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
     },
     input: (hasError) => ({
       padding: "11px 14px",
-      background: "rgba(255,255,255,0.04)",
-      border: `1px solid ${hasError ? "#c0524a" : "rgba(255,255,255,0.1)"}`,
+      background: theme.surfaceMuted,
+      border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
       borderRadius: 8,
-      color: "#fff",
+      color: theme.textOnLight,
       fontSize: 14,
       fontFamily: theme.fontBody,
       outline: "none",
@@ -170,7 +171,7 @@ export default function Checkout() {
     divider: {
       margin: "28px 0",
       height: 1,
-      background: theme.hairline,
+      background: theme.hairlineOnLight,
     },
 
     // ── Payment method pills ───────────────────────────────────────────────
@@ -180,9 +181,9 @@ export default function Checkout() {
       alignItems: "center",
       gap: 14,
       padding: "14px 16px",
-      border: `1px solid ${active ? theme.forest : "rgba(255,255,255,0.1)"}`,
+      border: `1px solid ${active ? theme.accent : theme.lightGray}`,
       borderRadius: 10,
-      background: active ? "rgba(15,91,70,0.35)" : "transparent",
+      background: active ? "rgba(15, 91, 70, 0.08)" : "transparent",
       cursor: "pointer",
       transition: "border-color 0.18s, background 0.18s",
     }),
@@ -190,29 +191,30 @@ export default function Checkout() {
     methodInfo: { flex: 1 },
     methodTitle: {
       fontSize: 14,
-      color: "#fff",
+      color: theme.textOnLight,
       fontFamily: theme.fontBody,
     },
     methodNote: {
       fontSize: 11,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       marginTop: 2,
     },
     methodRadio: (active) => ({
       width: 16,
       height: 16,
       borderRadius: "50%",
-      border: `2px solid ${active ? theme.white : "rgba(255,255,255,0.25)"}`,
-      background: active ? theme.white : "transparent",
+      border: `2px solid ${active ? theme.accent : theme.lightGray}`,
+      background: active ? theme.accent : "transparent",
       flexShrink: 0,
       transition: "background 0.18s, border-color 0.18s",
     }),
 
     // ── Order summary (desktop sidebar) ───────────────────────────────────
     summary: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: isDesktop ? 28 : 24,
       position: isDesktop ? "sticky" : "static",
       top: theme.barH + 20,
@@ -223,7 +225,7 @@ export default function Checkout() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
     },
     summaryRow: {
       display: "flex",
@@ -231,7 +233,7 @@ export default function Checkout() {
       alignItems: "center",
       marginBottom: 12,
       fontSize: 13,
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
     },
     summaryTotal: {
       display: "flex",
@@ -239,12 +241,12 @@ export default function Checkout() {
       alignItems: "center",
       paddingTop: 16,
       marginTop: 8,
-      borderTop: `1px solid ${theme.hairline}`,
+      borderTop: `1px solid ${theme.hairlineOnLight}`,
       fontSize: 15,
-      color: "#fff",
+      color: theme.textOnLight,
       fontFamily: theme.fontDisplay,
     },
-    totalAmount: { ...strongText, fontSize: 18 },
+    totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
 
     submitBtn: {
       ...btnSolid,
@@ -264,7 +266,7 @@ export default function Checkout() {
       background: "rgba(192,82,74,0.1)",
       border: "1px solid rgba(192,82,74,0.35)",
       borderRadius: 8,
-      color: "#e0847c",
+      color: "#a23b34",
       fontSize: 13,
     },
 
@@ -272,11 +274,11 @@ export default function Checkout() {
       padding: `80px ${theme.pad}px`,
       textAlign: "center",
     },
-    emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px" },
-    emptyText: { fontSize: 14, color: theme.lightGray, margin: "0 0 28px" },
+    emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
+    emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
 
     backLink: {
-      ...btnGhost,
+      ...btnGhost("light"),
       display: "inline-flex",
       marginTop: 14,
       width: "100%",
@@ -284,39 +286,35 @@ export default function Checkout() {
       fontSize: 12,
     },
 
-    // ── Footer ────────────────────────────────────────────────────────────
+    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.white,
+      background: theme.surfaceDark,
       marginTop: 80,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.forest },
-    footTagline: {
-      fontSize: 10, fontWeight: 500, letterSpacing: "0.32em",
-      textTransform: "uppercase", color: "rgba(11, 31, 24, 0.55)",
-    },
+    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.forest,
+      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
     },
-    footLink: { fontSize: 13, color: theme.ink2 },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
     footContact: {
       display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: "1px solid rgba(11, 31, 24, 0.1)",
+      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(11, 31, 24, 0.5)" },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
+    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
   if (items.length === 0) {
     return (
       <main style={s.page}>
         <div style={s.pageHead}>
-          <span style={label}>Almost there</span>
+          <span style={label("light")}>Almost there</span>
           <h1 style={s.pageTitle}>Checkout</h1>
         </div>
         <PulseDivider />
@@ -325,7 +323,7 @@ export default function Checkout() {
           <p style={s.emptyText}>Add some scrubs before checking out.</p>
           <a href="/men" style={{ ...btnSolid, paddingInline: 32 }}>Shop men</a>
           {"  "}
-          <a href="/women" style={{ ...btnGhost, paddingInline: 32, marginLeft: 10 }}>Shop women</a>
+          <a href="/women" style={{ ...btnGhost("light"), paddingInline: 32, marginLeft: 10 }}>Shop women</a>
         </div>
       </main>
     );
@@ -335,7 +333,7 @@ export default function Checkout() {
     <main style={s.page}>
       {/* Page header */}
       <div style={s.pageHead}>
-        <span style={label}>Almost there</span>
+        <span style={label("light")}>Almost there</span>
         <h1 style={s.pageTitle}>Checkout</h1>
       </div>
 
@@ -489,7 +487,7 @@ export default function Checkout() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={s.footTagline}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>

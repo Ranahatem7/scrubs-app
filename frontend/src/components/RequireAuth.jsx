@@ -14,7 +14,7 @@ export default function RequireAuth({ children }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: theme.muted,
+          color: theme.textOnLightMuted,
           fontSize: 13,
           letterSpacing: "0.1em",
         }}

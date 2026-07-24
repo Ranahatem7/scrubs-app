@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
-import { theme, label, display, btnSolid, strongText } from "../theme";
+import { theme, label, display, btnSolid } from "../theme";
 import { useAuth } from "../context/AuthContext";
 
 export default function Signup() {
@@ -50,14 +50,14 @@ export default function Signup() {
   const s = {
     page: {
       minHeight: "100vh",
-      background: theme.ink,
+      background: theme.surfaceLight,
       paddingBottom: 80,
     },
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairline}`,
+      borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: 34 },
+    pageTitle: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.textOnLight },
 
     layout: {
       maxWidth: 420,
@@ -68,15 +68,16 @@ export default function Signup() {
     card: {
       position: "relative",
       overflow: "hidden",
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: 24,
     },
     cardAccent: {
       height: 2,
       margin: "-24px -24px 24px",
-      background: theme.forest,
+      background: theme.accent,
     },
     cardBrand: {
       display: "flex",
@@ -87,7 +88,7 @@ export default function Signup() {
     },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     cardBrandMt: {
-      ...strongText,
+      color: theme.accent,
       fontFamily: theme.fontDisplay,
       fontSize: 32,
       fontWeight: 700,
@@ -100,7 +101,7 @@ export default function Signup() {
       background: "rgba(192,82,74,0.1)",
       border: "1px solid rgba(192,82,74,0.35)",
       borderRadius: 8,
-      color: "#e0847c",
+      color: "#a23b34",
       fontSize: 13,
     },
 
@@ -110,14 +111,14 @@ export default function Signup() {
       fontSize: 10,
       letterSpacing: "0.2em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
     },
     input: (hasError) => ({
       padding: "11px 14px",
-      background: "rgba(255,255,255,0.04)",
-      border: `1px solid ${hasError ? "#c0524a" : "rgba(255,255,255,0.1)"}`,
+      background: theme.surfaceMuted,
+      border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
       borderRadius: 8,
-      color: "#fff",
+      color: theme.textOnLight,
       fontSize: 14,
       fontFamily: theme.fontBody,
       outline: "none",
@@ -146,15 +147,15 @@ export default function Signup() {
       textAlign: "center",
       marginTop: 22,
       fontSize: 13,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
     },
-    switchLink: { color: theme.white, textDecoration: "underline" },
+    switchLink: { color: theme.accent, textDecoration: "underline" },
   };
 
   return (
     <main style={s.page}>
       <div style={s.pageHead}>
-        <span style={label}>Join MedTrack</span>
+        <span style={label("light")}>Join MedTrack</span>
         <h1 style={s.pageTitle}>Create account</h1>
       </div>
 
@@ -165,7 +166,7 @@ export default function Signup() {
           <div style={s.cardAccent} aria-hidden="true" />
           <div style={s.cardBrand}>
             <span style={s.cardBrandMt}>MT</span>
-            <span style={label}>Medical Wear</span>
+            <span style={label("light")}>Medical Wear</span>
           </div>
 
           {errors.form && <p style={s.formError}>{errors.form}</p>}

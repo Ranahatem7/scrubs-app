@@ -6,12 +6,13 @@ import { theme, label, display, btnGhost, btnSolid, strongText } from "../theme"
 import { useAuth } from "../context/AuthContext";
 import { getMyOrders } from "../services/orders";
 
+// Text/border/bg tuned for legibility on the white order cards
 const STATUS_STYLES = {
-  pending: { color: theme.white, border: "rgba(15,91,70,0.5)", bg: "rgba(15,91,70,0.25)" },
-  confirmed: { color: "#8fb8a8", border: "rgba(143,184,168,0.35)", bg: "rgba(143,184,168,0.08)" },
-  shipped: { color: "#8fb0c9", border: "rgba(143,176,201,0.35)", bg: "rgba(143,176,201,0.08)" },
-  delivered: { color: "#8fc98f", border: "rgba(143,201,143,0.35)", bg: "rgba(143,201,143,0.08)" },
-  cancelled: { color: "#d98a8a", border: "rgba(217,138,138,0.35)", bg: "rgba(217,138,138,0.08)" },
+  pending: { color: theme.accent, border: "rgba(15,91,70,0.4)", bg: "rgba(15,91,70,0.12)" },
+  confirmed: { color: "#2f6b5c", border: "rgba(47,107,92,0.35)", bg: "rgba(47,107,92,0.1)" },
+  shipped: { color: "#2f5f7a", border: "rgba(47,95,122,0.35)", bg: "rgba(47,95,122,0.1)" },
+  delivered: { color: "#3d7a3f", border: "rgba(61,122,63,0.35)", bg: "rgba(61,122,63,0.1)" },
+  cancelled: { color: "#a23b34", border: "rgba(162,59,52,0.35)", bg: "rgba(162,59,52,0.1)" },
 };
 
 export default function Profile() {
@@ -56,12 +57,12 @@ export default function Profile() {
     : null;
 
   const s = {
-    page: { minHeight: "100vh", background: theme.ink, paddingBottom: 80 },
+    page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairline}`,
+      borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 32 },
+    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 32, color: theme.textOnLight },
 
     layout: {
       display: "grid",
@@ -75,9 +76,10 @@ export default function Profile() {
 
     // ── Account sidebar ─────────────────────────────────────────────────────
     account: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: 24,
       position: isDesktop ? "sticky" : "static",
       top: theme.barH + 20,
@@ -88,31 +90,31 @@ export default function Profile() {
       width: 52,
       height: 52,
       borderRadius: "50%",
-      background: theme.forest,
+      background: theme.accent,
       display: "grid",
       placeItems: "center",
       fontFamily: theme.fontDisplay,
       fontSize: 22,
       fontWeight: 700,
-      color: theme.white,
+      color: theme.textOnDark,
       flexShrink: 0,
     },
-    accountName: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 19, margin: 0, lineHeight: 1.25 },
+    accountName: { ...strongText("light"), fontFamily: theme.fontDisplay, fontSize: 19, margin: 0, lineHeight: 1.25 },
     accountEmail: {
       fontSize: 12,
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
       margin: "3px 0 0",
       wordBreak: "break-word",
     },
     memberSince: {
       fontSize: 11,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       letterSpacing: "0.06em",
       paddingTop: 16,
       marginTop: 16,
-      borderTop: "1px solid rgba(255,255,255,0.06)",
+      borderTop: `1px solid ${theme.hairlineOnLight}`,
     },
-    signOutBtn: { ...btnGhost, width: "100%", justifyContent: "center", marginTop: 18 },
+    signOutBtn: { ...btnGhost("light"), width: "100%", justifyContent: "center", marginTop: 18 },
 
     // ── Orders (main column) ─────────────────────────────────────────────────
     ordersCol: { order: isDesktop ? 1 : 0 },
@@ -127,21 +129,22 @@ export default function Profile() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
       margin: 0,
     },
-    orderCountNote: { fontSize: 12, color: theme.muted },
+    orderCountNote: { fontSize: 12, color: theme.textOnLightMuted },
 
     stateBlock: {
       padding: "48px 24px",
       textAlign: "center",
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
     },
-    stateText: { fontSize: 13, color: theme.muted, margin: "0 0 16px" },
-    errorText: { fontSize: 13, color: "#d98a8a", margin: "0 0 16px" },
-    retryBtn: { ...btnGhost, display: "inline-flex" },
+    stateText: { fontSize: 13, color: theme.textOnLightMuted, margin: "0 0 16px" },
+    errorText: { fontSize: 13, color: "#a23b34", margin: "0 0 16px" },
+    retryBtn: { ...btnGhost("light"), display: "inline-flex" },
     emptyCta: { ...btnSolid, display: "inline-flex", paddingInline: 28, marginTop: 4 },
 
     orderList: { display: "flex", flexDirection: "column", gap: 12 },
@@ -149,9 +152,10 @@ export default function Profile() {
       display: "flex",
       gap: 14,
       padding: 16,
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
     },
     orderThumb: {
       width: 56,
@@ -159,13 +163,13 @@ export default function Profile() {
       objectFit: "cover",
       borderRadius: 6,
       flexShrink: 0,
-      background: "rgba(255,255,255,0.04)",
+      background: theme.surfaceMuted,
     },
     orderBody: { flex: 1, minWidth: 0 },
     orderHead: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
     orderRefDate: { minWidth: 0 },
-    orderRef: { fontSize: 11, color: theme.lightGray, letterSpacing: "0.04em", fontFamily: theme.fontBody },
-    orderDate: { fontSize: 11, color: theme.muted, marginTop: 2 },
+    orderRef: { fontSize: 11, color: theme.textOnLight, letterSpacing: "0.04em", fontFamily: theme.fontBody },
+    orderDate: { fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 },
     statusPill: (status) => ({
       flexShrink: 0,
       fontSize: 9,
@@ -175,13 +179,13 @@ export default function Profile() {
       padding: "4px 10px",
       borderRadius: 999,
       whiteSpace: "nowrap",
-      border: `1px solid ${STATUS_STYLES[status]?.border ?? theme.hairline}`,
-      color: STATUS_STYLES[status]?.color ?? theme.lightGray,
+      border: `1px solid ${STATUS_STYLES[status]?.border ?? theme.hairlineOnLight}`,
+      color: STATUS_STYLES[status]?.color ?? theme.textOnLightMuted,
       background: STATUS_STYLES[status]?.bg ?? "transparent",
     }),
     orderItemsText: {
       fontSize: 13,
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
       margin: "8px 0 0",
       overflow: "hidden",
       textOverflow: "ellipsis",
@@ -193,16 +197,16 @@ export default function Profile() {
       alignItems: "center",
       marginTop: 10,
       paddingTop: 10,
-      borderTop: "1px solid rgba(255,255,255,0.06)",
+      borderTop: `1px solid ${theme.hairlineOnLight}`,
     },
-    orderCount: { fontSize: 11, color: theme.muted },
-    orderTotal: { ...strongText, fontSize: 16, fontFamily: theme.fontDisplay },
+    orderCount: { fontSize: 11, color: theme.textOnLightMuted },
+    orderTotal: { color: theme.accent, fontWeight: 700, fontSize: 16, fontFamily: theme.fontDisplay },
   };
 
   return (
     <main style={s.page}>
       <div style={s.pageHead}>
-        <span style={label}>Account</span>
+        <span style={label("light")}>Account</span>
         <h1 style={s.pageTitle}>My profile</h1>
       </div>
 

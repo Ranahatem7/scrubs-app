@@ -2,7 +2,7 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost } from "../theme";
 
 export default function Cart() {
   const isDesktop = useIsDesktop(700);
@@ -10,15 +10,15 @@ export default function Cart() {
   const navigate = useNavigate();
 
   const s = {
-    page: { minHeight: "100vh", background: theme.ink, paddingBottom: 80 },
+    page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 
     // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairline}`,
+      borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30 },
-    itemCount: { fontSize: 13, color: theme.muted, marginTop: 6 },
+    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
+    itemCount: { fontSize: 13, color: theme.textOnLightMuted, marginTop: 6 },
 
     // ── Layout ────────────────────────────────────────────────────────────
     layout: {
@@ -38,9 +38,10 @@ export default function Cart() {
       display: "flex",
       gap: 16,
       padding: 16,
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
     },
     itemImage: {
       width: 90,
@@ -48,32 +49,32 @@ export default function Cart() {
       objectFit: "cover",
       borderRadius: 8,
       flexShrink: 0,
-      background: "rgba(255,255,255,0.04)",
+      background: theme.surfaceMuted,
     },
     itemInfo: { flex: 1, display: "flex", flexDirection: "column", gap: 6 },
     itemName: {
       fontFamily: theme.fontDisplay,
       fontSize: 16,
       fontWeight: 400,
-      color: "#fff",
+      color: theme.textOnLight,
       margin: 0,
     },
     itemMeta: {
       fontSize: 11,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       letterSpacing: "0.1em",
       textTransform: "uppercase",
     },
-    itemPrice: { ...strongText, fontSize: 15, marginTop: "auto" },
+    itemPrice: { color: theme.accent, fontWeight: 600, fontSize: 15, marginTop: "auto" },
 
     // Quantity controls
     qtyRow: { display: "flex", alignItems: "center", gap: 0, marginTop: 8 },
     qtyBtn: {
       width: 30,
       height: 30,
-      border: `1px solid rgba(255,255,255,0.12)`,
+      border: `1px solid ${theme.lightGray}`,
       background: "transparent",
-      color: "#fff",
+      color: theme.textOnLight,
       fontSize: 16,
       cursor: "pointer",
       display: "flex",
@@ -86,14 +87,14 @@ export default function Cart() {
       width: 34,
       textAlign: "center",
       fontSize: 14,
-      color: "#fff",
+      color: theme.textOnLight,
       fontFamily: theme.fontBody,
     },
     removeBtn: {
       marginLeft: "auto",
       background: "none",
       border: "none",
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       fontSize: 11,
       letterSpacing: "0.1em",
       textTransform: "uppercase",
@@ -108,14 +109,15 @@ export default function Cart() {
       padding: `80px ${theme.pad}px`,
       textAlign: "center",
     },
-    emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px" },
-    emptyText: { fontSize: 14, color: theme.lightGray, margin: "0 0 28px" },
+    emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
+    emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
 
     // ── Order summary sidebar ─────────────────────────────────────────────
     summary: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: 24,
       position: isDesktop ? "sticky" : "static",
       top: theme.barH + 20,
@@ -126,13 +128,13 @@ export default function Cart() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
     },
     summaryRow: {
       display: "flex",
       justifyContent: "space-between",
       fontSize: 13,
-      color: theme.lightGray,
+      color: theme.textOnLightMuted,
       marginBottom: 12,
     },
     summaryTotal: {
@@ -141,11 +143,11 @@ export default function Cart() {
       alignItems: "center",
       paddingTop: 16,
       marginTop: 4,
-      borderTop: `1px solid ${theme.hairline}`,
+      borderTop: `1px solid ${theme.hairlineOnLight}`,
       fontSize: 15,
-      color: "#fff",
+      color: theme.textOnLight,
     },
-    totalAmount: { ...strongText, fontSize: 18 },
+    totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
 
     checkoutBtn: {
       ...btnSolid,
@@ -157,7 +159,7 @@ export default function Cart() {
       letterSpacing: "0.14em",
     },
     continueBtn: {
-      ...btnGhost,
+      ...btnGhost("light"),
       width: "100%",
       marginTop: 10,
       padding: "13px 0",
@@ -168,37 +170,33 @@ export default function Cart() {
     shippingNote: {
       marginTop: 14,
       fontSize: 11,
-      color: theme.muted,
+      color: theme.textOnLightMuted,
       textAlign: "center",
       letterSpacing: "0.06em",
     },
 
-    // ── Footer ────────────────────────────────────────────────────────────
+    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.white,
+      background: theme.surfaceDark,
       marginTop: 80,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.forest },
-    footTagline: {
-      fontSize: 10, fontWeight: 500, letterSpacing: "0.32em",
-      textTransform: "uppercase", color: "rgba(11, 31, 24, 0.55)",
-    },
+    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.forest,
+      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
     },
-    footLink: { fontSize: 13, color: theme.ink2 },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
     footContact: {
       display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: "1px solid rgba(11, 31, 24, 0.1)",
+      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(11, 31, 24, 0.5)" },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
+    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
   // ── Empty cart ──────────────────────────────────────────────────────────
@@ -206,7 +204,7 @@ export default function Cart() {
     return (
       <main style={s.page}>
         <div style={s.pageHead}>
-          <span style={label}>Your bag</span>
+          <span style={label("light")}>Your bag</span>
           <h1 style={s.pageTitle}>Cart</h1>
         </div>
         <PulseDivider />
@@ -215,13 +213,13 @@ export default function Cart() {
           <p style={s.emptyText}>Add some scrubs and come back here.</p>
           <a href="/men" style={{ ...btnSolid, paddingInline: 32 }}>Shop men</a>
           {"  "}
-          <a href="/women" style={{ ...btnGhost, paddingInline: 32, marginLeft: 10 }}>Shop women</a>
+          <a href="/women" style={{ ...btnGhost("light"), paddingInline: 32, marginLeft: 10 }}>Shop women</a>
         </div>
 
         <footer style={s.footer}>
           <div style={s.footBrand}>
             <span style={s.footMt}>MT</span>
-            <span style={s.footTagline}>Medical Wear</span>
+            <span style={label("dark")}>Medical Wear</span>
           </div>
           <div style={s.footCols}>
             <div style={s.footCol}>
@@ -250,7 +248,7 @@ export default function Cart() {
     <main style={s.page}>
       {/* Page header */}
       <div style={s.pageHead}>
-        <span style={label}>Your bag</span>
+        <span style={label("light")}>Your bag</span>
         <h1 style={s.pageTitle}>Cart</h1>
         <p style={s.itemCount}>{totalItems} {totalItems === 1 ? "item" : "items"}</p>
       </div>
@@ -342,7 +340,7 @@ export default function Cart() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={s.footTagline}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>

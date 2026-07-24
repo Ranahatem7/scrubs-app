@@ -31,8 +31,8 @@ const s = {
     display: "flex",
     flexDirection: "column",
     padding: "22px 0 26px",
-    background: `linear-gradient(180deg, ${theme.ink2}, ${theme.ink})`,
-    borderRight: `1px solid ${theme.hairline}`,
+    background: theme.surfaceDark,
+    borderRight: `1px solid ${theme.hairlineOnDark}`,
     transform: open ? "translateX(0)" : "translateX(-102%)",
     visibility: open ? "visible" : "hidden",
     transition: "transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.42s",
@@ -45,8 +45,8 @@ const s = {
   },
   brand: { display: "flex", flexDirection: "column", gap: 6 },
   // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-  mt: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 30, fontWeight: 700, lineHeight: 1 },
-  close: { width: 34, height: 34, display: "grid", placeItems: "center", color: theme.muted, cursor: "pointer" },
+  mt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 30, fontWeight: 700, lineHeight: 1 },
+  close: { width: 34, height: 34, display: "grid", placeItems: "center", color: theme.textOnDarkMuted, cursor: "pointer" },
   closeIcon: { width: 18, height: 18 },
   list: { listStyle: "none", margin: "26px 0 0", padding: 0, flex: 1 },
   item: (open, i) => ({
@@ -64,17 +64,18 @@ const s = {
     fontSize: 26,
     fontWeight: 300,
     letterSpacing: "0.02em",
+    color: theme.textOnDark,
   },
-  index: { fontFamily: theme.fontBody, fontSize: 9, letterSpacing: "0.16em", color: theme.muted },
+  index: { fontFamily: theme.fontBody, fontSize: 9, letterSpacing: "0.16em", color: theme.textOnDarkMuted },
   foot: { padding: `0 ${theme.pad}px`, display: "flex", flexDirection: "column", gap: 18 },
-  account: { ...btnGhost, width: "100%" },
+  account: { ...btnGhost("dark"), width: "100%" },
   social: {
     display: "flex",
     gap: 16,
     fontSize: 10,
     letterSpacing: "0.18em",
     textTransform: "uppercase",
-    color: theme.muted,
+    color: theme.textOnDarkMuted,
   },
 };
 
@@ -105,7 +106,7 @@ export default function Sidebar({ open, onClose }) {
         <div style={s.top}>
           <div style={s.brand}>
             <span style={s.mt}>MT</span>
-            <span style={label}>Medical Wear</span>
+            <span style={label("dark")}>Medical Wear</span>
           </div>
           <button style={s.close} onClick={onClose} aria-label="Close menu">
             <svg style={s.closeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -114,7 +115,7 @@ export default function Sidebar({ open, onClose }) {
           </button>
         </div>
 
-        <PulseDivider />
+        <PulseDivider tone="dark" />
 
         <ul style={s.list}>
           {LINKS.map((link, i) => (

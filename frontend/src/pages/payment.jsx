@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost } from "../theme";
 
 const METHOD_DETAILS = {
   cod: {
@@ -53,8 +53,8 @@ export default function Payment() {
   // If someone lands here directly without checkout data, redirect
   if (!form || !paymentMethod) {
     return (
-      <main style={{ minHeight: "100vh", background: theme.ink, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
-        <p style={{ color: theme.lightGray, fontSize: 14 }}>No order found.</p>
+      <main style={{ minHeight: "100vh", background: theme.surfaceLight, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
+        <p style={{ color: theme.textOnLightMuted, fontSize: 14 }}>No order found.</p>
         <a href="/checkout" style={{ ...btnSolid, paddingInline: 28 }}>Go to checkout</a>
       </main>
     );
@@ -63,14 +63,14 @@ export default function Payment() {
   const method = METHOD_DETAILS[paymentMethod];
 
   const s = {
-    page: { minHeight: "100vh", background: theme.ink, paddingBottom: 80 },
+    page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 
     // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairline}`,
+      borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30 },
+    pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
 
     // ── Layout ────────────────────────────────────────────────────────────
     layout: {
@@ -85,9 +85,10 @@ export default function Payment() {
 
     // ── Card ──────────────────────────────────────────────────────────────
     card: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: isDesktop ? 36 : 24,
       marginBottom: 20,
     },
@@ -97,7 +98,7 @@ export default function Payment() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
     },
 
     // ── Success banner ────────────────────────────────────────────────────
@@ -106,14 +107,14 @@ export default function Payment() {
       alignItems: "center",
       gap: 14,
       padding: "18px 20px",
-      background: "rgba(15,91,70,0.20)",
-      border: `1px solid rgba(15,91,70,0.45)`,
+      background: "rgba(15,91,70,0.10)",
+      border: `1px solid rgba(15,91,70,0.35)`,
       borderRadius: 10,
       marginBottom: 20,
     },
     successIcon: { fontSize: 26 },
-    successText: { fontSize: 14, color: "#fff", lineHeight: 1.5 },
-    successSub: { fontSize: 12, color: theme.lightGray, marginTop: 3 },
+    successText: { fontSize: 14, color: theme.textOnLight, lineHeight: 1.5 },
+    successSub: { fontSize: 12, color: theme.textOnLightMuted, marginTop: 3 },
 
     // ── Payment instruction ───────────────────────────────────────────────
     methodHeader: {
@@ -123,19 +124,19 @@ export default function Payment() {
       marginBottom: 16,
     },
     methodIcon: { fontSize: 28 },
-    methodTitle: { ...display, fontSize: 20, margin: 0 },
-    instruction: { fontSize: 14, color: theme.lightGray, lineHeight: 1.7, marginBottom: 24 },
+    methodTitle: { ...display, fontSize: 20, margin: 0, color: theme.textOnLight },
+    instruction: { fontSize: 14, color: theme.textOnLightMuted, lineHeight: 1.7, marginBottom: 24 },
 
     // Account number highlight
     accountBox: {
       padding: "14px 18px",
-      background: "rgba(15,91,70,0.16)",
-      border: `1px solid rgba(15,91,70,0.40)`,
+      background: "rgba(15,91,70,0.08)",
+      border: `1px solid rgba(15,91,70,0.30)`,
       borderRadius: 8,
       marginBottom: 24,
     },
-    accountLabel: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.lightGray, marginBottom: 6 },
-    accountNumber: { ...strongText, fontFamily: theme.fontDisplay, fontSize: 22 },
+    accountLabel: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.textOnLightMuted, marginBottom: 6 },
+    accountNumber: { color: theme.accent, fontWeight: 700, fontFamily: theme.fontDisplay, fontSize: 22 },
 
     // Steps
     stepList: { display: "flex", flexDirection: "column", gap: 12 },
@@ -145,15 +146,15 @@ export default function Payment() {
       width: 24,
       height: 24,
       borderRadius: "50%",
-      border: `1px solid ${theme.forest}`,
+      background: theme.accent,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontSize: 11,
-      color: theme.white,
+      color: theme.textOnDark,
       marginTop: 1,
     },
-    stepText: { fontSize: 13, color: theme.lightGray, lineHeight: 1.6 },
+    stepText: { fontSize: 13, color: theme.textOnLightMuted, lineHeight: 1.6 },
 
     // ── Order details sidebar ─────────────────────────────────────────────
     sidebar: {
@@ -164,9 +165,10 @@ export default function Payment() {
       top: theme.barH + 20,
     },
     sideCard: {
-      background: theme.ink2,
-      border: `1px solid ${theme.hairline}`,
+      background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
+      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
       padding: 24,
     },
     sideTitle: {
@@ -175,7 +177,7 @@ export default function Payment() {
       fontWeight: 500,
       letterSpacing: "0.26em",
       textTransform: "uppercase",
-      color: theme.lightGray,
+      color: theme.accent,
     },
     detailRow: {
       display: "flex",
@@ -183,47 +185,43 @@ export default function Payment() {
       marginBottom: 10,
       fontSize: 13,
     },
-    detailKey: { color: theme.muted },
-    detailVal: { color: "#fff", textAlign: "right", maxWidth: "60%" },
+    detailKey: { color: theme.textOnLightMuted },
+    detailVal: { color: theme.textOnLight, textAlign: "right", maxWidth: "60%" },
 
     // ── Actions ───────────────────────────────────────────────────────────
     actions: { display: "flex", flexDirection: "column", gap: 10, marginTop: 4 },
     continueBtn: { ...btnSolid, justifyContent: "center", padding: "13px 0" },
-    backBtn: { ...btnGhost, justifyContent: "center", padding: "13px 0", fontSize: 12 },
+    backBtn: { ...btnGhost("light"), justifyContent: "center", padding: "13px 0", fontSize: 12 },
 
-    // ── Footer ────────────────────────────────────────────────────────────
+    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.white,
+      background: theme.surfaceDark,
       marginTop: 80,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
     // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.forest },
-    footTagline: {
-      fontSize: 10, fontWeight: 500, letterSpacing: "0.32em",
-      textTransform: "uppercase", color: "rgba(11, 31, 24, 0.55)",
-    },
+    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.forest,
+      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
     },
-    footLink: { fontSize: 13, color: theme.ink2 },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
     footContact: {
       display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: "1px solid rgba(11, 31, 24, 0.1)",
+      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.ink2 },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(11, 31, 24, 0.5)" },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
+    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
   return (
     <main style={s.page}>
       {/* Page header */}
       <div style={s.pageHead}>
-        <span style={label}>Order received</span>
+        <span style={label("light")}>Order received</span>
         <h1 style={s.pageTitle}>Payment details</h1>
       </div>
 
@@ -314,7 +312,7 @@ export default function Payment() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <span style={s.footMt}>MT</span>
-          <span style={s.footTagline}>Medical Wear</span>
+          <span style={label("dark")}>Medical Wear</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>
