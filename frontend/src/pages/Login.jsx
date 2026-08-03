@@ -1,215 +1,132 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import PulseDivider from "../components/PulseDivider";
-import { theme, label, display, btnSolid } from "../theme";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useAdmin } from "../context/AdminContext";
+import { theme, display } from "../theme";
 
 export default function Login() {
   const { login } = useAuth();
+  const { login: adminLogin } = useAdmin();
   const navigate = useNavigate();
-  const location = useLocation();
-
   const [form, setForm] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState({});
-  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const update = (field, value) => {
-    setForm((f) => ({ ...f, [field]: value }));
-    setErrors((e) => ({ ...e, [field]: undefined, form: undefined }));
-  };
-
-  const validate = () => {
-    const e = {};
-    if (!form.email.trim()) e.email = "Required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
-    if (!form.password) e.password = "Required";
-    return e;
-  };
+  const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
-
-    setSubmitting(true);
+    setError("");
+    setLoading(true);
     try {
-      await login(form.email, form.password);
-      const dest = location.state?.from?.pathname ?? "/profile";
-      navigate(dest, { replace: true });
+      // First try admin login
+      const adminRes = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (adminRes.ok) {
+        const adminData = await adminRes.json();
+        adminLogin(adminData.token);
+        navigate("/admin");
+        return;
+      }
+
+      // Otherwise try regular user login
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Invalid email or password");
+      login(data.token, data.user);
+      navigate("/");
     } catch (err) {
-      setErrors({ form: err.message });
+      setError(err.message);
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
   const s = {
     page: {
-      minHeight: "100vh",
-      background: theme.surfaceLight,
-      paddingBottom: 80,
+      minHeight: "100vh", background: theme.surfaceMuted,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
     },
-    pageHead: {
-      padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairlineOnLight}`,
-    },
-    pageTitle: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.textOnLight },
-
-    layout: {
-      maxWidth: 420,
-      margin: "0 auto",
-      padding: `40px ${theme.pad}px 0`,
-    },
-
     card: {
-      position: "relative",
-      overflow: "hidden",
-      background: theme.surfaceLight,
-      border: `1px solid ${theme.hairlineOnLight}`,
-      borderRadius: theme.radius,
-      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
-      padding: 24,
+      width: "100%", maxWidth: 420, background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`, borderRadius: theme.radius, padding: 40,
     },
-    cardAccent: {
-      height: 2,
-      margin: "-24px -24px 24px",
-      background: theme.accent,
+    logo: {
+      fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700,
+      color: theme.accent, display: "block", marginBottom: 4,
     },
-    cardBrand: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 4,
-      marginBottom: 22,
+    sub: {
+      fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase",
+      color: theme.textOnLightMuted, display: "block", marginBottom: 32,
     },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    cardBrandMt: {
-      color: theme.accent,
-      fontFamily: theme.fontDisplay,
-      fontSize: 32,
-      fontWeight: 700,
-      lineHeight: 1,
-    },
-
-    formError: {
-      padding: "12px 14px",
-      marginBottom: 16,
-      background: "rgba(192,82,74,0.1)",
-      border: "1px solid rgba(192,82,74,0.35)",
-      borderRadius: 8,
-      color: "#a23b34",
-      fontSize: 13,
-    },
-
-    fieldGroup: { display: "flex", flexDirection: "column", gap: 16 },
-    field: { display: "flex", flexDirection: "column", gap: 6 },
+    title: { ...display, fontSize: 26, margin: "0 0 24px", color: theme.textOnLight },
+    field: { display: "flex", flexDirection: "column", gap: 5, marginBottom: 16 },
     fieldLabel: {
-      fontSize: 10,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
+      fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase",
       color: theme.textOnLightMuted,
     },
-    input: (hasError) => ({
-      padding: "11px 14px",
-      background: theme.surfaceMuted,
-      border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
-      borderRadius: 8,
-      color: theme.textOnLight,
-      fontSize: 14,
-      fontFamily: theme.fontBody,
-      outline: "none",
-      transition: "border-color 0.18s",
-      width: "100%",
-    }),
-    fieldError: {
-      fontSize: 11,
-      color: "#c0524a",
-      letterSpacing: "0.06em",
+    input: {
+      padding: "11px 14px", background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`, borderRadius: theme.radius,
+      color: theme.textOnLight, fontSize: 14, fontFamily: theme.fontBody, outline: "none",
     },
-
-    submitBtn: {
-      ...btnSolid,
-      width: "100%",
-      marginTop: 6,
-      padding: "14px 0",
-      justifyContent: "center",
-      fontSize: 13,
-      letterSpacing: "0.14em",
-      opacity: submitting ? 0.6 : 1,
-      cursor: submitting ? "default" : "pointer",
+    error: {
+      fontSize: 12, color: "#b43c3c", marginBottom: 14,
+      padding: "8px 12px", background: "rgba(180,60,60,0.07)",
+      borderRadius: theme.radius, border: "1px solid rgba(180,60,60,0.15)",
     },
-
-    switchRow: {
-      textAlign: "center",
-      marginTop: 22,
-      fontSize: 13,
-      color: theme.textOnLightMuted,
+    btn: {
+      width: "100%", padding: "12px 0", background: theme.accent, border: "none",
+      borderRadius: theme.radius, color: theme.textOnDark, fontSize: 11,
+      fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase",
+      cursor: "pointer", fontFamily: theme.fontBody, marginTop: 4,
     },
-    switchLink: { color: theme.accent, textDecoration: "underline" },
+    footer: {
+      marginTop: 20, textAlign: "center", fontSize: 13, color: theme.textOnLightMuted,
+    },
+    link: { color: theme.accent, textDecoration: "none", fontWeight: 500 },
   };
 
   return (
-    <main style={s.page}>
-      <div style={s.pageHead}>
-        <span style={label("light")}>Welcome back</span>
-        <h1 style={s.pageTitle}>Log in</h1>
-      </div>
-
-      <PulseDivider />
-
-      <div style={s.layout}>
-        <div style={s.card}>
-          <div style={s.cardAccent} aria-hidden="true" />
-          <div style={s.cardBrand}>
-            <span style={s.cardBrandMt}>MT</span>
-            <span style={label("light")}>Medical Wear</span>
+    <div style={s.page}>
+      <div style={s.card}>
+        <span style={s.logo}>MT</span>
+        <span style={s.sub}>MedTrack</span>
+        <h1 style={s.title}>Sign in</h1>
+        <form onSubmit={handleSubmit}>
+          <div style={s.field}>
+            <label style={s.fieldLabel}>Email</label>
+            <input
+              type="email" style={s.input} value={form.email}
+              onChange={(e) => upd("email", e.target.value)}
+              placeholder="you@example.com" autoFocus required
+            />
           </div>
-
-          {errors.form && <p style={s.formError}>{errors.form}</p>}
-
-          <form onSubmit={handleSubmit} noValidate>
-            <div style={s.fieldGroup}>
-              <div style={s.field}>
-                <label style={s.fieldLabel}>Email</label>
-                <input
-                  style={s.input(!!errors.email)}
-                  value={form.email}
-                  onChange={(e) => update("email", e.target.value)}
-                  placeholder="you@email.com"
-                  type="email"
-                  autoComplete="email"
-                />
-                {errors.email && <span style={s.fieldError}>{errors.email}</span>}
-              </div>
-
-              <div style={s.field}>
-                <label style={s.fieldLabel}>Password</label>
-                <input
-                  style={s.input(!!errors.password)}
-                  value={form.password}
-                  onChange={(e) => update("password", e.target.value)}
-                  placeholder="••••••••"
-                  type="password"
-                  autoComplete="current-password"
-                />
-                {errors.password && <span style={s.fieldError}>{errors.password}</span>}
-              </div>
-            </div>
-
-            <button type="submit" style={s.submitBtn} disabled={submitting}>
-              {submitting ? "Signing in…" : "Log in"}
-            </button>
-          </form>
-        </div>
-
-        <p style={s.switchRow}>
-          New to MedTrack?{" "}
-          <Link to="/signup" style={s.switchLink}>Create an account</Link>
+          <div style={s.field}>
+            <label style={s.fieldLabel}>Password</label>
+            <input
+              type="password" style={s.input} value={form.password}
+              onChange={(e) => upd("password", e.target.value)}
+              placeholder="Your password" required
+            />
+          </div>
+          {error && <p style={s.error}>{error}</p>}
+          <button type="submit" style={s.btn} disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+        <p style={s.footer}>
+          Don't have an account?{" "}
+          <Link to="/register" style={s.link}>Create one</Link>
         </p>
       </div>
-    </main>
+    </div>
   );
 }

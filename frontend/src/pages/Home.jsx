@@ -2,13 +2,14 @@ import PulseDivider from "../components/PulseDivider";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
-import { categories } from "../data/products";
+import useCategories from "../hooks/useCategories";
 import { images } from "../data/images";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
 export default function Home() {
   const isDesktop = useIsDesktop(700);
   const { products, loading, error, retry } = useProducts();
+  const { categories } = useCategories();
 
   const s = {
     // ── Hero (dark bookend) ──────────────────────────────────────────────
@@ -20,7 +21,6 @@ export default function Home() {
       padding: `0 ${theme.pad}px 72px`,
       overflow: "hidden",
     },
-    // Photo, then a forest-green wash, then a bottom-heavy scrim for legibility
     heroBg: {
       position: "absolute",
       inset: 0,
@@ -69,6 +69,7 @@ export default function Home() {
       background: `linear-gradient(to top, rgba(11,31,24,0.94) 6%, rgba(11,31,24,0.2) 62%),
         url(${image}) center / cover no-repeat`,
       overflow: "hidden",
+      textDecoration: "none",
     }),
     railGlow: {
       position: "absolute",
@@ -76,7 +77,6 @@ export default function Home() {
       height: "60%",
       background: `radial-gradient(50% 100% at 50% 100%, rgba(15,91,70,0.35), transparent)`,
     },
-    // Collection cards keep a photo + dark overlay, so their titles stay white regardless of page tone
     railMeta: { position: "relative", display: "flex", flexDirection: "column", gap: 3 },
     railName: { fontFamily: theme.fontDisplay, fontSize: 24, fontWeight: 500, color: theme.textOnDark },
     railNote: { fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.textOnDarkMuted },
@@ -88,7 +88,6 @@ export default function Home() {
       padding: `0 ${theme.pad}px`,
     },
 
-    // Products states
     stateBlock: {
       padding: `56px ${theme.pad}px`,
       textAlign: "center",
@@ -117,7 +116,6 @@ export default function Home() {
       background: theme.surfaceDark,
     },
     footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
     footMt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
@@ -163,8 +161,8 @@ export default function Home() {
             Engineered fabric, tailored cut, made for twelve hours on your feet.
           </p>
           <div style={s.heroActions}>
-       <a href="/men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
-<a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
+            <a href="/men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
+            <a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
           </div>
         </div>
         <span style={s.heroScroll} aria-hidden="true" />
@@ -172,7 +170,7 @@ export default function Home() {
 
       <PulseDivider />
 
-      {/* Categories — horizontal rail reads naturally on a phone */}
+      {/* Categories — now loaded from database */}
       <section style={s.section} id="collections">
         <div style={s.head}>
           <span style={label("light")}>Collections</span>
@@ -181,11 +179,11 @@ export default function Home() {
 
         <div style={s.rail} className="no-scrollbar">
           {categories.map((cat) => (
-            <a key={cat.id} href={`#${cat.id}`} style={s.railCard(cat.image)}>
+            <a key={cat._id} href={`#${cat.slug}`} style={s.railCard(cat.image)}>
               <span style={s.railGlow} aria-hidden="true" />
               <span style={s.railMeta}>
                 <span style={s.railName}>{cat.name}</span>
-                <span style={s.railNote}>{cat.note}</span>
+                <span style={s.railNote}>{cat.subtitle}</span>
               </span>
             </a>
           ))}
@@ -243,8 +241,8 @@ export default function Home() {
         <div style={s.footCols}>
           <div style={s.footCol}>
             <h3 style={s.footHead}>Shop</h3>
-            <a href="#men" style={s.footLink}>Men</a>
-            <a href="#women" style={s.footLink}>Women</a>
+            <a href="/men" style={s.footLink}>Men</a>
+            <a href="/women" style={s.footLink}>Women</a>
             <a href="#lab-coats" style={s.footLink}>Lab coats</a>
           </div>
           <div style={s.footCol}>
