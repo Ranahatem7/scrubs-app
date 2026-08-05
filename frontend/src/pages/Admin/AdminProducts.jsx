@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAdmin } from "../../context/AdminContext";
 import { theme, display } from "../../theme";
+import ImageUploader from "../../components/ImageUploader";
 
 export default function AdminProducts() {
   const { adminToken } = useAdmin();
@@ -13,16 +14,21 @@ export default function AdminProducts() {
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
 
-  const headers = { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` };
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${adminToken}`,
+  });
 
   const load = () => {
+    if (!adminToken) return;
     setLoading(true);
+    const headers = getHeaders();
     Promise.all([
       fetch("/api/admin/products", { headers }).then((r) => r.json()),
       fetch("/api/admin/categories", { headers }).then((r) => r.json()),
     ]).then(([prods, cats]) => {
-      setProducts(prods);
-      setCategories(cats);
+      setProducts(Array.isArray(prods) ? prods : []);
+      setCategories(Array.isArray(cats) ? cats : []);
     }).finally(() => setLoading(false));
   };
 
@@ -31,7 +37,7 @@ export default function AdminProducts() {
     fit: "", sizes: "S,M,L,XL", images: "", stock: "50",
   });
 
-  useEffect(load, []);
+  useEffect(() => { if (adminToken) load(); }, [adminToken]);
 
   const openAdd = () => { setForm(emptyForm(categories)); setEditId(null); setShowForm(true); };
   const openEdit = (p) => {
@@ -55,7 +61,7 @@ export default function AdminProducts() {
       images: form.images.split(",").map((s) => s.trim()).filter(Boolean),
     };
     const url = editId ? `/api/admin/products/${editId}` : "/api/admin/products";
-    await fetch(url, { method: editId ? "PUT" : "POST", headers, body: JSON.stringify(body) });
+    await fetch(url, { method: editId ? "PUT" : "POST", headers: getHeaders(), body: JSON.stringify(body) });
     setSaving(false);
     setShowForm(false);
     load();
@@ -63,12 +69,12 @@ export default function AdminProducts() {
 
   const handleDelete = async (id, name) => {
     if (!confirm(`Delete "${name}"?`)) return;
-    await fetch(`/api/admin/products/${id}`, { method: "DELETE", headers });
+    await fetch(`/api/admin/products/${id}`, { method: "DELETE", headers: getHeaders() });
     load();
   };
 
   const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+    p.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   const s = {
@@ -175,6 +181,8 @@ export default function AdminProducts() {
         <tbody>
           {loading ? (
             <tr><td style={s.td} colSpan={7}>Loading…</td></tr>
+          ) : filtered.length === 0 ? (
+            <tr><td style={s.td} colSpan={7}>No products found.</td></tr>
           ) : filtered.map((p) => (
             <tr key={p._id}>
               <td style={s.td}>{p.images?.[0] ? <img src={p.images[0]} alt={p.name} style={s.img} /> : <div style={s.img} />}</td>
@@ -239,8 +247,12 @@ export default function AdminProducts() {
                 <input style={s.input} value={form.sizes} onChange={(e) => upd("sizes", e.target.value)} placeholder="S,M,L,XL" />
               </div>
               <div style={s.field}>
-                <label style={s.fieldLabel}>Image URLs (comma separated)</label>
-                <input style={s.input} value={form.images} onChange={(e) => upd("images", e.target.value)} placeholder="https://..." />
+                <label style={s.fieldLabel}>Images (upload or paste URLs)</label>
+                <ImageUploader
+                  value={form.images}
+                  onChange={(urls) => upd("images", urls)}
+                  multiple
+                />
               </div>
               <div style={s.modalActions}>
                 <button type="submit" style={s.saveBtn} disabled={saving}>{saving ? "Saving…" : "Save"}</button>

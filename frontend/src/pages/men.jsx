@@ -9,10 +9,7 @@ import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme"
 // Filter categories for men's page — ids match Product.category in the backend
 const MEN_FILTERS = [
   { id: "all", name: "All" },
-  { id: "tops", name: "Scrub Tops" },
-  { id: "pants", name: "Scrub Pants" },
-  { id: "lab-coats", name: "Lab Coats" },
-  { id: "full-scrub", name: "Sets" },
+
 ];
 
 export default function Men() {

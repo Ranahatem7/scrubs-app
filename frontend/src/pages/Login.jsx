@@ -5,7 +5,7 @@ import { useAdmin } from "../context/AdminContext";
 import { theme, display } from "../theme";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { setSession } = useAuth();
   const { login: adminLogin } = useAdmin();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -14,22 +14,30 @@ export default function Login() {
 
   const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  // Safe JSON parse — won't crash on empty body
+  const safeJSON = async (res) => {
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : {}; } catch { return {}; }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      // First try admin login
+      // Try admin login first
       const adminRes = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       if (adminRes.ok) {
-        const adminData = await adminRes.json();
-        adminLogin(adminData.token);
-        navigate("/admin");
-        return;
+        const adminData = await safeJSON(adminRes);
+        if (adminData.token) {
+          adminLogin(adminData.token);
+          navigate("/admin");
+          return;
+        }
       }
 
       // Otherwise try regular user login
@@ -38,9 +46,9 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const data = await res.json();
+      const data = await safeJSON(res);
       if (!res.ok) throw new Error(data.message || "Invalid email or password");
-      login(data.token, data.user);
+      setSession(data.token, data.user);
       navigate("/");
     } catch (err) {
       setError(err.message);

@@ -19,6 +19,8 @@ import Payment from "./pages/payment";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProductPage from "./pages/ProductPage";
+import CategoryPage from "./pages/CategoryPage";
 
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -75,6 +77,8 @@ export default function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/register" element={<Signup />} />
+                    <Route path="/product/:slug" element={<ProductPage />} />
+                    <Route path="/category/:slug" element={<CategoryPage />} />
                   </Routes>
                 </div>
               } />

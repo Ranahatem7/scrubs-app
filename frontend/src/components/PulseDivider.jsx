@@ -6,7 +6,7 @@ const s = {
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    padding: `40px ${theme.pad}px`,
+    padding: `0px ${theme.pad}px`,
     background: tone === "dark" ? theme.surfaceDark : theme.surfaceLight,
   }),
   line: (tone) => ({

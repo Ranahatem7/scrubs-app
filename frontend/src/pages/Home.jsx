@@ -3,44 +3,113 @@ import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import useCategories from "../hooks/useCategories";
+import useSiteSettings from "../hooks/useSiteSettings";
 import { images } from "../data/images";
+import { Link } from "react-router-dom";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
 export default function Home() {
   const isDesktop = useIsDesktop(700);
   const { products, loading, error, retry } = useProducts();
   const { categories } = useCategories();
+  const { settings } = useSiteSettings();
+  const heroImage  = settings?.heroImage  || images.hero;
+  const heroImage2 = settings?.heroImage2 || "";
+  const heroImage3 = settings?.heroImage3 || "";
+  const heroTitle = settings?.heroTitle || "Scrubs for the long shift";
+  const heroSub = settings?.heroSub || "Engineered fabric, tailored cut, made for twelve hours on your feet.";
+
+  const heroPanel = (fallbackColor = theme.ink) => ({
+    position: "relative",
+    overflow: "hidden",
+    background: fallbackColor,
+  });
 
   const s = {
-    // ── Hero (dark bookend) ──────────────────────────────────────────────
-    hero: {
-      position: "relative",
-      minHeight: "92vh",
-      display: "flex",
-      alignItems: "flex-end",
-      padding: `0 ${theme.pad}px 72px`,
-      overflow: "hidden",
+    // ── Hero mosaic ──────────────────────────────────────────────────────
+    heroGrid: {
+      display: "grid",
+      gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
+      minHeight: isDesktop ? "95vh" : "auto",
     },
-    heroBg: {
+    heroLeft: {
+      ...heroPanel(theme.ink),
+      minHeight: isDesktop ? "95vh" : "60vw",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end",
+      padding: isDesktop ? "48px 40px" : "28px 20px",
+    },
+    heroLeftImg: {
       position: "absolute",
       inset: 0,
-      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,31,24,0.82) 34%, rgba(11,31,24,0.42) 100%),
-        radial-gradient(90% 60% at 80% 20%, rgba(15,91,70,0.35), transparent 60%),
-        url(${images.hero}) center 20% / cover no-repeat`,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      objectPosition: "center top",
     },
-    heroInner: { position: "relative", zIndex: 1, maxWidth: 460 },
-    heroTitle: { ...display, margin: "14px 0 0", fontSize: "clamp(46px, 15vw, 68px)", color: theme.textOnDark },
-    heroEm: { ...strongText("dark"), fontStyle: "normal" },
-    heroSub: { margin: "16px 0 0", maxWidth: "30ch", fontSize: 14, color: theme.textOnDarkMuted },
-    heroActions: { display: "flex", gap: 10, marginTop: 28 },
-    heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
-    heroScroll: {
+    heroRight: {
+      display: "grid",
+      gridTemplateRows: "1fr 1fr",
+      gap: 3,
+    },
+    heroRightTop: {
+    ...heroPanel("#c8cac8"),
+      minHeight: isDesktop ? 0 : "45vw",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end",
+      padding: isDesktop ? "32px 28px" : "20px 16px",
+    },
+    heroRightBottom: {
+     ...heroPanel("#c8cac8"),
+      minHeight: isDesktop ? 0 : "45vw",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-end",
+      padding: isDesktop ? "32px 28px" : "20px 16px",
+    },
+    panelImg: {
       position: "absolute",
-      bottom: 26,
-      left: "50%",
-      width: 1,
-      height: 34,
-      background: `linear-gradient(to bottom, ${theme.textOnDark}, transparent)`,
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+      objectPosition: "center top",
+    },
+    heroOverlay: {
+      position: "absolute",
+      inset: 0,
+      background: "linear-gradient(to top, rgba(11,31,24,0.82) 0%, rgba(11,31,24,0.25) 60%, transparent 100%)",
+      pointerEvents: "none",
+    },
+    heroTitle: {
+      ...display,
+      position: "relative",
+      zIndex: 1,
+      margin: "12px 0 0",
+      fontSize: isDesktop ? "clamp(38px, 5vw, 64px)" : "clamp(32px, 10vw, 48px)",
+      lineHeight: 1.05,
+      color: theme.textOnDark,
+      textTransform: "uppercase",
+      letterSpacing: "-0.01em",
+    },
+    heroSub: {
+      position: "relative",
+      zIndex: 1,
+      margin: "14px 0 0",
+      maxWidth: "28ch",
+      fontSize: 13,
+      lineHeight: 1.6,
+      color: theme.textOnDarkMuted,
+    },
+    heroActions: {
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      gap: 10,
+      marginTop: 24,
+      flexWrap: "wrap",
     },
 
     // ── Light content sections ───────────────────────────────────────────
@@ -50,17 +119,15 @@ export default function Home() {
     sectionCta: { ...btnGhost("light"), display: "flex", margin: `28px ${theme.pad}px 0` },
 
     rail: {
-      display: "flex",
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 280px))",
       gap: 12,
-      overflowX: "auto",
-      padding: `0 ${theme.pad}px 6px`,
-      scrollSnapType: "x mandatory",
+      padding: `0 ${theme.pad}px`,
+      justifyContent: "center",
     },
     railCard: (image) => ({
       position: "relative",
-      flex: `0 0 ${isDesktop ? "30%" : "63%"}`,
-      aspectRatio: "4 / 5",
-      scrollSnapAlign: "start",
+      aspectRatio: "3 / 4",
       display: "flex",
       alignItems: "flex-end",
       padding: 16,
@@ -99,13 +166,13 @@ export default function Home() {
     retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
     // ── Brand statement ───────────────────────────────────────────────────
-    statement: { padding: `72px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
+    statement: { padding: `20px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
     statementText: {
       ...display,
       margin: "0 auto 18px",
-      fontSize: isDesktop ? 40 : 28,
+      fontSize: isDesktop ? 20 : 18,
       fontStyle: "italic",
-      lineHeight: 1.25,
+      lineHeight: 0.95,
       maxWidth: isDesktop ? "18ch" : "none",
       color: theme.accent,
     },
@@ -147,28 +214,62 @@ export default function Home() {
 
   return (
     <main id="top">
-      {/* Hero */}
-      <section style={s.hero}>
-        <div style={s.heroBg} aria-hidden="true" />
-        <div style={s.heroInner}>
-          <span style={label("dark")}>Medical Wear</span>
-          <h1 style={s.heroTitle}>
-            Scrubs for the
-            <br />
-            <em style={s.heroEm}>long shift</em>
-          </h1>
-          <p style={s.heroSub}>
-            Engineered fabric, tailored cut, made for twelve hours on your feet.
-          </p>
+      {/* Hero — 3-panel mosaic */}
+      <section style={s.heroGrid}>
+        {/* Left — tall main image */}
+        <div style={s.heroLeft}>
+          {heroImage && <img src={heroImage} alt="" style={s.heroLeftImg} />}
+          <div style={s.heroOverlay} aria-hidden="true" />
+          <span style={{ ...label("dark"), position: "relative", zIndex: 1 }}>Medical Wear</span>
+          <h1 style={s.heroTitle}>{heroTitle}</h1>
+          <p style={s.heroSub}>{heroSub}</p>
           <div style={s.heroActions}>
-            <a href="/men" style={{ ...btnSolid, ...s.heroBtn }}>Shop men</a>
-            <a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
+            <a href="#collections" style={btnSolid}>Shop</a>
           </div>
         </div>
-        <span style={s.heroScroll} aria-hidden="true" />
+
+        {/* Right — two stacked panels (desktop only) */}
+        {isDesktop && (
+          <div style={s.heroRight}>
+            {/* Top right — Shop Men */}
+            <div style={s.heroRightTop}>
+              {heroImage2 && <img src={heroImage2} alt="Shop Men" style={s.panelImg} />}
+              <div style={s.heroOverlay} aria-hidden="true" />
+              <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
+              <a href="/men" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Men</a>
+            </div>
+            {/* Bottom right — Shop Women */}
+            <div style={s.heroRightBottom}>
+              {heroImage3 && <img src={heroImage3} alt="Shop Women" style={s.panelImg} />}
+              <div style={s.heroOverlay} aria-hidden="true" />
+              <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
+              <a href="/women" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Women</a>
+            </div>
+          </div>
+        )}
       </section>
 
       <PulseDivider />
+
+      {/* Slogan banner */}
+      <section style={{
+        padding: `10px ${theme.pad}px`,
+        background: theme.surfaceLight,
+        textAlign: "center",
+        borderBottom: `1px solid ${theme.hairlineOnLight}`,
+      }}>
+        <p style={{
+          ...display,
+          margin: "0 auto 4px",
+          fontSize: isDesktop ? 22 : 18,
+          fontStyle: "italic",
+          color: theme.accent,
+          letterSpacing: "0.01em",
+        }}>
+          Wear the journey.
+        </p>
+        <span style={label("light")}>MedTrack Medical Wear</span>
+      </section>
 
       {/* Categories — now loaded from database */}
       <section style={s.section} id="collections">
@@ -179,13 +280,13 @@ export default function Home() {
 
         <div style={s.rail} className="no-scrollbar">
           {categories.map((cat) => (
-            <a key={cat._id} href={`#${cat.slug}`} style={s.railCard(cat.image)}>
+           <Link key={cat._id} to={`/category/${cat.slug}`} style={s.railCard(cat.image)}>
               <span style={s.railGlow} aria-hidden="true" />
               <span style={s.railMeta}>
                 <span style={s.railName}>{cat.name}</span>
                 <span style={s.railNote}>{cat.subtitle}</span>
               </span>
-            </a>
+           </Link>
           ))}
         </div>
       </section>
@@ -248,7 +349,6 @@ export default function Home() {
           <div style={s.footCol}>
             <h3 style={s.footHead}>Help</h3>
             <a href="#sizing" style={s.footLink}>Size guide</a>
-            <a href="#fabric" style={s.footLink}>Our fabric</a>
             <a href="#returns" style={s.footLink}>Returns</a>
           </div>
         </div>

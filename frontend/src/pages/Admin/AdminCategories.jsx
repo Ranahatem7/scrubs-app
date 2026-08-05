@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAdmin } from "../../context/AdminContext";
 import { theme, display } from "../../theme";
+import ImageUploader from "../../components/ImageUploader";
 
 const EMPTY = { name: "", subtitle: "", image: "", slug: "", order: "0" };
 
@@ -177,12 +178,9 @@ export default function AdminCategories() {
                 <input style={s.input} value={form.subtitle} onChange={(e) => upd("subtitle", e.target.value)} placeholder="e.g. TEN POCKETS" />
               </div>
               <div style={s.field}>
-                <label style={s.fieldLabel}>Image URL</label>
-                <input style={s.input} value={form.image} onChange={(e) => upd("image", e.target.value)} placeholder="https://..." />
+                <label style={s.fieldLabel}>Image</label>
+                <ImageUploader value={form.image} onChange={(url) => upd("image", url)} />
               </div>
-              {form.image && (
-                <img src={form.image} alt="preview" style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: theme.radius, marginBottom: 14 }} />
-              )}
               <div style={s.modalActions}>
                 <button type="submit" style={s.saveBtn} disabled={saving}>{saving ? "Saving…" : "Save"}</button>
                 <button type="button" style={s.cancelBtn} onClick={() => setShowForm(false)}>Cancel</button>

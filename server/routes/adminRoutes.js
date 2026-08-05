@@ -7,6 +7,7 @@ const User = require("../models/User");
 const Order = require("../models/Order");
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
+const SiteSettings = require("../models/SiteSettings");
 
 // ── POST /api/admin/login ──────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -99,11 +100,10 @@ router.put("/orders/:id", adminAuth, async (req, res) => {
 router.get("/users", adminAuth, async (req, res) => {
   try {
     const users = await User.find().select("-password").sort({ createdAt: -1 }).lean();
-    // Attach order count per user
     const withCounts = await Promise.all(
       users.map(async (u) => ({
         ...u,
-        orderCount: await Order.countDocuments({ userId: u._id }),
+        orderCount: await Order.countDocuments({ user: u._id }),
       }))
     );
     res.json(withCounts);
@@ -146,6 +146,31 @@ router.put("/categories/:id", adminAuth, async (req, res) => {
 router.delete("/categories/:id", adminAuth, async (req, res) => {
   await Category.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+});
+
+// ── SITE SETTINGS ─────────────────────────────────────────────────────────
+// Public — used by Home page (no auth needed)
+router.get("/settings/public", async (req, res) => {
+  try {
+    const s = await SiteSettings.findOne();
+    res.json(s || {});
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Admin — update hero image/title/subtitle
+router.put("/settings", adminAuth, async (req, res) => {
+  try {
+    const s = await SiteSettings.findOneAndUpdate(
+      {},
+      { $set: req.body },
+      { new: true, upsert: true }
+    );
+    res.json(s);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;

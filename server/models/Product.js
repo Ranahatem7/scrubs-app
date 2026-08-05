@@ -17,7 +17,6 @@ const productSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
       trim: true,
@@ -33,19 +32,16 @@ const productSchema = new mongoose.Schema(
       required: [true, "Price is required"],
       min: 0,
     },
+    // Free-form string — no enum, categories are managed in the DB
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: ["tops", "pants", "full-scrub", "lab-coats"],
     },
-    // "men" / "women" / "unisex" — matches the gender filter used on
-    // frontend/src/pages/men.jsx and women.jsx
     gender: {
       type: String,
       enum: ["men", "women", "unisex"],
       default: "unisex",
     },
-    // Short descriptor shown under the product name, e.g. "Men · Slim"
     fit: {
       type: String,
       trim: true,
@@ -63,7 +59,6 @@ const productSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    // Fallback swatch color, used by ProductCard when no image is set
     tone: {
       type: String,
       trim: true,
@@ -81,5 +76,25 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Auto-generate slug from name before saving
+productSchema.pre("save", async function (next) {
+  if (!this.isModified("name") && this.slug) return next();
+
+  let base = this.name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  // Make slug unique by appending a number if needed
+  let slug = base;
+  let count = 1;
+  while (await mongoose.model("Product").exists({ slug, _id: { $ne: this._id } })) {
+    slug = `${base}-${count++}`;
+  }
+  this.slug = slug;
+  next();
+});
 
 module.exports = mongoose.model("Product", productSchema);

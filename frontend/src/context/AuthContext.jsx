@@ -4,11 +4,6 @@ import { getToken, setToken as persistToken } from "../services/api";
 
 const AuthContext = createContext(null);
 
-/**
- * Wrap your app with <AuthProvider> to give every page access to the
- * signed-in user. Restores the session on load via GET /api/auth/me
- * if a JWT is already in localStorage.
- */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,6 +24,12 @@ export function AuthProvider({ children }) {
         setUser(null);
       })
       .finally(() => setLoading(false));
+  }, []);
+
+  // Called by Login.jsx after a successful /api/auth/login fetch
+  const setSession = useCallback((token, userData) => {
+    persistToken(token);
+    setUser(userData);
   }, []);
 
   const login = useCallback(async (email, password) => {
@@ -63,13 +64,12 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, error, login, register, logout, setSession }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-/** Use this hook in any component to access the signed-in user. */
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");

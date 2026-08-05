@@ -19,21 +19,25 @@ export default function AdminOrders() {
   const [expanded, setExpanded] = useState(null);
   const [filter, setFilter] = useState("all");
 
-  const headers = { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` };
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${adminToken}`,
+  });
 
   const load = () => {
+    if (!adminToken) return;
     setLoading(true);
-    fetch("/api/admin/orders", { headers })
+    fetch("/api/admin/orders", { headers: getHeaders() })
       .then((r) => r.json())
-      .then(setOrders)
+      .then((data) => setOrders(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
   };
 
-  useEffect(load, []);
+  useEffect(() => { if (adminToken) load(); }, [adminToken]);
 
   const updateStatus = async (id, status) => {
     await fetch(`/api/admin/orders/${id}`, {
-      method: "PUT", headers, body: JSON.stringify({ status }),
+      method: "PUT", headers: getHeaders(), body: JSON.stringify({ status }),
     });
     setOrders((prev) => prev.map((o) => o._id === id ? { ...o, status } : o));
   };
@@ -122,11 +126,11 @@ export default function AdminOrders() {
             <>
               <tr key={order._id}>
                 <td style={{ ...s.td }}>
-                  <div style={{ fontWeight: 600 }}>{order.name}</div>
-                  <div style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 }}>{order.email}</div>
+                  <div style={{ fontWeight: 600 }}>{order.shipping?.name}</div>
+                  <div style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 }}>{order.shipping?.email}</div>
                 </td>
-                <td style={s.td}>{order.phone}</td>
-                <td style={s.td}>{order.street}, {order.city}, {order.governorate}</td>
+                <td style={s.td}>{order.shipping?.phone}</td>
+                <td style={s.td}>{order.shipping?.street}, {order.shipping?.city}, {order.shipping?.governorate}</td>
                 <td style={s.td}>{order.paymentMethod}</td>
                 <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>
                   LE {order.total?.toLocaleString()}
