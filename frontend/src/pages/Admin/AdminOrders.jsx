@@ -27,7 +27,7 @@ export default function AdminOrders() {
   const load = () => {
     if (!adminToken) return;
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/admin/orders", { headers: getHeaders() })
+    fetch(`${import.meta.env.VITE_API_URL}/admin/orders`, { headers: getHeaders() })
       .then((r) => r.json())
       .then((data) => setOrders(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
@@ -36,7 +36,7 @@ export default function AdminOrders() {
   useEffect(() => { if (adminToken) load(); }, [adminToken]);
 
   const updateStatus = async (id, status) => {
-    await fetch(`/api/admin/orders/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/admin/orders/${id}`, {
       method: "PUT", headers: getHeaders(), body: JSON.stringify({ status }),
     });
     setOrders((prev) => prev.map((o) => o._id === id ? { ...o, status } : o));

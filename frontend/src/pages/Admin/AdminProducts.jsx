@@ -26,8 +26,8 @@ export default function AdminProducts() {
     setLoading(true);
     const headers = getHeaders();
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/admin/products", { headers }).then((r) => r.json()),
-      fetch(`${import.meta.env.VITE_API_URL}/admin/categories", { headers }).then((r) => r.json()),
+      fetch(`${import.meta.env.VITE_API_URL}/admin/products`, { headers }).then((r) => r.json()),
+fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, { headers }).then((r) => r.json()),
     ]).then(([prods, cats]) => {
       setProducts(Array.isArray(prods) ? prods : []);
       setCategories(Array.isArray(cats) ? cats : []);
@@ -62,18 +62,14 @@ export default function AdminProducts() {
       sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
       images: form.images.split(",").map((s) => s.trim()).filter(Boolean),
     };
-    const url = editId ? `/api/admin/products/${editId}` : "/api/admin/products";
+    const url = editId ? `${import.meta.env.VITE_API_URL}/admin/products/${editId}` : `${import.meta.env.VITE_API_URL}/admin/products`;
     await fetch(url, { method: editId ? "PUT" : "POST", headers: getHeaders(), body: JSON.stringify(body) });
     setSaving(false);
     setShowForm(false);
     load();
   };
 
-  const handleDelete = async (id, name) => {
-    if (!confirm(`Delete "${name}"?`)) return;
-    await fetch(`/api/admin/products/${id}`, { method: "DELETE", headers: getHeaders() });
-    load();
-  };
+  await fetch(`${import.meta.env.VITE_API_URL}/admin/products/${id}`, { method: "DELETE", headers: getHeaders() });
 
   const filtered = products.filter((p) =>
     p.name?.toLowerCase().includes(search.toLowerCase())

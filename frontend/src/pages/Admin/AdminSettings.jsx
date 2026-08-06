@@ -21,7 +21,7 @@ export default function AdminSettings() {
  
   useEffect(() => {
     if (!adminToken) return;
-    fetch(`${import.meta.env.VITE_API_URL}/admin/settings/public")
+   fetch(`${import.meta.env.VITE_API_URL}/admin/settings/public`)
       .then((r) => r.json())
       .then((data) => setSite({
         heroImage:  data.heroImage  || "",
@@ -38,7 +38,7 @@ export default function AdminSettings() {
     setCredsSaving(true);
     setCredsMsg(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/credentials", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/credentials`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify(creds),
@@ -59,7 +59,7 @@ export default function AdminSettings() {
     setSiteSaving(true);
     setSiteMsg(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/settings", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/settings`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify(site),

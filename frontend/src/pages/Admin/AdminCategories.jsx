@@ -18,7 +18,7 @@ export default function AdminCategories() {
 
   const load = () => {
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/admin/categories", { headers })
+   fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, { headers: getHeaders() })
       .then((r) => r.json())
       .then(setCats)
       .finally(() => setLoading(false));
@@ -37,7 +37,7 @@ export default function AdminCategories() {
     e.preventDefault();
     setSaving(true);
     const body = { ...form, order: Number(form.order) };
-    const url = editId ? `/api/admin/categories/${editId}` : "/api/admin/categories";
+   const url = editId ? `${import.meta.env.VITE_API_URL}/admin/categories/${editId}` : `${import.meta.env.VITE_API_URL}/admin/categories`;
     await fetch(url, { method: editId ? "PUT" : "POST", headers, body: JSON.stringify(body) });
     setSaving(false);
     setShowForm(false);

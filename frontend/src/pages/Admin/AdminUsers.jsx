@@ -11,7 +11,7 @@ export default function AdminUsers() {
   const headers = { Authorization: `Bearer ${adminToken}` };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/admin/users", { headers })
+    fetch(`${import.meta.env.VITE_API_URL}/admin/users`, { headers })
       .then((r) => r.json())
       .then(setUsers)
       .finally(() => setLoading(false));
