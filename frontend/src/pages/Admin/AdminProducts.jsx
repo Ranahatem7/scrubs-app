@@ -69,7 +69,11 @@ fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, { headers }).then((r) 
     load();
   };
 
+ const handleDelete = async (id, name) => {
+  if (!confirm(`Delete "${name}"?`)) return;
   await fetch(`${import.meta.env.VITE_API_URL}/admin/products/${id}`, { method: "DELETE", headers: getHeaders() });
+  load();
+};
 
   const filtered = products.filter((p) =>
     p.name?.toLowerCase().includes(search.toLowerCase())
