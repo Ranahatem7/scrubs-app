@@ -14,7 +14,7 @@ export default function AllProducts() {
   const query = searchParams.get("q") || "";
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/products")
+    fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((r) => r.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch((err) => setError(err.message))

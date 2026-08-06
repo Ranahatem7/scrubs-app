@@ -26,7 +26,7 @@ export default function Login() {
     setLoading(true);
     try {
       // Try admin login first
-      const adminRes = await fetch(`${import.meta.env.VITE_API_URL}/admin/login", {
+      const adminRes = await fetch(`${import.meta.env.VITE_API_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -41,7 +41,7 @@ export default function Login() {
       }
 
       // Otherwise try regular user login
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
