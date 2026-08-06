@@ -25,13 +25,13 @@ import Contact from "./pages/Contact";
 import AllProducts from "./pages/AllProducts";
 
 // Admin pages
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminProducts from "./pages/admin/AdminProducts";
-import AdminOrders from "./pages/admin/AdminOrders";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminSettings from "./pages/admin/AdminSettings";
-import AdminCategories from "./pages/admin/AdminCategories";
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminProducts from "./pages/Admin/AdminProducts";
+import AdminOrders from "./pages/Admin/AdminOrders";
+import AdminUsers from "./pages/Admin/AdminUsers";
+import AdminSettings from "./pages/Admin/AdminSettings";
+import AdminCategories from "./pages/Admin/AdminCategories";
 
 import { theme } from "./theme";
 
