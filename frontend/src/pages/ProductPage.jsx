@@ -30,7 +30,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/products/${slug}`)
+    fetch(`${import.meta.env.VITE_API_URL}/products/${slug}`)
       .then((r) => r.json())
       .then((data) => {
         setProduct(data);
