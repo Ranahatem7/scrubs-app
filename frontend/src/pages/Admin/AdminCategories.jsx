@@ -18,7 +18,7 @@ export default function AdminCategories() {
 
   const load = () => {
     setLoading(true);
-   fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, { headers: getHeaders() })
+   fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, { headers })
       .then((r) => r.json())
       .then(setCats)
       .finally(() => setLoading(false));
@@ -46,7 +46,7 @@ export default function AdminCategories() {
 
   const handleDelete = async (id, name) => {
     if (!confirm(`Delete "${name}"?`)) return;
-    await fetch(`/api/admin/categories/${id}`, { method: "DELETE", headers });
+   await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${id}`, { method: "DELETE", headers });
     load();
   };
 

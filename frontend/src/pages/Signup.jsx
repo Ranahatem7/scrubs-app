@@ -179,7 +179,7 @@ export default function Signup() {
                   style={s.input(!!errors.name)}
                   value={form.name}
                   onChange={(e) => update("name", e.target.value)}
-                  placeholder="Rasha ElHady"
+                  placeholder="Full Name"
                   autoComplete="name"
                 />
                 {errors.name && <span style={s.fieldError}>{errors.name}</span>}
