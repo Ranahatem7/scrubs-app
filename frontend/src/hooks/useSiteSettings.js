@@ -5,7 +5,7 @@ export default function useSiteSettings() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/admin/settings/public")
+    fetch(`${import.meta.env.VITE_API_URL}/admin/settings/public")
       .then((r) => r.json())
       .then(setSettings)
       .catch(() => setSettings(null))

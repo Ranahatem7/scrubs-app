@@ -26,8 +26,8 @@ export default function AdminProducts() {
     setLoading(true);
     const headers = getHeaders();
     Promise.all([
-      fetch("/api/admin/products", { headers }).then((r) => r.json()),
-      fetch("/api/admin/categories", { headers }).then((r) => r.json()),
+      fetch(`${import.meta.env.VITE_API_URL}/admin/products", { headers }).then((r) => r.json()),
+      fetch(`${import.meta.env.VITE_API_URL}/admin/categories", { headers }).then((r) => r.json()),
     ]).then(([prods, cats]) => {
       setProducts(Array.isArray(prods) ? prods : []);
       setCategories(Array.isArray(cats) ? cats : []);

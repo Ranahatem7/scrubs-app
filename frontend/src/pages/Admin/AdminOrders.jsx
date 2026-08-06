@@ -27,7 +27,7 @@ export default function AdminOrders() {
   const load = () => {
     if (!adminToken) return;
     setLoading(true);
-    fetch("/api/admin/orders", { headers: getHeaders() })
+    fetch(`${import.meta.env.VITE_API_URL}/admin/orders", { headers: getHeaders() })
       .then((r) => r.json())
       .then((data) => setOrders(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));

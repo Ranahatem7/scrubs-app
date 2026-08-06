@@ -18,7 +18,7 @@ export default function AdminCategories() {
 
   const load = () => {
     setLoading(true);
-    fetch("/api/admin/categories", { headers })
+    fetch(`${import.meta.env.VITE_API_URL}/admin/categories", { headers })
       .then((r) => r.json())
       .then(setCats)
       .finally(() => setLoading(false));

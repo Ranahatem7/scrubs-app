@@ -17,7 +17,7 @@ export default function AdminDashboard() {
   const load = () => {
     if (!adminToken) return;
     setLoading(true);
-    fetch("/api/admin/stats", { headers: getHeaders() })
+    fetch(`${import.meta.env.VITE_API_URL}/admin/stats", { headers: getHeaders() })
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {})
