@@ -4,7 +4,6 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import useCategories from "../hooks/useCategories";
 import useSiteSettings from "../hooks/useSiteSettings";
-import { images } from "../data/images";
 import { Link } from "react-router-dom";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
@@ -13,7 +12,7 @@ export default function Home() {
   const { products, loading, error, retry } = useProducts();
   const { categories } = useCategories();
   const { settings } = useSiteSettings();
-  const heroImage  = settings?.heroImage  || images.hero;
+  const heroImage  = settings?.heroImage  || "";
   const heroImage2 = settings?.heroImage2 || "";
   const heroImage3 = settings?.heroImage3 || "";
   const heroTitle = settings?.heroTitle || "Scrubs for the long shift";
@@ -50,11 +49,12 @@ export default function Home() {
     },
     heroRight: {
       display: "grid",
-      gridTemplateRows: "1fr 1fr",
+      gridTemplateColumns: isDesktop ? "1fr" : "1fr 1fr",
+      gridTemplateRows: isDesktop ? "1fr 1fr" : "1fr",
       gap: 3,
     },
     heroRightTop: {
-    ...heroPanel("#c8cac8"),
+      ...heroPanel("#c8cac8"),
       minHeight: isDesktop ? 0 : "45vw",
       display: "flex",
       flexDirection: "column",
@@ -62,7 +62,7 @@ export default function Home() {
       padding: isDesktop ? "32px 28px" : "20px 16px",
     },
     heroRightBottom: {
-     ...heroPanel("#c8cac8"),
+      ...heroPanel("#c8cac8"),
       minHeight: isDesktop ? 0 : "45vw",
       display: "flex",
       flexDirection: "column",
@@ -228,25 +228,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right — two stacked panels (desktop only) */}
-        {isDesktop && (
-          <div style={s.heroRight}>
-            {/* Top right — Shop Men */}
-            <div style={s.heroRightTop}>
-              {heroImage2 && <img src={heroImage2} alt="Shop Men" style={s.panelImg} />}
-              <div style={s.heroOverlay} aria-hidden="true" />
-              <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
-              <a href="/men" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Men</a>
-            </div>
-            {/* Bottom right — Shop Women */}
-            <div style={s.heroRightBottom}>
-              {heroImage3 && <img src={heroImage3} alt="Shop Women" style={s.panelImg} />}
-              <div style={s.heroOverlay} aria-hidden="true" />
-              <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
-              <a href="/women" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Women</a>
-            </div>
+        {/* Right — two panels (side by side on mobile, stacked on desktop) */}
+        <div style={s.heroRight}>
+          {/* Shop Men */}
+          <div style={s.heroRightTop}>
+            {heroImage2 && <img src={heroImage2} alt="Shop Men" style={s.panelImg} />}
+            <div style={s.heroOverlay} aria-hidden="true" />
+            <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
+            <a href="/men" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Men</a>
           </div>
-        )}
+          {/* Shop Women */}
+          <div style={s.heroRightBottom}>
+            {heroImage3 && <img src={heroImage3} alt="Shop Women" style={s.panelImg} />}
+            <div style={s.heroOverlay} aria-hidden="true" />
+            <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
+            <a href="/women" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Women</a>
+          </div>
+        </div>
       </section>
 
       <PulseDivider />
@@ -271,7 +269,7 @@ export default function Home() {
         <span style={label("light")}>MedTrack Medical Wear</span>
       </section>
 
-      {/* Categories — now loaded from database */}
+      {/* Categories — loaded from database */}
       <section style={s.section} id="collections">
         <div style={s.head}>
           <span style={label("light")}>Collections</span>
@@ -280,13 +278,13 @@ export default function Home() {
 
         <div style={s.rail} className="no-scrollbar">
           {categories.map((cat) => (
-           <Link key={cat._id} to={`/category/${cat.slug}`} style={s.railCard(cat.image)}>
+            <Link key={cat._id} to={`/category/${cat.slug}`} style={s.railCard(cat.image)}>
               <span style={s.railGlow} aria-hidden="true" />
               <span style={s.railMeta}>
                 <span style={s.railName}>{cat.name}</span>
                 <span style={s.railNote}>{cat.subtitle}</span>
               </span>
-           </Link>
+            </Link>
           ))}
         </div>
       </section>
@@ -319,7 +317,7 @@ export default function Home() {
           </div>
         )}
 
-       <a href="/products" style={s.sectionCta}>View all products</a>
+        <a href="/products" style={s.sectionCta}>View all products</a>
       </section>
 
       <PulseDivider />
