@@ -8,12 +8,27 @@ const orderRoutes = require("./routes/orderRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const adminRoutes = require("./routes/adminRoutes");
 const app = express();
-const path = require("path"); 
+const path = require("path");
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, Render health checks)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
   })
 );
+
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
