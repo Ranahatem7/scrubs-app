@@ -21,7 +21,7 @@ export default function CategoryPage() {
     if (!categoryName) return;
     setLoading(true);
     setError(null);
-    fetch(`/api/products?category=${encodeURIComponent(categoryName)}`)
+   fetch(`${import.meta.env.VITE_API_URL}/products?category=${encodeURIComponent(categoryName)}`)
       .then((r) => r.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch((err) => setError(err.message))
