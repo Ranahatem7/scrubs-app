@@ -4,7 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { AdminProvider } from "./context/AdminContext";
 import AdminRoute from "./components/AdminRoute";
-import AdminLayout from "./pages/admin/AdminLayout";
+import AdminLayout from "./pages/Admin/AdminLayout";
 import GlobalStyles from "./GlobalStyles";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
