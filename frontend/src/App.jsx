@@ -54,13 +54,13 @@ export default function App() {
             <Routes>
 
               {/* ── Admin routes (no shop header) ── */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminPage><AdminDashboard /></AdminPage>} />
-              <Route path="/admin/products" element={<AdminPage><AdminProducts /></AdminPage>} />
-              <Route path="/admin/orders" element={<AdminPage><AdminOrders /></AdminPage>} />
-              <Route path="/admin/users" element={<AdminPage><AdminUsers /></AdminPage>} />
-              <Route path="/admin/categories" element={<AdminPage><AdminCategories /></AdminPage>} />
-              <Route path="/admin/settings" element={<AdminPage><AdminSettings /></AdminPage>} />
+              <Route path="/Admin/login" element={<AdminLogin />} />
+              <Route path="/Admin" element={<AdminPage><AdminDashboard /></AdminPage>} />
+              <Route path="/Admin/products" element={<AdminPage><AdminProducts /></AdminPage>} />
+              <Route path="/Admin/orders" element={<AdminPage><AdminOrders /></AdminPage>} />
+              <Route path="/Admin/users" element={<AdminPage><AdminUsers /></AdminPage>} />
+              <Route path="/Admin/categories" element={<AdminPage><AdminCategories /></AdminPage>} />
+              <Route path="/Admin/settings" element={<AdminPage><AdminSettings /></AdminPage>} />
 
               {/* ── Shop routes (with header + sidebar) ── */}
               <Route path="*" element={
