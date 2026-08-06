@@ -11,8 +11,8 @@ import Sidebar from "./components/Sidebar";
 
 // Shop pages
 import Home from "./pages/Home";
-import Men from "./pages/men";
-import Women from "./pages/women";
+import Men from "./pages/Men";
+import Women from "./pages/Women";
 import Cart from "./pages/cart";
 import Checkout from "./pages/checkout";
 import Payment from "./pages/payment";
