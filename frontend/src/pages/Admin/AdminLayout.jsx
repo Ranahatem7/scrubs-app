@@ -134,7 +134,7 @@ export default function AdminLayout({ children }) {
           })}
         </nav>
 
-        <button style={s.logoutBtn} onClick={() => { logout(); navigate("/admin/login"); }}>
+       <button style={s.logoutBtn} onClick={logout}>
           ← Sign out
         </button>
       </aside>

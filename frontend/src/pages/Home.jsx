@@ -313,13 +313,13 @@ export default function Home() {
 
         {!loading && !error && products.length > 0 && (
           <div style={s.grid}>
-            {products.map((product) => (
+            {products.slice(0, 4).map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
         )}
 
-        <a href="#all" style={s.sectionCta}>View all products</a>
+       <a href="/products" style={s.sectionCta}>View all products</a>
       </section>
 
       <PulseDivider />

@@ -1,25 +1,34 @@
 import { useEffect, useState } from "react";
 import { useAdmin } from "../../context/AdminContext";
 import { theme, display } from "../../theme";
+import useIsDesktop from "../../hooks/useIsDesktop";
 
 export default function AdminDashboard() {
   const { adminToken } = useAdmin();
+  const isDesktop = useIsDesktop(700);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/admin/stats", {
-      headers: { Authorization: `Bearer ${adminToken}` },
-    })
+  const getHeaders = () => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${adminToken}`,
+  });
+
+  const load = () => {
+    if (!adminToken) return;
+    setLoading(true);
+    fetch("/api/admin/stats", { headers: getHeaders() })
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [adminToken]);
+  };
+
+  useEffect(() => { if (adminToken) load(); }, [adminToken]);
 
   const s = {
-    title: { ...display, fontSize: 28, margin: "0 0 28px", color: theme.textOnLight },
-    grid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 },
+    title: { ...display, fontSize: isDesktop ? 28 : 22, margin: "0 0 20px", color: theme.textOnLight },
+    grid: { display: "grid", gridTemplateColumns: `repeat(${isDesktop ? 4 : 2}, 1fr)`, gap: 12, marginBottom: 28 },
 
     statCard: {
       background: theme.surfaceLight,
@@ -116,6 +125,7 @@ export default function AdminDashboard() {
       </div>
 
       <p style={s.sectionTitle}>Recent orders</p>
+      <div style={{ overflowX: "auto" }}>
       <table style={s.table}>
         <thead>
           <tr>
@@ -132,7 +142,7 @@ export default function AdminDashboard() {
           ) : stats?.recentOrders?.length > 0 ? (
             stats.recentOrders.map((order) => (
               <tr key={order._id}>
-                <td style={s.td}>{order.name}</td>
+                <td style={s.td}>{order.shipping?.name}</td>
                 <td style={s.td}>{order.items?.length ?? 0}</td>
                 <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>LE {order.total?.toLocaleString()}</td>
                 <td style={s.td}><span style={s.badge(order.status)}>{order.status}</span></td>
@@ -144,6 +154,7 @@ export default function AdminDashboard() {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

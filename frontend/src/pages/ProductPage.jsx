@@ -3,6 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { theme, display } from "../theme";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import useIsDesktop from "../hooks/useIsDesktop";
 
 const SIZE_GUIDE = [
   { size: "S",  chest: "86–91",  waist: "71–76",  hip: "91–96",  length: "68" },
@@ -17,6 +18,7 @@ export default function ProductPage() {
   const { addItem } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
+  const isDesktop = useIsDesktop(700);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,17 +52,17 @@ export default function ProductPage() {
   };
 
   const s = {
-    page: { maxWidth: 1100, margin: "0 auto", padding: "40px 24px 80px" },
+    page: { maxWidth: 1100, margin: "0 auto", padding: isDesktop ? "40px 24px 80px" : "20px 16px 60px" },
     back: {
       display: "inline-flex", alignItems: "center", gap: 6,
       fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase",
       color: theme.textOnLightMuted, cursor: "pointer", background: "none",
-      border: "none", fontFamily: theme.fontBody, padding: 0, marginBottom: 32,
+      border: "none", fontFamily: theme.fontBody, padding: 0, marginBottom: 24,
     },
     grid: {
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 56,
+      gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
+      gap: isDesktop ? 56 : 28,
       alignItems: "start",
     },
     // ── Gallery ──────────────────────────────────────────────────────────
@@ -82,7 +84,7 @@ export default function ProductPage() {
       fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
       color: theme.accent, marginBottom: 8,
     },
-    name: { ...display, fontSize: 32, margin: "0 0 4px", color: theme.textOnLight },
+    name: { ...display, fontSize: isDesktop ? 32 : 26, margin: "0 0 4px", color: theme.textOnLight },
     fit: {
       fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase",
       color: theme.textOnLightMuted, margin: "0 0 16px",
@@ -277,6 +279,15 @@ export default function ProductPage() {
 
           <hr style={s.divider} />
 
+          {/* Description */}
+          {product.description && (
+            <>
+              <span style={s.label}>Description</span>
+              <p style={{ ...s.desc, marginTop: 0 }}>{product.description}</p>
+              <hr style={s.divider} />
+            </>
+          )}
+
           {/* Add to cart */}
           <button style={s.addBtn(added)} onClick={handleAdd}>
             {added
@@ -296,14 +307,6 @@ export default function ProductPage() {
           )}
         </div>
       </div>
-
-      {/* ── Description ── */}
-      {product.description && (
-        <div style={s.section}>
-          <p style={s.sectionTitle}>Description</p>
-          <p style={s.desc}>{product.description}</p>
-        </div>
-      )}
     </div>
   );
 }

@@ -21,6 +21,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProductPage from "./pages/ProductPage";
 import CategoryPage from "./pages/CategoryPage";
+import Contact from "./pages/Contact";
+import AllProducts from "./pages/AllProducts";
 
 // Admin pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -35,7 +37,7 @@ import { theme } from "./theme";
 
 function AdminPage({ children }) {
   return (
-    <AdminRoute>
+    <AdminRoute redirectTo="/">
       <AdminLayout>{children}</AdminLayout>
     </AdminRoute>
   );
@@ -79,6 +81,8 @@ export default function App() {
                     <Route path="/register" element={<Signup />} />
                     <Route path="/product/:slug" element={<ProductPage />} />
                     <Route path="/category/:slug" element={<CategoryPage />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/products" element={<AllProducts />} />
                   </Routes>
                 </div>
               } />

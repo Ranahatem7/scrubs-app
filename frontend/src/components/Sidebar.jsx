@@ -7,7 +7,7 @@ const LINKS = [
   { label: "Home", href: "/" },
   { label: "Men", href: "/men" },
   { label: "Women", href: "/women" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const s = {

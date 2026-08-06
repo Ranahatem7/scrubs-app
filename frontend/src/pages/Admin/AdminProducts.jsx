@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useAdmin } from "../../context/AdminContext";
 import { theme, display } from "../../theme";
 import ImageUploader from "../../components/ImageUploader";
+import useIsDesktop from "../../hooks/useIsDesktop";
 
 export default function AdminProducts() {
   const { adminToken } = useAdmin();
+  const isDesktop = useIsDesktop(700);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +35,7 @@ export default function AdminProducts() {
   };
 
   const emptyForm = (cats) => ({
-    name: "", price: "", category: cats[0]?.slug || "", gender: "unisex",
+    name: "", description: "", price: "", category: cats[0]?.slug || "", gender: "unisex",
     fit: "", sizes: "S,M,L,XL", images: "", stock: "50",
   });
 
@@ -42,7 +44,7 @@ export default function AdminProducts() {
   const openAdd = () => { setForm(emptyForm(categories)); setEditId(null); setShowForm(true); };
   const openEdit = (p) => {
     setForm({
-      name: p.name, price: p.price, category: p.category,
+      name: p.name, description: p.description || "", price: p.price, category: p.category,
       gender: p.gender, fit: p.fit, sizes: (p.sizes || []).join(","),
       images: (p.images || []).join(","), stock: p.stock,
     });
@@ -124,7 +126,8 @@ export default function AdminProducts() {
     },
     modal: {
       background: theme.surfaceLight, border: `1px solid ${theme.hairlineOnLight}`,
-      borderRadius: theme.radius, padding: 32, width: "100%", maxWidth: 520,
+      borderRadius: theme.radius, padding: isDesktop ? 32 : 20, width: "100%",
+      maxWidth: isDesktop ? 520 : "100%",
       maxHeight: "90vh", overflowY: "auto",
     },
     modalTitle: { ...display, fontSize: 22, margin: "0 0 24px", color: theme.textOnLight },
@@ -166,6 +169,7 @@ export default function AdminProducts() {
 
       <input style={s.searchInput} placeholder="Search products…" value={search} onChange={(e) => setSearch(e.target.value)} />
 
+      <div style={{ overflowX: "auto" }}>
       <table style={s.table}>
         <thead>
           <tr>
@@ -199,6 +203,7 @@ export default function AdminProducts() {
           ))}
         </tbody>
       </table>
+      </div>
 
       {showForm && (
         <div style={s.overlay} onClick={(e) => e.target === e.currentTarget && setShowForm(false)}>
@@ -208,6 +213,15 @@ export default function AdminProducts() {
               <div style={s.field}>
                 <label style={s.fieldLabel}>Name</label>
                 <input style={s.input} value={form.name} onChange={(e) => upd("name", e.target.value)} required />
+              </div>
+              <div style={s.field}>
+                <label style={s.fieldLabel}>Description</label>
+                <textarea
+                  style={{ ...s.input, resize: "vertical", minHeight: 90 }}
+                  value={form.description}
+                  onChange={(e) => upd("description", e.target.value)}
+                  placeholder="Describe the product — fabric, fit, features…"
+                />
               </div>
               <div style={s.row2}>
                 <div style={s.field}>
