@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { theme, display } from "../theme";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
 import useIsDesktop from "../hooks/useIsDesktop";
 
 const SIZE_GUIDE = [
@@ -14,10 +13,8 @@ const SIZE_GUIDE = [
 
 export default function ProductPage() {
   const { slug } = useParams();
-  const { user } = useAuth();
   const { addItem } = useCart();
   const navigate = useNavigate();
-  const location = useLocation();
   const isDesktop = useIsDesktop(700);
 
   const [product, setProduct] = useState(null);
@@ -41,10 +38,6 @@ export default function ProductPage() {
   }, [slug]);
 
   const handleAdd = () => {
-    if (!user) {
-      navigate("/login", { state: { from: location } });
-      return;
-    }
     if (!selectedSize) return;
     addItem(product, selectedSize, selectedColor?.name ?? selectedColor ?? "");
     setAdded(true);
@@ -65,7 +58,6 @@ export default function ProductPage() {
       gap: isDesktop ? 56 : 28,
       alignItems: "start",
     },
-    // ── Gallery ──────────────────────────────────────────────────────────
     gallery: { display: "flex", flexDirection: "column", gap: 10 },
     mainImg: {
       width: "100%", aspectRatio: "3/4", objectFit: "cover",
@@ -78,7 +70,6 @@ export default function ProductPage() {
       border: `2px solid ${active ? theme.accent : theme.hairlineOnLight}`,
       cursor: "pointer", background: theme.surfaceMuted,
     }),
-    // ── Info ─────────────────────────────────────────────────────────────
     info: { display: "flex", flexDirection: "column", gap: 0 },
     category: {
       fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
@@ -95,7 +86,6 @@ export default function ProductPage() {
       fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase",
       color: theme.textOnLightMuted, marginBottom: 10, display: "block",
     },
-    // ── Colors ───────────────────────────────────────────────────────────
     colorRow: { display: "flex", gap: 8, marginBottom: 20 },
     colorDot: (hex, active) => ({
       width: 22, height: 22, borderRadius: "50%", background: hex,
@@ -103,7 +93,6 @@ export default function ProductPage() {
       outline: active ? `1px solid ${theme.accent}` : "none",
       outlineOffset: 2, cursor: "pointer",
     }),
-    // ── Sizes ────────────────────────────────────────────────────────────
     sizeRow: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 6 },
     sizePill: (active) => ({
       padding: "8px 16px", fontSize: 12, letterSpacing: "0.1em",
@@ -119,26 +108,17 @@ export default function ProductPage() {
       fontSize: 11, color: theme.accent, textDecoration: "underline",
       fontFamily: theme.fontBody, marginBottom: 20,
     },
-    // ── Add to cart ──────────────────────────────────────────────────────
     addBtn: (active) => ({
       width: "100%", padding: "14px 0",
-      background: active ? theme.accent : theme.accent,
+      background: theme.accent,
       border: "none", borderRadius: theme.radius,
       color: theme.textOnDark, fontSize: 11, fontWeight: 700,
       letterSpacing: "0.18em", textTransform: "uppercase",
-      cursor: "pointer", fontFamily: theme.fontBody,
-      opacity: (!user || !selectedSize) && !active ? 0.5 : 1,
+      cursor: selectedSize ? "pointer" : "default", fontFamily: theme.fontBody,
+      opacity: !selectedSize && !active ? 0.5 : 1,
       transition: "opacity 0.2s",
     }),
-    // ── Description ──────────────────────────────────────────────────────
-    section: { marginTop: 48 },
-    sectionTitle: {
-      fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-      color: theme.textOnLightMuted, marginBottom: 12,
-      borderBottom: `1px solid ${theme.hairlineOnLight}`, paddingBottom: 10,
-    },
     desc: { fontSize: 14, lineHeight: 1.7, color: theme.textOnLight },
-    // ── Size guide ───────────────────────────────────────────────────────
     sizeTable: { width: "100%", borderCollapse: "collapse", marginTop: 12 },
     sTh: {
       padding: "8px 12px", fontSize: 10, letterSpacing: "0.16em",
@@ -177,7 +157,7 @@ export default function ProductPage() {
       <button style={s.back} onClick={() => navigate(-1)}>← Back</button>
 
       <div style={s.grid}>
-        {/* ── Gallery ── */}
+        {/* Gallery */}
         <div style={s.gallery}>
           {images.length > 0 ? (
             <>
@@ -185,13 +165,7 @@ export default function ProductPage() {
               {images.length > 1 && (
                 <div style={s.thumbRow}>
                   {images.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img}
-                      alt=""
-                      style={s.thumb(i === activeImg)}
-                      onClick={() => setActiveImg(i)}
-                    />
+                    <img key={i} src={img} alt="" style={s.thumb(i === activeImg)} onClick={() => setActiveImg(i)} />
                   ))}
                 </div>
               )}
@@ -203,7 +177,7 @@ export default function ProductPage() {
           )}
         </div>
 
-        {/* ── Info ── */}
+        {/* Info */}
         <div style={s.info}>
           {product.category && <p style={s.category}>{product.category}</p>}
           <h1 style={s.name}>{product.name}</h1>
@@ -222,12 +196,7 @@ export default function ProductPage() {
                   const name = typeof c === "string" ? c : c.name;
                   const isActive = selectedColor === c || selectedColor?.name === name;
                   return (
-                    <button
-                      key={name}
-                      style={s.colorDot(hex, isActive)}
-                      onClick={() => setSelectedColor(c)}
-                      title={name}
-                    />
+                    <button key={name} style={s.colorDot(hex, isActive)} onClick={() => setSelectedColor(c)} title={name} />
                   );
                 })}
               </div>
@@ -238,11 +207,7 @@ export default function ProductPage() {
           <span style={s.label}>Size</span>
           <div style={s.sizeRow}>
             {sizes.map((sz) => (
-              <button
-                key={sz}
-                style={s.sizePill(selectedSize === sz)}
-                onClick={() => setSelectedSize(sz)}
-              >
+              <button key={sz} style={s.sizePill(selectedSize === sz)} onClick={() => setSelectedSize(sz)}>
                 {sz}
               </button>
             ))}
@@ -290,16 +255,9 @@ export default function ProductPage() {
 
           {/* Add to cart */}
           <button style={s.addBtn(added)} onClick={handleAdd}>
-            {added
-              ? "Added to cart ✓"
-              : !user
-              ? "Log in to add to cart"
-              : !selectedSize
-              ? "Select a size"
-              : "Add to cart"}
+            {added ? "Added to cart ✓" : !selectedSize ? "Select a size" : "Add to cart"}
           </button>
 
-          {/* Stock indicator */}
           {product.stock !== undefined && (
             <p style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 10 }}>
               {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}

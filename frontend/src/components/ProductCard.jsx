@@ -86,10 +86,6 @@ export default function ProductCard({ product }) {
 
   const handleAdd = (e) => {
     e.stopPropagation();
-    if (!user) {
-      navigate("/login", { state: { from: location } });
-      return;
-    }
     if (!selectedSize) return;
     addItem(product, selectedSize, selectedColor?.name ?? selectedColor ?? "");
     setAdded(true);
@@ -148,13 +144,13 @@ export default function ProductCard({ product }) {
         </div>
 
         <button
-          style={s.addBtn(added)}
-          onClick={handleAdd}
-          disabled={user && !selectedSize}
-          title={!user ? "Log in to add to cart" : !selectedSize ? "Pick a size first" : ""}
-        >
-          {added ? "Added ✓" : !user ? "Log in to add" : !selectedSize ? "Select a size" : "Add to cart"}
-        </button>
+  style={s.addBtn(added)}
+  onClick={handleAdd}
+  disabled={!selectedSize}
+  title={!selectedSize ? "Pick a size first" : ""}
+>
+  {added ? "Added ✓" : !selectedSize ? "Select a size" : "Add to cart"}
+</button>
       </div>
     </article>
   );
