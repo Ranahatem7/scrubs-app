@@ -157,7 +157,10 @@ export default function Signup() {
         <div style={s.card}>
           <div style={s.cardAccent} aria-hidden="true" />
           <div style={s.cardBrand}>
-            <img src="/logo_dark.png" alt="MedTrack" style={{ height: 56, width: "auto", display: "block" }} />
+           <div style={s.cardBrand}>
+  <img src="/logo_dark.png" alt="MedTrack" style={{ height: 56, width: "auto", display: "block" }} />
+  <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnLightMuted, marginTop: 4 }}>MedTrack</span>
+</div>
             <span style={label("light")}>Medical Wear</span>
           </div>
 
