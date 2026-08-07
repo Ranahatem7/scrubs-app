@@ -96,7 +96,7 @@ export default function Login() {
       <div style={s.card}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 28 }}>
   <img src="/logo_dark.png" alt="MedTrack" style={{ height: 64, width: "auto", display: "block" }} />
-  <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnLightMuted, marginTop: 6 }}>MedTrack</span>
+  <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnLightMuted, marginTop: 2 }}>MedTrack</span>
 </div>
         <h1 style={s.title}>Sign in</h1>
         <form onSubmit={handleSubmit}>
