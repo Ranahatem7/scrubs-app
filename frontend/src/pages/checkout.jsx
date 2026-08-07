@@ -357,7 +357,7 @@ export default function Checkout() {
                     style={s.input(!!errors.name)}
                     value={form.name}
                     onChange={(e) => update("name", e.target.value)}
-                    placeholder="Rasha ElHady"
+                    placeholder="Name"
                   />
                   {errors.name && <span style={s.fieldError}>{errors.name}</span>}
                 </div>

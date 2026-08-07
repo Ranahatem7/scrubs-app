@@ -86,14 +86,6 @@ export default function Signup() {
       gap: 4,
       marginBottom: 22,
     },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    cardBrandMt: {
-      color: theme.accent,
-      fontFamily: theme.fontDisplay,
-      fontSize: 32,
-      fontWeight: 700,
-      lineHeight: 1,
-    },
 
     formError: {
       padding: "12px 14px",
@@ -165,7 +157,7 @@ export default function Signup() {
         <div style={s.card}>
           <div style={s.cardAccent} aria-hidden="true" />
           <div style={s.cardBrand}>
-            <span style={s.cardBrandMt}>MT</span>
+            <img src="/logo_white.png" alt="MedTrack" style={{ height: 56, width: "auto", display: "block" }} />
             <span style={label("light")}>Medical Wear</span>
           </div>
 

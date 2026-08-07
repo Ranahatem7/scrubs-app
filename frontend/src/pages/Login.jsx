@@ -14,7 +14,6 @@ export default function Login() {
 
   const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  // Safe JSON parse — won't crash on empty body
   const safeJSON = async (res) => {
     const text = await res.text();
     try { return text ? JSON.parse(text) : {}; } catch { return {}; }
@@ -25,7 +24,6 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      // Try admin login first
       const adminRes = await fetch(`${import.meta.env.VITE_API_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,7 +38,6 @@ export default function Login() {
         }
       }
 
-      // Otherwise try regular user login
       const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,14 +62,6 @@ export default function Login() {
     card: {
       width: "100%", maxWidth: 420, background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`, borderRadius: theme.radius, padding: 40,
-    },
-    logo: {
-      fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700,
-      color: theme.accent, display: "block", marginBottom: 4,
-    },
-    sub: {
-      fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase",
-      color: theme.textOnLightMuted, display: "block", marginBottom: 32,
     },
     title: { ...display, fontSize: 26, margin: "0 0 24px", color: theme.textOnLight },
     field: { display: "flex", flexDirection: "column", gap: 5, marginBottom: 16 },
@@ -105,7 +94,7 @@ export default function Login() {
   return (
     <div style={s.page}>
       <div style={s.card}>
-      <img src="/logo.png" alt="MedTrack" style={{ height: 64, width: "auto", display: "block", marginBottom: 28,mixBlendMode: "multiply"}} />
+        <img src="/logo_white.png" alt="MedTrack" style={{ height: 64, width: "auto", display: "block", marginBottom: 28 }} />
         <h1 style={s.title}>Sign in</h1>
         <form onSubmit={handleSubmit}>
           <div style={s.field}>
