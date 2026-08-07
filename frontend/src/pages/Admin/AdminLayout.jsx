@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
+import useIsDesktop from "../../hooks/useIsDesktop";
 import { theme } from "../../theme";
 
 const NAV = [
@@ -15,10 +17,24 @@ export default function AdminLayout({ children }) {
   const { logout } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
+  const isDesktop = useIsDesktop(768);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const currentNav = NAV.find((n) =>
+    n.path === "/admin"
+      ? location.pathname === "/admin"
+      : location.pathname.startsWith(n.path)
+  );
+
+  const handleNav = (path) => {
+    navigate(path);
+    setDrawerOpen(false);
+  };
 
   const s = {
     shell: { display: "flex", minHeight: "100vh", background: theme.surfaceLight },
 
+    // Desktop sidebar
     sidebar: {
       width: 220,
       flexShrink: 0,
@@ -30,6 +46,31 @@ export default function AdminLayout({ children }) {
       top: 0,
       height: "100vh",
     },
+
+    // Mobile overlay behind drawer
+    overlay: {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.5)",
+      zIndex: 200,
+    },
+
+    // Mobile slide-in drawer
+    drawer: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: 220,
+      height: "100vh",
+      background: theme.surfaceDark,
+      display: "flex",
+      flexDirection: "column",
+      padding: "28px 0",
+      zIndex: 201,
+      transition: "transform 0.25s ease",
+      transform: drawerOpen ? "translateX(0)" : "translateX(-100%)",
+    },
+
     brand: {
       padding: "0 24px 28px",
       borderBottom: `1px solid ${theme.hairlineOnDark}`,
@@ -81,17 +122,29 @@ export default function AdminLayout({ children }) {
       textAlign: "left",
     },
 
-    main: { flex: 1, overflow: "auto" },
+    main: { flex: 1, overflow: "auto", minWidth: 0 },
     topBar: {
-      padding: "18px 32px",
+      padding: isDesktop ? "18px 32px" : "14px 16px",
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
       background: theme.surfaceLight,
+      gap: 12,
+    },
+    topLeft: { display: "flex", alignItems: "center", gap: 10 },
+    hamburger: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      fontSize: 20,
+      color: theme.textOnLight,
+      padding: 0,
+      lineHeight: 1,
+      fontFamily: theme.fontBody,
     },
     topTitle: {
-      fontSize: 12,
+      fontSize: 11,
       letterSpacing: "0.18em",
       textTransform: "uppercase",
       color: theme.textOnLightMuted,
@@ -101,48 +154,64 @@ export default function AdminLayout({ children }) {
       color: theme.accent,
       textDecoration: "none",
       fontFamily: theme.fontBody,
+      whiteSpace: "nowrap",
     },
-    content: { padding: 32 },
+    content: { padding: isDesktop ? 32 : 16 },
   };
 
-  const currentNav = NAV.find((n) =>
-    n.path === "/admin"
-      ? location.pathname === "/admin"
-      : location.pathname.startsWith(n.path)
+  const SidebarContent = () => (
+    <>
+      <div style={s.brand}>
+        <span style={s.brandMt}>MT</span>
+        <span style={s.brandSub}>Admin panel</span>
+      </div>
+      <nav style={s.nav}>
+        {NAV.map((item) => {
+          const active = item.path === "/admin"
+            ? location.pathname === "/admin"
+            : location.pathname.startsWith(item.path);
+          return (
+            <button key={item.path} style={s.navItem(active)} onClick={() => handleNav(item.path)}>
+              <span style={s.navIcon}>{item.icon}</span>
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+      <button style={s.logoutBtn} onClick={logout}>← Sign out</button>
+    </>
   );
 
   return (
     <div style={s.shell}>
-      {/* Sidebar */}
-      <aside style={s.sidebar}>
-        <div style={s.brand}>
-          <span style={s.brandMt}>MT</span>
-          <span style={s.brandSub}>Admin panel</span>
-        </div>
+      {/* Desktop: inline sidebar */}
+      {isDesktop && (
+        <aside style={s.sidebar}>
+          <SidebarContent />
+        </aside>
+      )}
 
-        <nav style={s.nav}>
-          {NAV.map((item) => {
-            const active = item.path === "/admin"
-              ? location.pathname === "/admin"
-              : location.pathname.startsWith(item.path);
-            return (
-              <button key={item.path} style={s.navItem(active)} onClick={() => navigate(item.path)}>
-                <span style={s.navIcon}>{item.icon}</span>
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
+      {/* Mobile: slide-in drawer */}
+      {!isDesktop && (
+        <>
+          {drawerOpen && (
+            <div style={s.overlay} onClick={() => setDrawerOpen(false)} />
+          )}
+          <div style={s.drawer}>
+            <SidebarContent />
+          </div>
+        </>
+      )}
 
-       <button style={s.logoutBtn} onClick={logout}>
-          ← Sign out
-        </button>
-      </aside>
-
-      {/* Main */}
+      {/* Main content */}
       <main style={s.main}>
         <div style={s.topBar}>
-          <span style={s.topTitle}>MedTrack / {currentNav?.label ?? "Admin"}</span>
+          <div style={s.topLeft}>
+            {!isDesktop && (
+              <button style={s.hamburger} onClick={() => setDrawerOpen(!drawerOpen)}>☰</button>
+            )}
+            <span style={s.topTitle}>MedTrack / {currentNav?.label ?? "Admin"}</span>
+          </div>
           <a href="/" style={s.viewSite}>↗ View site</a>
         </div>
         <div style={s.content}>{children}</div>
