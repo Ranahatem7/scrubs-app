@@ -105,8 +105,7 @@ export default function Login() {
   return (
     <div style={s.page}>
       <div style={s.card}>
-        <span style={s.logo}>MT</span>
-        <span style={s.sub}>MedTrack</span>
+      <img src="/logo.png" alt="MedTrack" style={{ height: 64, width: "auto", display: "block", marginBottom: 28 }} />
         <h1 style={s.title}>Sign in</h1>
         <form onSubmit={handleSubmit}>
           <div style={s.field}>

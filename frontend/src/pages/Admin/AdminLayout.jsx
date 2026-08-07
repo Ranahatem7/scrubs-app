@@ -162,8 +162,8 @@ export default function AdminLayout({ children }) {
   const SidebarContent = () => (
     <>
       <div style={s.brand}>
-        <span style={s.brandMt}>MT</span>
-        <span style={s.brandSub}>Admin panel</span>
+       <img src="/logo.png" alt="MedTrack" style={{ height: 48, width: "auto", display: "block", marginBottom: 6 }} />
+<span style={s.brandSub}>Admin panel</span>
       </div>
       <nav style={s.nav}>
         {NAV.map((item) => {
