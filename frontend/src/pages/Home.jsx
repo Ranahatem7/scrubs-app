@@ -333,8 +333,7 @@ export default function Home() {
       {/* Footer */}
       <footer style={s.footer} id="contact">
         <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
+      <img src="/logo_white.png" alt="MedTrack" style={{ height: 48, width: "auto", display: "block", marginBottom: 6 }} />
         </div>
 
         <div style={s.footCols}>

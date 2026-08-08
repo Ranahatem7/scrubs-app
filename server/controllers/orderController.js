@@ -3,9 +3,6 @@ const Product = require("../models/Product");
 const asyncHandler = require("../utils/asyncHandler");
 
 // POST /api/orders
-// body: { items: [{ product, size, color, quantity }], shipping, paymentMethod }
-// Prices/names/images are looked up from the DB rather than trusted from the
-// client, so a tampered request body can't under-price an order.
 const createOrder = asyncHandler(async (req, res) => {
   const { items, shipping, paymentMethod } = req.body;
 
@@ -42,7 +39,7 @@ const createOrder = asyncHandler(async (req, res) => {
   const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   const order = await Order.create({
-    user: req.user._id,
+    user: req.user?._id ?? null,
     items: orderItems,
     shipping,
     paymentMethod,
