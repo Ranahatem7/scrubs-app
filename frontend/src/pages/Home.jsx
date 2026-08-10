@@ -25,7 +25,6 @@ export default function Home() {
   });
 
   const s = {
-    // ── Hero mosaic ──────────────────────────────────────────────────────
     heroGrid: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
@@ -112,7 +111,6 @@ export default function Home() {
       flexWrap: "wrap",
     },
 
-    // ── Light content sections ───────────────────────────────────────────
     section: { padding: "56px 0", background: theme.surfaceLight },
     head: { padding: `0 ${theme.pad}px`, marginBottom: 24 },
     title: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.accent },
@@ -165,7 +163,6 @@ export default function Home() {
     errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
     retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
-    // ── Brand statement ───────────────────────────────────────────────────
     statement: { padding: `20px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
     statementText: {
       ...display,
@@ -177,13 +174,11 @@ export default function Home() {
       color: theme.accent,
     },
 
-    // ── Footer (dark bookend) ────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.surfaceDark,
+      background: "#092a1f",
     },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    footMt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
+    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
@@ -214,9 +209,8 @@ export default function Home() {
 
   return (
     <main id="top">
-      {/* Hero — 3-panel mosaic */}
+      {/* Hero */}
       <section style={s.heroGrid}>
-        {/* Left — tall main image */}
         <div style={s.heroLeft}>
           {heroImage && <img src={heroImage} alt="" style={s.heroLeftImg} />}
           <div style={s.heroOverlay} aria-hidden="true" />
@@ -228,16 +222,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right — two panels (side by side on mobile, stacked on desktop) */}
         <div style={s.heroRight}>
-          {/* Shop Men */}
           <div style={s.heroRightTop}>
             {heroImage2 && <img src={heroImage2} alt="Shop Men" style={s.panelImg} />}
             <div style={s.heroOverlay} aria-hidden="true" />
             <span style={{ position: "relative", zIndex: 1, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.55)" }}>Collection</span>
             <a href="/men" style={{ ...btnSolid, position: "relative", zIndex: 1, marginTop: 10, display: "inline-flex", alignSelf: "flex-start" }}>Shop Men</a>
           </div>
-          {/* Shop Women */}
           <div style={s.heroRightBottom}>
             {heroImage3 && <img src={heroImage3} alt="Shop Women" style={s.panelImg} />}
             <div style={s.heroOverlay} aria-hidden="true" />
@@ -269,13 +260,12 @@ export default function Home() {
         <span style={label("light")}>MedTrack Medical Wear</span>
       </section>
 
-      {/* Categories — loaded from database */}
+      {/* Categories */}
       <section style={s.section} id="collections">
         <div style={s.head}>
           <span style={label("light")}>Collections</span>
           <h2 style={s.title}>Shop by piece</h2>
         </div>
-
         <div style={s.rail} className="no-scrollbar">
           {categories.map((cat) => (
             <Link key={cat._id} to={`/category/${cat.slug}`} style={s.railCard(cat.image)}>
@@ -332,10 +322,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={s.footer} id="contact">
-        <div style={s.footBrand}>
-      <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+        <div style={s.footLogo}>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
-
         <div style={s.footCols}>
           <div style={s.footCol}>
             <h3 style={s.footHead}>Shop</h3>

@@ -6,10 +6,8 @@ import useProducts from "../hooks/useProducts";
 import { images } from "../data/images";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
-// Filter categories for women's page — ids match Product.category in the backend
 const WOMEN_FILTERS = [
   { id: "all", name: "All" },
-
 ];
 
 export default function Women() {
@@ -17,7 +15,6 @@ export default function Women() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { products, loading, error, retry } = useProducts();
 
-  // Women's page shows women's + unisex pieces
   const womenProducts = products.filter(
     (p) => p.gender === "women" || p.gender === "unisex" || !p.gender
   );
@@ -27,7 +24,6 @@ export default function Women() {
       : womenProducts.filter((p) => p.category === activeFilter);
 
   const s = {
-    // ── Hero (dark bookend) ──────────────────────────────────────────────
     hero: {
       position: "relative",
       minHeight: "72vh",
@@ -60,7 +56,6 @@ export default function Women() {
     heroActions: { display: "flex", gap: 10, marginTop: 28 },
     heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
 
-    // ── Filter bar (light) ────────────────────────────────────────────────
     filterBar: {
       display: "flex",
       gap: 8,
@@ -85,7 +80,6 @@ export default function Women() {
       whiteSpace: "nowrap",
     }),
 
-    // ── Product section (light) ───────────────────────────────────────────
     section: { padding: "40px 0 64px", background: theme.surfaceLight },
     head: { padding: `0 ${theme.pad}px`, marginBottom: 24 },
     title: { ...display, margin: "8px 0 0", fontSize: 34, color: theme.accent },
@@ -103,7 +97,6 @@ export default function Women() {
       padding: `0 ${theme.pad}px`,
     },
 
-    // Empty / loading / error states
     empty: {
       padding: `56px ${theme.pad}px`,
       textAlign: "center",
@@ -114,7 +107,6 @@ export default function Women() {
     errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
     retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
-    // ── Brand statement ───────────────────────────────────────────────────
     statement: { padding: `64px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
     statementText: {
       ...display,
@@ -126,26 +118,12 @@ export default function Women() {
       color: theme.accent,
     },
 
-    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.surfaceDark,
+      background: "#092a1f",
     },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: {
-      ...strongText("dark"),
-      fontFamily: theme.fontDisplay,
-      fontSize: 26,
-      fontWeight: 700,
-      lineHeight: 1,
-    },
-    footCols: {
-      display: "grid",
-      gridTemplateColumns: "repeat(2, 1fr)",
-      gap: 28,
-      marginBottom: 32,
-    },
+    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
+    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
       margin: "0 0 4px",
@@ -260,9 +238,9 @@ export default function Women() {
 
       {/* Footer */}
       <footer style={s.footer} id="contact">
-        <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
+        <div style={s.footLogo}>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
 
         <div style={s.footCols}>
@@ -282,9 +260,7 @@ export default function Women() {
 
         <div style={s.footContact}>
           <p style={s.footText}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={s.footLink}>
-            hello@medtrack.com
-          </a>
+          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
         </div>
 
         <p style={s.legal}>© 2026 MedTrack</p>

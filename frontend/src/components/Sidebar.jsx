@@ -44,7 +44,6 @@ const s = {
     padding: `0 ${theme.pad}px 22px`,
   },
   brand: { display: "flex", flexDirection: "column", gap: 6 },
-  // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
   mt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 30, fontWeight: 700, lineHeight: 1 },
   close: { width: 34, height: 34, display: "grid", placeItems: "center", color: theme.textOnDarkMuted, cursor: "pointer" },
   closeIcon: { width: 18, height: 18 },
@@ -82,7 +81,6 @@ const s = {
 export default function Sidebar({ open, onClose }) {
   const { user } = useAuth();
 
-  // Lock background scroll while the drawer is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -90,7 +88,6 @@ export default function Sidebar({ open, onClose }) {
     };
   }, [open]);
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -133,9 +130,8 @@ export default function Sidebar({ open, onClose }) {
             {user ? "My account" : "Log in"}
           </a>
           <div style={s.social}>
-            <a href="#instagram">Instagram</a>
-            <a href="#tiktok">TikTok</a>
-            <a href="#facebook">Facebook</a>
+            <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={{ color: theme.textOnDarkMuted }}>Instagram</a>
+            
           </div>
         </div>
       </nav>

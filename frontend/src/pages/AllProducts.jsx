@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import Footer from "../components/Footer";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnGhost } from "../theme";
 
@@ -53,6 +52,16 @@ export default function AllProducts() {
       marginTop: 32,
       marginBottom: 8,
     },
+
+    footer: { padding: `44px ${theme.pad}px 32px`, background: "#092a1f" },
+    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
+    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
+    footCol: { display: "flex", flexDirection: "column", gap: 9 },
+    footHead: { margin: "0 0 4px", fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark },
+    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
+    footContact: { display: "flex", flexDirection: "column", gap: 6, paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}` },
+    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
+    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
   return (
@@ -78,7 +87,32 @@ export default function AllProducts() {
           ))}
         </div>
       )}
-      <Footer />
+
+      <footer style={s.footer}>
+        <div style={s.footLogo}>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
+        </div>
+        <div style={s.footCols}>
+          <div style={s.footCol}>
+            <h3 style={s.footHead}>Shop</h3>
+            <a href="/men" style={s.footLink}>Men</a>
+            <a href="/women" style={s.footLink}>Women</a>
+            <a href="#lab-coats" style={s.footLink}>Lab coats</a>
+          </div>
+          <div style={s.footCol}>
+            <h3 style={s.footHead}>Help</h3>
+            <a href="#sizing" style={s.footLink}>Size guide</a>
+            <a href="#fabric" style={s.footLink}>Our fabric</a>
+            <a href="#returns" style={s.footLink}>Returns</a>
+          </div>
+        </div>
+        <div style={s.footContact}>
+          <p style={s.footText}>New Cairo, Cairo</p>
+          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
+        </div>
+        <p style={s.legal}>© 2026 MedTrack</p>
+      </footer>
     </div>
   );
 }

@@ -8,24 +8,9 @@ import { useCart } from "../context/CartContext";
 import { createOrder } from "../services/orders";
 
 const PAYMENT_METHODS = [
-  {
-    id: "cod",
-    title: "Cash on Delivery",
-    note: "Pay when your order arrives",
-    icon: "💵",
-  },
-  {
-    id: "vodafone",
-    title: "Vodafone Cash",
-    note: "Send to our Vodafone Cash wallet",
-    icon: "📱",
-  },
-  {
-    id: "instapay",
-    title: "Instapay",
-    note: "Transfer via Instapay",
-    icon: "⚡",
-  },
+  { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
+  { id: "vodafone", title: "Vodafone Cash", note: "Send to our Vodafone Cash wallet", icon: "📱" },
+  { id: "instapay", title: "Instapay", note: "Transfer via Instapay", icon: "⚡" },
 ];
 
 export default function Checkout() {
@@ -56,7 +41,7 @@ export default function Checkout() {
     const e = {};
     if (!form.name.trim()) e.name = "Required";
     if (!form.phone.trim()) e.phone = "Required";
-   else if (!/^\d{10,13}$/.test(form.phone.replace(/[\s\-\+]/g, "")))
+    else if (!/^\d{10,13}$/.test(form.phone.replace(/[\s\-\+]/g, "")))
       e.phone = "Enter a valid Egyptian phone number";
     if (!form.email.trim()) e.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
@@ -73,7 +58,6 @@ export default function Checkout() {
       setErrors(errs);
       return;
     }
-
     setSubmitting(true);
     try {
       const order = await createOrder({
@@ -96,219 +80,148 @@ export default function Checkout() {
   };
 
   const s = {
-    page: {
-      minHeight: "100vh",
-      background: theme.surfaceLight,
-      paddingBottom: 80,
-    },
+    page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 
-    // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
 
-    // ── Layout ────────────────────────────────────────────────────────────
     layout: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 380px" : "1fr",
-      gap: 32,
+      gap: 24,
       maxWidth: 1080,
       margin: "0 auto",
-      padding: `40px ${theme.pad}px 0`,
+      padding: `32px ${theme.pad}px 0`,
       alignItems: "start",
     },
 
-    // ── Form card ─────────────────────────────────────────────────────────
     card: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
       boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
-      padding: isDesktop ? 36 : 24,
+      padding: isDesktop ? 36 : 20,
     },
     cardTitle: {
-      margin: "0 0 24px",
-      fontSize: 11,
-      fontWeight: 500,
-      letterSpacing: "0.26em",
-      textTransform: "uppercase",
-      color: theme.accent,
+      margin: "0 0 24px", fontSize: 11, fontWeight: 500,
+      letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent,
     },
 
-    // ── Field ─────────────────────────────────────────────────────────────
     fieldGroup: { display: "flex", flexDirection: "column", gap: 16 },
-    row: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: 12,
-    },
+    row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
     field: { display: "flex", flexDirection: "column", gap: 6 },
-    fieldLabel: {
-      fontSize: 10,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: theme.textOnLightMuted,
-    },
+    fieldLabel: { fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: theme.textOnLightMuted },
     input: (hasError) => ({
-      padding: "11px 14px",
-      background: theme.surfaceMuted,
+      padding: "11px 14px", background: theme.surfaceMuted,
       border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
-      borderRadius: 8,
-      color: theme.textOnLight,
-      fontSize: 14,
-      fontFamily: theme.fontBody,
-      outline: "none",
-      transition: "border-color 0.18s",
+      borderRadius: 8, color: theme.textOnLight, fontSize: 14,
+      fontFamily: theme.fontBody, outline: "none", transition: "border-color 0.18s",
+      width: "100%", boxSizing: "border-box",
     }),
-    fieldError: {
-      fontSize: 11,
-      color: "#c0524a",
-      letterSpacing: "0.06em",
-    },
+    fieldError: { fontSize: 11, color: "#c0524a", letterSpacing: "0.06em" },
 
-    divider: {
-      margin: "28px 0",
-      height: 1,
-      background: theme.hairlineOnLight,
-    },
-
-    // ── Payment method pills ───────────────────────────────────────────────
     methodList: { display: "flex", flexDirection: "column", gap: 10 },
     methodPill: (active) => ({
-      display: "flex",
-      alignItems: "center",
-      gap: 14,
-      padding: "14px 16px",
+      display: "flex", alignItems: "center", gap: 14, padding: "14px 16px",
       border: `1px solid ${active ? theme.accent : theme.lightGray}`,
-      borderRadius: 10,
-      background: active ? "rgba(15, 91, 70, 0.08)" : "transparent",
-      cursor: "pointer",
-      transition: "border-color 0.18s, background 0.18s",
+      borderRadius: 10, background: active ? "rgba(15, 91, 70, 0.08)" : "transparent",
+      cursor: "pointer", transition: "border-color 0.18s, background 0.18s",
     }),
     methodIcon: { fontSize: 20, lineHeight: 1 },
     methodInfo: { flex: 1 },
-    methodTitle: {
-      fontSize: 14,
-      color: theme.textOnLight,
-      fontFamily: theme.fontBody,
-    },
-    methodNote: {
-      fontSize: 11,
-      color: theme.textOnLightMuted,
-      marginTop: 2,
-    },
+    methodTitle: { fontSize: 14, color: theme.textOnLight, fontFamily: theme.fontBody },
+    methodNote: { fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 },
     methodRadio: (active) => ({
-      width: 16,
-      height: 16,
-      borderRadius: "50%",
+      width: 16, height: 16, borderRadius: "50%",
       border: `2px solid ${active ? theme.accent : theme.lightGray}`,
       background: active ? theme.accent : "transparent",
-      flexShrink: 0,
-      transition: "background 0.18s, border-color 0.18s",
+      flexShrink: 0, transition: "background 0.18s, border-color 0.18s",
     }),
 
-    // ── Order summary (desktop sidebar) ───────────────────────────────────
+    // Order summary — shown ABOVE form on mobile, sidebar on desktop
     summary: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
       borderRadius: theme.radius,
       boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
-      padding: isDesktop ? 28 : 24,
+      padding: isDesktop ? 28 : 20,
       position: isDesktop ? "sticky" : "static",
       top: theme.barH + 20,
     },
     summaryTitle: {
-      margin: "0 0 20px",
-      fontSize: 11,
-      fontWeight: 500,
-      letterSpacing: "0.26em",
-      textTransform: "uppercase",
-      color: theme.accent,
+      margin: "0 0 20px", fontSize: 11, fontWeight: 500,
+      letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent,
     },
     summaryRow: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 12,
-      fontSize: 13,
-      color: theme.textOnLightMuted,
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      marginBottom: 12, fontSize: 13, color: theme.textOnLightMuted,
     },
     summaryTotal: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingTop: 16,
-      marginTop: 8,
-      borderTop: `1px solid ${theme.hairlineOnLight}`,
-      fontSize: 15,
-      color: theme.textOnLight,
-      fontFamily: theme.fontDisplay,
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      paddingTop: 16, marginTop: 8, borderTop: `1px solid ${theme.hairlineOnLight}`,
+      fontSize: 15, color: theme.textOnLight, fontFamily: theme.fontDisplay,
     },
     totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
 
     submitBtn: {
-      ...btnSolid,
-      width: "100%",
-      marginTop: 20,
-      padding: "14px 0",
-      fontSize: 13,
-      letterSpacing: "0.14em",
-      justifyContent: "center",
-      opacity: submitting ? 0.6 : 1,
-      cursor: submitting ? "default" : "pointer",
+      ...btnSolid, width: "100%", marginTop: 20, padding: "14px 0",
+      fontSize: 13, letterSpacing: "0.14em", justifyContent: "center",
+      opacity: submitting ? 0.6 : 1, cursor: submitting ? "default" : "pointer",
     },
 
     formError: {
-      padding: "12px 14px",
-      marginBottom: 20,
-      background: "rgba(192,82,74,0.1)",
-      border: "1px solid rgba(192,82,74,0.35)",
-      borderRadius: 8,
-      color: "#a23b34",
-      fontSize: 13,
+      padding: "12px 14px", marginBottom: 20,
+      background: "rgba(192,82,74,0.1)", border: "1px solid rgba(192,82,74,0.35)",
+      borderRadius: 8, color: "#a23b34", fontSize: 13,
     },
 
-    empty: {
-      padding: `80px ${theme.pad}px`,
-      textAlign: "center",
-    },
+    empty: { padding: `80px ${theme.pad}px`, textAlign: "center" },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
     emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
-
     backLink: {
-      ...btnGhost("light"),
-      display: "inline-flex",
-      marginTop: 14,
-      width: "100%",
-      justifyContent: "center",
-      fontSize: 12,
+      ...btnGhost("light"), display: "inline-flex", marginTop: 14,
+      width: "100%", justifyContent: "center", fontSize: 12,
     },
 
-    // ── Footer (dark bookend) ─────────────────────────────────────────────
-    footer: {
-      padding: `44px ${theme.pad}px 32px`,
-      background: theme.surfaceDark,
-      marginTop: 80,
-    },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
+    footer: { padding: `44px ${theme.pad}px 32px`, background: "#092a1f", marginTop: 70 },
+    footBrand: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, marginBottom: 34 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
-    },
+    footHead: { margin: "0 0 4px", fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark },
     footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
-    },
+    footContact: { display: "flex", flexDirection: "column", gap: 6, paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}` },
     footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
     legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
+
+  const OrderSummary = () => (
+    <div style={s.summary}>
+      <p style={s.summaryTitle}>Order summary</p>
+      <div style={s.summaryRow}>
+        <span>Subtotal ({totalItems} items)</span>
+        <span>EGP {totalPrice.toLocaleString()}</span>
+      </div>
+      <div style={s.summaryRow}>
+        <span>Shipping</span>
+        <span>Calculated at checkout</span>
+      </div>
+      <div style={s.summaryTotal}>
+        <span>Total</span>
+        <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
+      </div>
+      {isDesktop && (
+        <>
+          <button type="submit" style={s.submitBtn} disabled={submitting}>
+            {submitting ? "Placing order…" : "Place order"}
+          </button>
+          <a href="/men" style={s.backLink}>← Continue shopping</a>
+        </>
+      )}
+    </div>
+  );
 
   if (items.length === 0) {
     return (
@@ -331,7 +244,6 @@ export default function Checkout() {
 
   return (
     <main style={s.page}>
-      {/* Page header */}
       <div style={s.pageHead}>
         <span style={label("light")}>Almost there</span>
         <h1 style={s.pageTitle}>Checkout</h1>
@@ -342,107 +254,66 @@ export default function Checkout() {
       <form onSubmit={handleSubmit} noValidate>
         <div style={s.layout}>
 
-          {/* ── Left: form ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          {/* On mobile: summary first, then form. On desktop: form left, summary right */}
+          {!isDesktop && <OrderSummary />}
 
+          {/* Form */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {errors.form && <p style={s.formError}>{errors.form}</p>}
 
-            {/* Contact */}
             <div style={s.card}>
               <p style={s.cardTitle}>Contact information</p>
               <div style={s.fieldGroup}>
                 <div style={s.field}>
                   <label style={s.fieldLabel}>Full name</label>
-                  <input
-                    style={s.input(!!errors.name)}
-                    value={form.name}
-                    onChange={(e) => update("name", e.target.value)}
-                    placeholder="Name"
-                  />
+                  <input style={s.input(!!errors.name)} value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Name" />
                   {errors.name && <span style={s.fieldError}>{errors.name}</span>}
                 </div>
-
                 <div style={s.row}>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>Phone</label>
-                    <input
-                      style={s.input(!!errors.phone)}
-                      value={form.phone}
-                      onChange={(e) => update("phone", e.target.value)}
-                      placeholder="01xxxxxxxxx"
-                      type="tel"
-                    />
+                    <input style={s.input(!!errors.phone)} value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="01xxxxxxxxx" type="tel" />
                     {errors.phone && <span style={s.fieldError}>{errors.phone}</span>}
                   </div>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>Email</label>
-                    <input
-                      style={s.input(!!errors.email)}
-                      value={form.email}
-                      onChange={(e) => update("email", e.target.value)}
-                      placeholder="you@email.com"
-                      type="email"
-                    />
+                    <input style={s.input(!!errors.email)} value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@email.com" type="email" />
                     {errors.email && <span style={s.fieldError}>{errors.email}</span>}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Delivery address */}
             <div style={s.card}>
               <p style={s.cardTitle}>Delivery address</p>
               <div style={s.fieldGroup}>
                 <div style={s.field}>
                   <label style={s.fieldLabel}>Street address</label>
-                  <input
-                    style={s.input(!!errors.street)}
-                    value={form.street}
-                    onChange={(e) => update("street", e.target.value)}
-                    placeholder="Building, street name"
-                  />
+                  <input style={s.input(!!errors.street)} value={form.street} onChange={(e) => update("street", e.target.value)} placeholder="Building, street name" />
                   {errors.street && <span style={s.fieldError}>{errors.street}</span>}
                 </div>
-
                 <div style={s.row}>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>City / Area</label>
-                    <input
-                      style={s.input(!!errors.city)}
-                      value={form.city}
-                      onChange={(e) => update("city", e.target.value)}
-                      placeholder="New Cairo"
-                    />
+                    <input style={s.input(!!errors.city)} value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="New Cairo" />
                     {errors.city && <span style={s.fieldError}>{errors.city}</span>}
                   </div>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>Governorate</label>
-                    <input
-                      style={s.input(!!errors.governorate)}
-                      value={form.governorate}
-                      onChange={(e) => update("governorate", e.target.value)}
-                      placeholder="Cairo"
-                    />
+                    <input style={s.input(!!errors.governorate)} value={form.governorate} onChange={(e) => update("governorate", e.target.value)} placeholder="Cairo" />
                     {errors.governorate && <span style={s.fieldError}>{errors.governorate}</span>}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Payment method */}
             <div style={s.card}>
               <p style={s.cardTitle}>Payment method</p>
               <div style={s.methodList}>
                 {PAYMENT_METHODS.map((m) => (
-                  <div
-                    key={m.id}
-                    style={s.methodPill(paymentMethod === m.id)}
-                    onClick={() => setPaymentMethod(m.id)}
-                    role="radio"
-                    aria-checked={paymentMethod === m.id}
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setPaymentMethod(m.id)}
-                  >
+                  <div key={m.id} style={s.methodPill(paymentMethod === m.id)} onClick={() => setPaymentMethod(m.id)}
+                    role="radio" aria-checked={paymentMethod === m.id} tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setPaymentMethod(m.id)}>
                     <span style={s.methodIcon}>{m.icon}</span>
                     <span style={s.methodInfo}>
                       <span style={s.methodTitle}>{m.title}</span>
@@ -454,40 +325,24 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* Mobile: Place order button at bottom of form */}
+            {!isDesktop && (
+              <button type="submit" style={s.submitBtn} disabled={submitting}>
+                {submitting ? "Placing order…" : "Place order"}
+              </button>
+            )}
           </div>
 
-          {/* ── Right: order summary ── */}
-          <div style={s.summary}>
-            <p style={s.summaryTitle}>Order summary</p>
-
-            <div style={s.summaryRow}>
-              <span>Subtotal ({totalItems} items)</span>
-              <span>EGP {totalPrice.toLocaleString()}</span>
-            </div>
-            <div style={s.summaryRow}>
-              <span>Shipping</span>
-              <span>Calculated at checkout</span>
-            </div>
-
-            <div style={s.summaryTotal}>
-              <span>Total</span>
-              <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
-            </div>
-
-            <button type="submit" style={s.submitBtn} disabled={submitting}>
-              {submitting ? "Placing order…" : "Place order"}
-            </button>
-            <a href="/men" style={s.backLink}>← Continue shopping</a>
-          </div>
+          {/* Desktop: summary sidebar */}
+          {isDesktop && <OrderSummary />}
 
         </div>
       </form>
 
-      {/* Footer */}
       <footer style={s.footer}>
         <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", maxWidth: 160, display: "block" }} />
+        <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>
