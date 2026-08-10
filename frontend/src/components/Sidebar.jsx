@@ -31,7 +31,7 @@ const s = {
     display: "flex",
     flexDirection: "column",
     padding: "22px 0 26px",
-    background: theme.surfaceDark,
+    background: "#092a1f",
     borderRight: `1px solid ${theme.hairlineOnDark}`,
     transform: open ? "translateX(0)" : "translateX(-102%)",
     visibility: open ? "visible" : "hidden",
@@ -102,8 +102,8 @@ export default function Sidebar({ open, onClose }) {
       <nav style={s.panel(open)} aria-label="Main menu" aria-hidden={!open}>
         <div style={s.top}>
           <div style={s.brand}>
-            <span style={s.mt}>MT</span>
-            <span style={label("dark")}>Medical Wear</span>
+                      <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", maxWidth: 160, display: "block" }} />
+        <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
           </div>
           <button style={s.close} onClick={onClose} aria-label="Close menu">
             <svg style={s.closeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
