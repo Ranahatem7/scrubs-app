@@ -10,11 +10,13 @@ import LoadingPage from "../components/LoadingPage";
 const MEN_FILTERS = [
   { id: "all", name: "All" },
 ];
-if (loading) return <LoadingPage />;
+
 export default function Men() {
   const isDesktop = useIsDesktop(700);
   const [activeFilter, setActiveFilter] = useState("all");
   const { products, loading, error, retry } = useProducts();
+
+  if (loading) return <LoadingPage />;
 
   const menProducts = products.filter(
     (p) => p.gender === "men" || p.gender === "unisex" || !p.gender
@@ -198,23 +200,21 @@ export default function Men() {
               ? "All pieces"
               : MEN_FILTERS.find((f) => f.id === activeFilter)?.name}
           </h2>
-          {!loading && !error && (
+          {!error && (
             <p style={s.countNote}>
               {filtered.length} {filtered.length === 1 ? "item" : "items"}
             </p>
           )}
         </div>
 
-        {loading && <p style={s.empty}>Loading products…</p>}
-
-        {!loading && error && (
+        {error && (
           <div style={s.empty}>
             <p style={s.errorText}>{error}</p>
             <button style={s.retryBtn} onClick={retry}>Try again</button>
           </div>
         )}
 
-        {!loading && !error && filtered.length > 0 && (
+        {!error && filtered.length > 0 && (
           <div style={s.grid}>
             {filtered.map((product) => (
               <ProductCard key={product._id} product={product} />
@@ -222,7 +222,7 @@ export default function Men() {
           </div>
         )}
 
-        {!loading && !error && filtered.length === 0 && (
+        {!error && filtered.length === 0 && (
           <p style={s.empty}>No items in this category yet.</p>
         )}
       </section>

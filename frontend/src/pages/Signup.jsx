@@ -3,8 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import { theme, label, display, btnSolid } from "../theme";
 import { useAuth } from "../context/AuthContext";
-import LoadingPage from "../components/LoadingPage";
-if (loading) return <LoadingPage />;
+
 export default function Signup() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -158,10 +157,8 @@ export default function Signup() {
         <div style={s.card}>
           <div style={s.cardAccent} aria-hidden="true" />
           <div style={s.cardBrand}>
-           <div style={s.cardBrand}>
-  <img src="/logo_dark.png" alt="MedTrack" style={{ height: 56, width: "auto", display: "block" }} />
-  <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnLightMuted, marginTop: 2 }}>MedTrack</span>
-</div>
+            <img src="/logo_dark.png" alt="MedTrack" style={{ height: 56, width: "auto", display: "block" }} />
+            <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnLightMuted, marginTop: 2 }}>MedTrack</span>
           </div>
 
           {errors.form && <p style={s.formError}>{errors.form}</p>}

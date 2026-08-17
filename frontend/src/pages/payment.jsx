@@ -2,8 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
-import LoadingPage from "../components/LoadingPage";
-if (loading) return <LoadingPage />;
+
 const METHOD_DETAILS = {
   cod: {
     icon: "💵",
@@ -53,14 +52,12 @@ export default function Payment() {
   const s = {
     page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 
-    // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
 
-    // ── Layout ────────────────────────────────────────────────────────────
     layout: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 360px" : "1fr",
@@ -71,7 +68,6 @@ export default function Payment() {
       alignItems: "start",
     },
 
-    // ── Card ──────────────────────────────────────────────────────────────
     card: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
@@ -89,7 +85,6 @@ export default function Payment() {
       color: theme.accent,
     },
 
-    // ── Success banner ────────────────────────────────────────────────────
     successBanner: {
       display: "flex",
       alignItems: "center",
@@ -104,7 +99,6 @@ export default function Payment() {
     successText: { fontSize: 14, color: theme.textOnLight, lineHeight: 1.5 },
     successSub: { fontSize: 12, color: theme.textOnLightMuted, marginTop: 3 },
 
-    // ── Payment instruction ───────────────────────────────────────────────
     methodHeader: {
       display: "flex",
       alignItems: "center",
@@ -115,7 +109,6 @@ export default function Payment() {
     methodTitle: { ...display, fontSize: 20, margin: 0, color: theme.textOnLight },
     instruction: { fontSize: 14, color: theme.textOnLightMuted, lineHeight: 1.7, marginBottom: 24 },
 
-    // Account number highlight
     accountBox: {
       padding: "14px 18px",
       background: "rgba(15,91,70,0.08)",
@@ -126,7 +119,6 @@ export default function Payment() {
     accountLabel: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.textOnLightMuted, marginBottom: 6 },
     accountNumber: { color: theme.accent, fontWeight: 700, fontFamily: theme.fontDisplay, fontSize: 22 },
 
-    // Steps
     stepList: { display: "flex", flexDirection: "column", gap: 12 },
     step: { display: "flex", gap: 12, alignItems: "flex-start" },
     stepNum: {
@@ -144,7 +136,6 @@ export default function Payment() {
     },
     stepText: { fontSize: 13, color: theme.textOnLightMuted, lineHeight: 1.6 },
 
-    // ── Order details sidebar ─────────────────────────────────────────────
     sidebar: {
       display: "flex",
       flexDirection: "column",
@@ -176,20 +167,16 @@ export default function Payment() {
     detailKey: { color: theme.textOnLightMuted },
     detailVal: { color: theme.textOnLight, textAlign: "right", maxWidth: "60%" },
 
-    // ── Actions ───────────────────────────────────────────────────────────
     actions: { display: "flex", flexDirection: "column", gap: 10, marginTop: 4 },
     continueBtn: { ...btnSolid, justifyContent: "center", padding: "13px 0" },
     backBtn: { ...btnGhost("light"), justifyContent: "center", padding: "13px 0", fontSize: 12 },
 
-    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.surfaceDark,
+      background: "#092a1f",
       marginTop: 80,
     },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
+    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
@@ -207,7 +194,6 @@ export default function Payment() {
 
   return (
     <main style={s.page}>
-      {/* Page header */}
       <div style={s.pageHead}>
         <span style={label("light")}>Order received</span>
         <h1 style={s.pageTitle}>Payment details</h1>
@@ -216,10 +202,8 @@ export default function Payment() {
       <PulseDivider />
 
       <div style={s.layout}>
-
         {/* ── Left: payment instructions ── */}
         <div>
-          {/* Success banner */}
           <div style={s.successBanner}>
             <span style={s.successIcon}>✓</span>
             <div>
@@ -230,7 +214,6 @@ export default function Payment() {
             </div>
           </div>
 
-          {/* Payment method card */}
           <div style={s.card}>
             <div style={s.methodHeader}>
               <span style={s.methodIcon}>{method.icon}</span>
@@ -239,7 +222,6 @@ export default function Payment() {
 
             <p style={s.instruction}>{method.instruction}</p>
 
-            {/* Account number (for Vodafone / Instapay) */}
             {method.accountNumber && (
               <div style={s.accountBox}>
                 <p style={{ ...s.accountLabel, margin: "0 0 6px" }}>{method.accountLabel}</p>
@@ -247,7 +229,6 @@ export default function Payment() {
               </div>
             )}
 
-            {/* Steps */}
             <div style={s.stepList}>
               {method.steps.map((step, i) => (
                 <div key={i} style={s.step}>
@@ -261,7 +242,6 @@ export default function Payment() {
 
         {/* ── Right: order summary sidebar ── */}
         <div style={s.sidebar}>
-          {/* Delivery details */}
           <div style={s.sideCard}>
             <p style={s.sideTitle}>Delivery details</p>
             <div style={s.detailRow}>
@@ -284,7 +264,6 @@ export default function Payment() {
             </div>
           </div>
 
-          {/* Actions */}
           <div style={s.sideCard}>
             <p style={s.sideTitle}>What&rsquo;s next?</p>
             <div style={s.actions}>
@@ -293,14 +272,13 @@ export default function Payment() {
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Footer */}
       <footer style={s.footer}>
-        <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
+        <div style={s.footLogo}>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>

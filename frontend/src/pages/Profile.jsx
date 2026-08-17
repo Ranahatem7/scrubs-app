@@ -15,7 +15,7 @@ const STATUS_STYLES = {
   delivered: { color: "#3d7a3f", border: "rgba(61,122,63,0.35)", bg: "rgba(61,122,63,0.1)" },
   cancelled: { color: "#a23b34", border: "rgba(162,59,52,0.35)", bg: "rgba(162,59,52,0.1)" },
 };
-if (loading) return <LoadingPage />;
+
 export default function Profile() {
   const isDesktop = useIsDesktop(700);
   const { user, logout } = useAuth();
@@ -46,6 +46,8 @@ export default function Profile() {
       cancelled = true;
     };
   }, [reloadKey]);
+
+  if (ordersLoading) return <LoadingPage />;
 
   const handleSignOut = () => {
     logout();
@@ -233,16 +235,14 @@ export default function Profile() {
         <div style={s.ordersCol}>
           <div style={s.sectionHead}>
             <p style={s.sectionTitle}>Orders</p>
-            {!ordersLoading && !ordersError && orders.length > 0 && (
+            {!ordersError && orders.length > 0 && (
               <span style={s.orderCountNote}>
                 {orders.length} {orders.length === 1 ? "order" : "orders"}
               </span>
             )}
           </div>
 
-          {ordersLoading && <p style={s.stateBlock}>Loading orders…</p>}
-
-          {!ordersLoading && ordersError && (
+          {ordersError && (
             <div style={s.stateBlock}>
               <p style={s.errorText}>{ordersError}</p>
               <button style={s.retryBtn} onClick={() => setReloadKey((k) => k + 1)}>
@@ -251,14 +251,14 @@ export default function Profile() {
             </div>
           )}
 
-          {!ordersLoading && !ordersError && orders.length === 0 && (
+          {!ordersError && orders.length === 0 && (
             <div style={s.stateBlock}>
               <p style={s.stateText}>You haven&rsquo;t placed any orders yet.</p>
               <a href="/men" style={s.emptyCta}>Start shopping</a>
             </div>
           )}
 
-          {!ordersLoading && !ordersError && orders.length > 0 && (
+          {!ordersError && orders.length > 0 && (
             <div style={s.orderList}>
               {orders.map((order) => {
                 const itemCount = order.items.reduce((sum, i) => sum + i.quantity, 0);
