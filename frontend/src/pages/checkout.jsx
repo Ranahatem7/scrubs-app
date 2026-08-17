@@ -9,7 +9,6 @@ import { createOrder } from "../services/orders";
 
 const PAYMENT_METHODS = [
   { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
-  { id: "vodafone", title: "Vodafone Cash", note: "Send to our Vodafone Cash wallet", icon: "📱" },
   { id: "instapay", title: "Instapay", note: "Transfer via Instapay", icon: "⚡" },
 ];
 
