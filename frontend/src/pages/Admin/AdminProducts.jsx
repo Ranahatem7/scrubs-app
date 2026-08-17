@@ -36,17 +36,27 @@ export default function AdminProducts() {
 
   const emptyForm = (cats) => ({
     name: "", description: "", price: "", category: cats[0]?.slug || "", gender: "unisex",
-    fit: "", sizes: "S,M,L,XL", images: "", stock: "50", colors: "",
+    fit: "", sizes: "S,M,L,XL", images: "", stock: { S: 0, M: 0, L: 0, XL: 0 }, colors: "",
   });
 
   useEffect(() => { if (adminToken) load(); }, [adminToken]);
 
   const openAdd = () => { setForm(emptyForm(categories)); setEditId(null); setShowForm(true); };
+
   const openEdit = (p) => {
+    const sizeList = p.sizes || [];
+    let stockObj = {};
+    if (typeof p.stock === "number") {
+      // backward compat: spread old single number across all sizes
+      sizeList.forEach((s) => { stockObj[s] = p.stock; });
+    } else if (p.stock && typeof p.stock === "object") {
+      stockObj = { ...p.stock };
+    }
     setForm({
-      name: p.name, description: p.description || "", price: p.price, category: p.category,
-      gender: p.gender, fit: p.fit, sizes: (p.sizes || []).join(","),
-      images: (p.images || []).join(","), stock: p.stock,
+      name: p.name, description: p.description || "", price: p.price,
+      category: p.category, gender: p.gender, fit: p.fit,
+      sizes: sizeList.join(","), images: (p.images || []).join(","),
+      stock: stockObj,
       colors: (p.colors || []).map((c) => typeof c === "string" ? c : `${c.name}:${c.hex}`).join(","),
     });
     setEditId(p._id);
@@ -56,11 +66,16 @@ export default function AdminProducts() {
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
+    const sizeList = form.sizes.split(",").map((s) => s.trim()).filter(Boolean);
+    // Build stock object with only the current sizes
+    const stockObj = {};
+    sizeList.forEach((s) => { stockObj[s] = Number(form.stock[s] ?? 0); });
+
     const body = {
       ...form,
       price: Number(form.price),
-      stock: Number(form.stock),
-      sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
+      stock: stockObj,
+      sizes: sizeList,
       images: form.images.split(",").map((s) => s.trim()).filter(Boolean),
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean).map((c) => {
         const [name, hex] = c.split(":").map((x) => x.trim());
@@ -85,6 +100,30 @@ export default function AdminProducts() {
   const filtered = products.filter((p) =>
     p.name?.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Helper: total stock across all sizes
+  const totalStock = (stock) => {
+    if (!stock || typeof stock === "number") return stock ?? 0;
+    return Object.values(stock).reduce((a, b) => a + Number(b), 0);
+  };
+
+  const upd = (k, v) => {
+    if (k === "sizes") {
+      // When sizes change, preserve existing stock values and add new sizes with 0
+      const newSizes = v.split(",").map((s) => s.trim()).filter(Boolean);
+      const newStock = {};
+      newSizes.forEach((s) => { newStock[s] = form.stock?.[s] ?? 0; });
+      setForm((f) => ({ ...f, sizes: v, stock: newStock }));
+    } else {
+      setForm((f) => ({ ...f, [k]: v }));
+    }
+  };
+
+  const updStock = (size, val) => {
+    setForm((f) => ({ ...f, stock: { ...f.stock, [size]: val } }));
+  };
+
+  const sizeList = (form.sizes || "").split(",").map((s) => s.trim()).filter(Boolean);
 
   const s = {
     topRow: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 },
@@ -163,9 +202,19 @@ export default function AdminProducts() {
       color: theme.textOnLightMuted, fontSize: 11, cursor: "pointer", fontFamily: theme.fontBody,
     },
     hint: { fontSize: 11, color: theme.textOnLightMuted, marginTop: 4 },
+    stockGrid: { display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4 },
+    stockItem: { display: "flex", flexDirection: "column", gap: 4, alignItems: "center" },
+    stockInput: {
+      padding: "9px 0", background: theme.surfaceLight,
+      border: `1px solid ${theme.hairlineOnLight}`, borderRadius: theme.radius,
+      color: theme.textOnLight, fontSize: 13, fontFamily: theme.fontBody,
+      outline: "none", width: 64, textAlign: "center",
+    },
+    stockLabel: {
+      fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase",
+      color: theme.accent, fontWeight: 600,
+    },
   };
-
-  const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   return (
     <div>
@@ -190,7 +239,7 @@ export default function AdminProducts() {
               <th style={s.th}>Category</th>
               <th style={s.th}>Gender</th>
               <th style={s.th}>Price</th>
-              <th style={s.th}>Stock</th>
+              <th style={s.th}>Stock (total)</th>
               <th style={s.th}>Actions</th>
             </tr>
           </thead>
@@ -206,7 +255,11 @@ export default function AdminProducts() {
                 <td style={s.td}>{p.category}</td>
                 <td style={s.td}>{p.gender}</td>
                 <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>LE {p.price?.toLocaleString()}</td>
-                <td style={s.td}>{p.stock}</td>
+                <td style={s.td}>
+                  {typeof p.stock === "object" && p.stock !== null
+                    ? Object.entries(p.stock).map(([sz, qty]) => `${sz}:${qty}`).join(" · ")
+                    : p.stock}
+                </td>
                 <td style={s.td}>
                   <button style={s.editBtn} onClick={() => openEdit(p)}>Edit</button>
                   <button style={s.deleteBtn} onClick={() => handleDelete(p._id, p.name)}>Delete</button>
@@ -235,15 +288,9 @@ export default function AdminProducts() {
                   placeholder="Describe the product — fabric, fit, features…"
                 />
               </div>
-              <div style={s.row2}>
-                <div style={s.field}>
-                  <label style={s.fieldLabel}>Price (LE)</label>
-                  <input style={s.input} type="number" value={form.price} onChange={(e) => upd("price", e.target.value)} required />
-                </div>
-                <div style={s.field}>
-                  <label style={s.fieldLabel}>Stock</label>
-                  <input style={s.input} type="number" value={form.stock} onChange={(e) => upd("stock", e.target.value)} />
-                </div>
+              <div style={s.field}>
+                <label style={s.fieldLabel}>Price (LE)</label>
+                <input style={s.input} type="number" value={form.price} onChange={(e) => upd("price", e.target.value)} required />
               </div>
               <div style={s.row2}>
                 <div style={s.field}>
@@ -272,6 +319,28 @@ export default function AdminProducts() {
                 <label style={s.fieldLabel}>Sizes (comma separated)</label>
                 <input style={s.input} value={form.sizes} onChange={(e) => upd("sizes", e.target.value)} placeholder="S,M,L,XL" />
               </div>
+
+              {/* Per-size stock */}
+              {sizeList.length > 0 && (
+                <div style={s.field}>
+                  <label style={s.fieldLabel}>Stock per size</label>
+                  <div style={s.stockGrid}>
+                    {sizeList.map((size) => (
+                      <div key={size} style={s.stockItem}>
+                        <span style={s.stockLabel}>{size}</span>
+                        <input
+                          style={s.stockInput}
+                          type="number"
+                          min="0"
+                          value={form.stock?.[size] ?? 0}
+                          onChange={(e) => updStock(size, e.target.value)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div style={s.field}>
                 <label style={s.fieldLabel}>Colors (Name:Hex, comma separated)</label>
                 <input

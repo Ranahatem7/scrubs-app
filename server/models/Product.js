@@ -64,10 +64,10 @@ const productSchema = new mongoose.Schema(
       trim: true,
       default: "#3a3f45",
     },
+    // Per-size stock object, e.g. { S: 10, M: 20, L: 15, XL: 8 }
     stock: {
-      type: Number,
-      default: 0,
-      min: 0,
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
     featured: {
       type: Boolean,
