@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import useCategories from "../hooks/useCategories";
 import useIsDesktop from "../hooks/useIsDesktop";
+import LoadingPage from "../components/LoadingPage";
 import { theme, label, display, btnGhost } from "../theme";
 
 export default function CategoryPage() {
@@ -13,7 +14,6 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Match slug to category name (e.g. "full-scrubs" → "Full-Scrubs")
   const category = categories.find((c) => c.slug === slug);
   const categoryName = category?.name || slug;
 
@@ -21,12 +21,14 @@ export default function CategoryPage() {
     if (!categoryName) return;
     setLoading(true);
     setError(null);
-   fetch(`${import.meta.env.VITE_API_URL}/products?category=${encodeURIComponent(categoryName)}`)
+    fetch(`${import.meta.env.VITE_API_URL}/products?category=${encodeURIComponent(categoryName)}`)
       .then((r) => r.json())
       .then((data) => setProducts(Array.isArray(data) ? data : []))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [categoryName]);
+
+  if (loading) return <LoadingPage />;
 
   const s = {
     page: { minHeight: "60vh", background: theme.surfaceLight },
@@ -64,32 +66,25 @@ export default function CategoryPage() {
       <div style={s.hero}>
         <span style={label("light")}>Collections</span>
         <h1 style={s.title}>{categoryName}</h1>
-        {!loading && (
-          <p style={s.count}>{products.length} product{products.length !== 1 ? "s" : ""}</p>
-        )}
+        <p style={s.count}>{products.length} product{products.length !== 1 ? "s" : ""}</p>
       </div>
 
-      {loading && <p style={s.state}>Loading…</p>}
-      {!loading && error && <p style={{ ...s.state, color: "#c0524a" }}>{error}</p>}
-      {!loading && !error && products.length === 0 && (
+      {error && <p style={{ ...s.state, color: "#c0524a" }}>{error}</p>}
+      {!error && products.length === 0 && (
         <p style={s.state}>No products in this category yet.</p>
       )}
-      {!loading && !error && products.length > 0 && (
+      {!error && products.length > 0 && (
         <div style={s.grid}>
           {products.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
       )}
-      {/* Footer */}
-      <footer style={{
-        padding: `44px ${theme.pad}px 32px`,
-        background: theme.surfaceDark,
-        marginTop: "auto",
-      }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 }}>
-          <span style={{ fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark }}>MT</span>
-          <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.32em", textTransform: "uppercase", color: theme.textOnDark }}>Medical Wear</span>
+
+      <footer style={{ padding: `44px ${theme.pad}px 32px`, background: "#092a1f", marginTop: "auto" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 }}>
+          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 }}>
