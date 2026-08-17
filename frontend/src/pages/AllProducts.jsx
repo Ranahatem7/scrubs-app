@@ -12,7 +12,7 @@ export default function AllProducts() {
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-if (loading) return <LoadingPage />;
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((r) => r.json())
@@ -20,6 +20,8 @@ if (loading) return <LoadingPage />;
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  if (loading) return <LoadingPage />;
 
   const filtered = query
     ? products.filter((p) => p.name?.toLowerCase().includes(query.toLowerCase()))
@@ -71,17 +73,14 @@ if (loading) return <LoadingPage />;
       <div style={s.hero}>
         <span style={label("light")}>{query ? `Search: "${query}"` : "Catalogue"}</span>
         <h1 style={s.title}>{query ? "Results" : "All Products"}</h1>
-        {!loading && (
-          <p style={s.count}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}</p>
-        )}
+        <p style={s.count}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}</p>
       </div>
 
-      {loading && <p style={s.state}>Loading…</p>}
-      {!loading && error && <p style={{ ...s.state, color: "#c0524a" }}>{error}</p>}
-      {!loading && !error && filtered.length === 0 && (
+      {error && <p style={{ ...s.state, color: "#c0524a" }}>{error}</p>}
+      {!error && filtered.length === 0 && (
         <p style={s.state}>{query ? `No products found for "${query}"` : "No products yet — check back soon."}</p>
       )}
-      {!loading && !error && filtered.length > 0 && (
+      {!error && filtered.length > 0 && (
         <div style={s.grid}>
           {filtered.map((product) => (
             <ProductCard key={product._id} product={product} />

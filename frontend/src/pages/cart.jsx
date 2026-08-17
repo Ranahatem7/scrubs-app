@@ -3,17 +3,15 @@ import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
-import LoadingPage from "../components/LoadingPage";
 
 export default function Cart() {
   const isDesktop = useIsDesktop(700);
   const { items, removeItem, updateQty, totalItems, totalPrice } = useCart();
   const navigate = useNavigate();
-if (loading) return <LoadingPage />;
+
   const s = {
     page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 
-    // ── Page header ───────────────────────────────────────────────────────
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
@@ -21,7 +19,6 @@ if (loading) return <LoadingPage />;
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
     itemCount: { fontSize: 13, color: theme.textOnLightMuted, marginTop: 6 },
 
-    // ── Layout ────────────────────────────────────────────────────────────
     layout: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 340px" : "1fr",
@@ -32,7 +29,6 @@ if (loading) return <LoadingPage />;
       alignItems: "start",
     },
 
-    // ── Cart items list ───────────────────────────────────────────────────
     itemsList: { display: "flex", flexDirection: "column", gap: 14 },
 
     itemCard: {
@@ -68,7 +64,6 @@ if (loading) return <LoadingPage />;
     },
     itemPrice: { color: theme.accent, fontWeight: 600, fontSize: 15, marginTop: "auto" },
 
-    // Quantity controls
     qtyRow: { display: "flex", alignItems: "center", gap: 0, marginTop: 8 },
     qtyBtn: {
       width: 30,
@@ -105,7 +100,6 @@ if (loading) return <LoadingPage />;
       transition: "color 0.15s",
     },
 
-    // ── Empty state ───────────────────────────────────────────────────────
     empty: {
       padding: `80px ${theme.pad}px`,
       textAlign: "center",
@@ -113,7 +107,6 @@ if (loading) return <LoadingPage />;
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
     emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
 
-    // ── Order summary sidebar ─────────────────────────────────────────────
     summary: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
@@ -176,15 +169,12 @@ if (loading) return <LoadingPage />;
       letterSpacing: "0.06em",
     },
 
-    // ── Footer (dark bookend) ─────────────────────────────────────────────
     footer: {
       padding: `44px ${theme.pad}px 32px`,
-      background: theme.surfaceDark,
+      background: "#092a1f",
       marginTop: 80,
     },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    // TODO: swap for the real MT/ECG logo asset once provided — text treatment is a placeholder
-    footMt: { fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1, color: theme.textOnDark },
+    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
     footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
     footCol: { display: "flex", flexDirection: "column", gap: 9 },
     footHead: {
@@ -199,6 +189,34 @@ if (loading) return <LoadingPage />;
     footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
     legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
+
+  const footerJSX = (
+    <footer style={s.footer}>
+      <div style={s.footLogo}>
+        <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
+        <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
+      </div>
+      <div style={s.footCols}>
+        <div style={s.footCol}>
+          <h3 style={s.footHead}>Shop</h3>
+          <a href="/men" style={s.footLink}>Men</a>
+          <a href="/women" style={s.footLink}>Women</a>
+          <a href="#lab-coats" style={s.footLink}>Lab coats</a>
+        </div>
+        <div style={s.footCol}>
+          <h3 style={s.footHead}>Help</h3>
+          <a href="#sizing" style={s.footLink}>Size guide</a>
+          <a href="#fabric" style={s.footLink}>Our fabric</a>
+          <a href="#returns" style={s.footLink}>Returns</a>
+        </div>
+      </div>
+      <div style={s.footContact}>
+        <p style={s.footText}>New Cairo, Cairo</p>
+        <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
+      </div>
+      <p style={s.legal}>© 2026 MedTrack</p>
+    </footer>
+  );
 
   // ── Empty cart ──────────────────────────────────────────────────────────
   if (items.length === 0) {
@@ -216,30 +234,7 @@ if (loading) return <LoadingPage />;
           {"  "}
           <a href="/women" style={{ ...btnGhost("light"), paddingInline: 32, marginLeft: 10 }}>Shop women</a>
         </div>
-
-        <footer style={s.footer}>
-          <div style={s.footBrand}>
-            <span style={s.footMt}>MT</span>
-            <span style={label("dark")}>Medical Wear</span>
-          </div>
-          <div style={s.footCols}>
-            <div style={s.footCol}>
-              <h3 style={s.footHead}>Shop</h3>
-              <a href="/men" style={s.footLink}>Men</a>
-              <a href="/women" style={s.footLink}>Women</a>
-            </div>
-            <div style={s.footCol}>
-              <h3 style={s.footHead}>Help</h3>
-              <a href="#sizing" style={s.footLink}>Size guide</a>
-              <a href="#returns" style={s.footLink}>Returns</a>
-            </div>
-          </div>
-          <div style={s.footContact}>
-            <p style={s.footText}>New Cairo, Cairo</p>
-            <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
-          </div>
-          <p style={s.legal}>© 2026 MedTrack</p>
-        </footer>
+        {footerJSX}
       </main>
     );
   }
@@ -247,7 +242,6 @@ if (loading) return <LoadingPage />;
   // ── Cart with items ─────────────────────────────────────────────────────
   return (
     <main style={s.page}>
-      {/* Page header */}
       <div style={s.pageHead}>
         <span style={label("light")}>Your bag</span>
         <h1 style={s.pageTitle}>Cart</h1>
@@ -257,7 +251,6 @@ if (loading) return <LoadingPage />;
       <PulseDivider />
 
       <div style={s.layout}>
-
         {/* ── Left: items ── */}
         <div style={s.itemsList}>
           {items.map((item) => (
@@ -323,10 +316,7 @@ if (loading) return <LoadingPage />;
             <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
           </div>
 
-          <button
-            style={s.checkoutBtn}
-            onClick={() => navigate("/checkout")}
-          >
+          <button style={s.checkoutBtn} onClick={() => navigate("/checkout")}>
             Proceed to checkout
           </button>
 
@@ -334,35 +324,9 @@ if (loading) return <LoadingPage />;
 
           <p style={s.shippingNote}>Free delivery on orders over EGP 500</p>
         </div>
-
       </div>
 
-      {/* Footer */}
-      <footer style={s.footer}>
-        <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
-        </div>
-        <div style={s.footCols}>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Shop</h3>
-            <a href="/men" style={s.footLink}>Men</a>
-            <a href="/women" style={s.footLink}>Women</a>
-            <a href="#lab-coats" style={s.footLink}>Lab coats</a>
-          </div>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Help</h3>
-            <a href="#sizing" style={s.footLink}>Size guide</a>
-            <a href="#fabric" style={s.footLink}>Our fabric</a>
-            <a href="#returns" style={s.footLink}>Returns</a>
-          </div>
-        </div>
-        <div style={s.footContact}>
-          <p style={s.footText}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
-        </div>
-        <p style={s.legal}>© 2026 MedTrack</p>
-      </footer>
+      {footerJSX}
     </main>
   );
 }

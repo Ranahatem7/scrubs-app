@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { theme, display } from "../theme";
 import { useCart } from "../context/CartContext";
 import useIsDesktop from "../hooks/useIsDesktop";
+import LoadingPage from "../components/LoadingPage";
 
 const SIZE_GUIDE = [
   { size: "S",  chest: "86–91",  waist: "71–76",  hip: "91–96",  length: "68" },
@@ -22,6 +23,7 @@ export default function ProductPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
 
@@ -37,12 +39,40 @@ export default function ProductPage() {
       .finally(() => setLoading(false));
   }, [slug]);
 
+  if (loading) return <LoadingPage />;
+
+  if (!product) {
+    return (
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
+        <p style={{ color: theme.textOnLightMuted }}>Product not found.</p>
+        <button style={{ background: "none", border: "none", cursor: "pointer", color: theme.textOnLightMuted, fontFamily: theme.fontBody }} onClick={() => navigate(-1)}>← Go back</button>
+      </div>
+    );
+  }
+
+  const images = product.images?.length ? product.images : [];
+  const sizes = product.sizes?.length ? product.sizes : ["S", "M", "L", "XL"];
+
+  // Per-size stock
+  const sizeStock = selectedSize && product.stock && typeof product.stock === "object"
+    ? (product.stock[selectedSize] ?? 0)
+    : typeof product.stock === "number"
+    ? product.stock
+    : null;
+
+  const isOutOfStock = sizeStock !== null && sizeStock === 0;
+
   const handleAdd = () => {
-    if (!selectedSize) return;
-    addItem(product, selectedSize, selectedColor?.name ?? selectedColor ?? "");
+    if (!selectedSize || isOutOfStock) return;
+    for (let i = 0; i < quantity; i++) {
+      addItem(product, selectedSize, selectedColor?.name ?? selectedColor ?? "");
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   };
+
+  const prevImg = () => setActiveImg((i) => (i === 0 ? images.length - 1 : i - 1));
+  const nextImg = () => setActiveImg((i) => (i === images.length - 1 ? 0 : i + 1));
 
   const s = {
     page: { maxWidth: 1100, margin: "0 auto", padding: isDesktop ? "40px 24px 80px" : "20px 16px 60px" },
@@ -58,18 +88,49 @@ export default function ProductPage() {
       gap: isDesktop ? 56 : 28,
       alignItems: "start",
     },
+
+    // ── Gallery ──────────────────────────────────────────────────────────
     gallery: { display: "flex", flexDirection: "column", gap: 10 },
-    mainImg: {
-      width: "100%", aspectRatio: "3/4", objectFit: "cover",
-      borderRadius: theme.radius, border: `1px solid ${theme.hairlineOnLight}`,
-      background: theme.surfaceMuted, display: "block",
+    mainImgWrap: {
+      position: "relative",
+      width: "100%",
+      aspectRatio: "3/4",
+      borderRadius: theme.radius,
+      border: `1px solid ${theme.hairlineOnLight}`,
+      background: theme.surfaceMuted,
+      overflow: "hidden",
     },
-    thumbRow: { display: "flex", gap: 8 },
+    mainImg: {
+      width: "100%", height: "100%", objectFit: "cover", display: "block",
+    },
+    arrowBtn: (side) => ({
+      position: "absolute",
+      top: "50%",
+      [side]: 10,
+      transform: "translateY(-50%)",
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      background: "rgba(9,42,31,0.72)",
+      border: "none",
+      color: "#fff",
+      fontSize: 16,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 2,
+      backdropFilter: "blur(4px)",
+      transition: "background 0.15s",
+    }),
+    thumbRow: { display: "flex", gap: 8, flexWrap: "wrap" },
     thumb: (active) => ({
       width: 64, height: 76, objectFit: "cover", borderRadius: 6,
       border: `2px solid ${active ? theme.accent : theme.hairlineOnLight}`,
       cursor: "pointer", background: theme.surfaceMuted,
     }),
+
+    // ── Info ─────────────────────────────────────────────────────────────
     info: { display: "flex", flexDirection: "column", gap: 0 },
     category: {
       fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
@@ -108,16 +169,40 @@ export default function ProductPage() {
       fontSize: 11, color: theme.accent, textDecoration: "underline",
       fontFamily: theme.fontBody, marginBottom: 20,
     },
-    addBtn: (active) => ({
+
+    // ── Quantity picker ───────────────────────────────────────────────────
+    qtySection: { marginBottom: 20 },
+    qtyRow: { display: "flex", alignItems: "center", gap: 0, marginTop: 8 },
+    qtyBtn: {
+      width: 36, height: 36,
+      border: `1px solid ${theme.hairlineOnLight}`,
+      background: "transparent",
+      color: theme.textOnLight,
+      fontSize: 18,
+      cursor: "pointer",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      borderRadius: 6,
+      fontFamily: theme.fontBody,
+    },
+    qtyNum: {
+      width: 48, textAlign: "center", fontSize: 15,
+      color: theme.textOnLight, fontFamily: theme.fontBody,
+      border: `1px solid ${theme.hairlineOnLight}`,
+      borderLeft: "none", borderRight: "none",
+      height: 36, display: "flex", alignItems: "center", justifyContent: "center",
+    },
+
+    addBtn: {
       width: "100%", padding: "14px 0",
-      background: theme.accent,
+      background: isOutOfStock ? theme.textOnLightMuted : theme.accent,
       border: "none", borderRadius: theme.radius,
       color: theme.textOnDark, fontSize: 11, fontWeight: 700,
       letterSpacing: "0.18em", textTransform: "uppercase",
-      cursor: selectedSize ? "pointer" : "default", fontFamily: theme.fontBody,
-      opacity: !selectedSize && !active ? 0.5 : 1,
+      cursor: selectedSize && !isOutOfStock ? "pointer" : "default",
+      fontFamily: theme.fontBody,
+      opacity: !selectedSize ? 0.5 : 1,
       transition: "opacity 0.2s",
-    }),
+    },
     desc: { fontSize: 14, lineHeight: 1.7, color: theme.textOnLight },
     sizeTable: { width: "100%", borderCollapse: "collapse", marginTop: 12 },
     sTh: {
@@ -132,36 +217,24 @@ export default function ProductPage() {
     },
   };
 
-  if (loading) {
-    return (
-      <div style={{ ...s.page, textAlign: "center", paddingTop: 80 }}>
-        <p style={{ color: theme.textOnLightMuted }}>Loading…</p>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div style={{ ...s.page, textAlign: "center", paddingTop: 80 }}>
-        <p style={{ color: theme.textOnLightMuted }}>Product not found.</p>
-        <button style={s.back} onClick={() => navigate(-1)}>← Go back</button>
-      </div>
-    );
-  }
-
-  const images = product.images?.length ? product.images : [];
-  const sizes = product.sizes?.length ? product.sizes : ["S", "M", "L", "XL"];
-
   return (
     <div style={s.page}>
       <button style={s.back} onClick={() => navigate(-1)}>← Back</button>
 
       <div style={s.grid}>
-        {/* Gallery */}
+        {/* ── Gallery ── */}
         <div style={s.gallery}>
           {images.length > 0 ? (
             <>
-              <img src={images[activeImg]} alt={product.name} style={s.mainImg} />
+              <div style={s.mainImgWrap}>
+                <img src={images[activeImg]} alt={product.name} style={s.mainImg} />
+                {images.length > 1 && (
+                  <>
+                    <button style={s.arrowBtn("left")} onClick={prevImg} aria-label="Previous image">‹</button>
+                    <button style={s.arrowBtn("right")} onClick={nextImg} aria-label="Next image">›</button>
+                  </>
+                )}
+              </div>
               {images.length > 1 && (
                 <div style={s.thumbRow}>
                   {images.map((img, i) => (
@@ -171,13 +244,13 @@ export default function ProductPage() {
               )}
             </>
           ) : (
-            <div style={{ ...s.mainImg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ ...s.mainImgWrap, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ color: theme.textOnLightMuted, fontSize: 13 }}>No image</span>
             </div>
           )}
         </div>
 
-        {/* Info */}
+        {/* ── Info ── */}
         <div style={s.info}>
           {product.category && <p style={s.category}>{product.category}</p>}
           <h1 style={s.name}>{product.name}</h1>
@@ -207,7 +280,7 @@ export default function ProductPage() {
           <span style={s.label}>Size</span>
           <div style={s.sizeRow}>
             {sizes.map((sz) => (
-              <button key={sz} style={s.sizePill(selectedSize === sz)} onClick={() => setSelectedSize(sz)}>
+              <button key={sz} style={s.sizePill(selectedSize === sz)} onClick={() => { setSelectedSize(sz); setQuantity(1); }}>
                 {sz}
               </button>
             ))}
@@ -253,14 +326,43 @@ export default function ProductPage() {
             </>
           )}
 
+          {/* Quantity */}
+          <div style={s.qtySection}>
+            <span style={s.label}>Quantity</span>
+            <div style={s.qtyRow}>
+              <button
+                style={s.qtyBtn}
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <span style={s.qtyNum}>{quantity}</span>
+              <button
+                style={s.qtyBtn}
+                onClick={() => setQuantity((q) => sizeStock !== null ? Math.min(sizeStock, q + 1) : q + 1)}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
           {/* Add to cart */}
-          <button style={s.addBtn(added)} onClick={handleAdd}>
-            {added ? "Added to cart ✓" : !selectedSize ? "Select a size" : "Add to cart"}
+          <button style={s.addBtn} onClick={handleAdd} disabled={!selectedSize || isOutOfStock}>
+            {added
+              ? "Added to cart ✓"
+              : isOutOfStock
+              ? "Out of stock"
+              : !selectedSize
+              ? "Select a size"
+              : `Add ${quantity > 1 ? `${quantity} ` : ""}to cart`}
           </button>
 
-          {product.stock !== undefined && (
-            <p style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 10 }}>
-              {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+          {/* Stock note */}
+          {selectedSize && sizeStock !== null && (
+            <p style={{ fontSize: 11, color: isOutOfStock ? "#c0524a" : theme.textOnLightMuted, marginTop: 10 }}>
+              {isOutOfStock ? "Out of stock for this size" : `${sizeStock} in stock`}
             </p>
           )}
         </div>
