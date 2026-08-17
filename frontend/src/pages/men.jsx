@@ -5,11 +5,12 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import { images } from "../data/images";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import LoadingPage from "../components/LoadingPage";
 
 const MEN_FILTERS = [
   { id: "all", name: "All" },
 ];
-
+if (loading) return <LoadingPage />;
 export default function Men() {
   const isDesktop = useIsDesktop(700);
   const [activeFilter, setActiveFilter] = useState("all");

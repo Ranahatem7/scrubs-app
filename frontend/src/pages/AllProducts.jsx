@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnGhost } from "../theme";
+import LoadingPage from "../components/LoadingPage";
 
 export default function AllProducts() {
   const isDesktop = useIsDesktop(700);
@@ -11,7 +12,7 @@ export default function AllProducts() {
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-
+if (loading) return <LoadingPage />;
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/products`)
       .then((r) => r.json())

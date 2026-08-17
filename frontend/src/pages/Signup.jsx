@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import { theme, label, display, btnSolid } from "../theme";
 import { useAuth } from "../context/AuthContext";
-
+import LoadingPage from "../components/LoadingPage";
+if (loading) return <LoadingPage />;
 export default function Signup() {
   const { register } = useAuth();
   const navigate = useNavigate();

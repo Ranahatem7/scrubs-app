@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
+import LoadingPage from "../components/LoadingPage";
 
 export default function Cart() {
   const isDesktop = useIsDesktop(700);
   const { items, removeItem, updateQty, totalItems, totalPrice } = useCart();
   const navigate = useNavigate();
-
+if (loading) return <LoadingPage />;
   const s = {
     page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
 

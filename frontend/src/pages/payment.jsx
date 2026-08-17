@@ -2,7 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
-
+import LoadingPage from "../components/LoadingPage";
+if (loading) return <LoadingPage />;
 const METHOD_DETAILS = {
   cod: {
     icon: "💵",
@@ -13,19 +14,6 @@ const METHOD_DETAILS = {
       "Your order will be packed and dispatched within 2–3 business days.",
       "Hand the cash to the courier upon delivery.",
     ],
-  },
-  vodafone: {
-    icon: "📱",
-    title: "Vodafone Cash",
-    instruction: "Complete your payment by sending the total amount to our Vodafone Cash number below.",
-    steps: [
-      "Open the Vodafone Cash app or dial *9#.",
-      'Select "Send Money" and enter the number below.',
-      "Send the exact total amount and use your name as the reference.",
-      "Send a screenshot of the transfer to hello@medtrack.com to confirm.",
-    ],
-    accountLabel: "Vodafone Cash number",
-    accountNumber: "010 XXXX XXXX", // ← replace with your real number
   },
   instapay: {
     icon: "⚡",

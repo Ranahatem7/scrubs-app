@@ -4,6 +4,7 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
 import useCategories from "../hooks/useCategories";
 import useSiteSettings from "../hooks/useSiteSettings";
+import LoadingPage from "../components/LoadingPage";
 import { Link } from "react-router-dom";
 import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
 
@@ -17,6 +18,8 @@ export default function Home() {
   const heroImage3 = settings?.heroImage3 || "";
   const heroTitle = settings?.heroTitle || "Scrubs for the long shift";
   const heroSub = settings?.heroSub || "Engineered fabric, tailored cut, made for twelve hours on your feet.";
+
+  if (loading) return <LoadingPage />;
 
   const heroPanel = (fallbackColor = theme.ink) => ({
     position: "relative",
@@ -286,20 +289,18 @@ export default function Home() {
           <h2 style={s.title}>This season</h2>
         </div>
 
-        {loading && <p style={s.stateBlock}>Loading products…</p>}
-
-        {!loading && error && (
+        {error && (
           <div style={s.stateBlock}>
             <p style={s.errorText}>{error}</p>
             <button style={s.retryBtn} onClick={retry}>Try again</button>
           </div>
         )}
 
-        {!loading && !error && products.length === 0 && (
+        {!error && products.length === 0 && (
           <p style={s.stateBlock}>No products yet — check back soon.</p>
         )}
 
-        {!loading && !error && products.length > 0 && (
+        {!error && products.length > 0 && (
           <div style={s.grid}>
             {products.slice(0, 4).map((product) => (
               <ProductCard key={product._id} product={product} />

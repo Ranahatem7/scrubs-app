@@ -5,6 +5,7 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnGhost, btnSolid, strongText } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { getMyOrders } from "../services/orders";
+import LoadingPage from "../components/LoadingPage";
 
 // Text/border/bg tuned for legibility on the white order cards
 const STATUS_STYLES = {
@@ -14,7 +15,7 @@ const STATUS_STYLES = {
   delivered: { color: "#3d7a3f", border: "rgba(61,122,63,0.35)", bg: "rgba(61,122,63,0.1)" },
   cancelled: { color: "#a23b34", border: "rgba(162,59,52,0.35)", bg: "rgba(162,59,52,0.1)" },
 };
-
+if (loading) return <LoadingPage />;
 export default function Profile() {
   const isDesktop = useIsDesktop(700);
   const { user, logout } = useAuth();

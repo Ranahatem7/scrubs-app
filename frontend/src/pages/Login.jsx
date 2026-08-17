@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useAdmin } from "../context/AdminContext";
 import { theme, display } from "../theme";
+import LoadingPage from "../components/LoadingPage";
 
 export default function Login() {
   const { setSession } = useAuth();
@@ -11,9 +12,9 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+if (loading) return <LoadingPage />;
   const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
+if (loading) return <LoadingPage />;
   const safeJSON = async (res) => {
     const text = await res.text();
     try { return text ? JSON.parse(text) : {}; } catch { return {}; }
