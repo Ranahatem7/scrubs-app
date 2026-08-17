@@ -36,7 +36,7 @@ export default function AdminProducts() {
 
   const emptyForm = (cats) => ({
     name: "", description: "", price: "", category: cats[0]?.slug || "", gender: "unisex",
-    fit: "", sizes: "S,M,L,XL", images: "", stock: { S: 0, M: 0, L: 0, XL: 0 }, colors: "",
+    fit: "", sizes: "S,M,L,XL", images: "", stock: { S: 0, M: 0, L: 0, XL: 0 }, colors: "", featured: false,
   });
 
   useEffect(() => { if (adminToken) load(); }, [adminToken]);
@@ -58,6 +58,7 @@ export default function AdminProducts() {
       sizes: sizeList.join(","), images: (p.images || []).join(","),
       stock: stockObj,
       colors: (p.colors || []).map((c) => typeof c === "string" ? c : `${c.name}:${c.hex}`).join(","),
+      featured: p.featured ?? false,
     });
     setEditId(p._id);
     setShowForm(true);
@@ -74,6 +75,7 @@ export default function AdminProducts() {
     const body = {
       ...form,
       price: Number(form.price),
+      featured: form.featured ?? false,
       stock: stockObj,
       sizes: sizeList,
       images: form.images.split(",").map((s) => s.trim()).filter(Boolean),
@@ -359,6 +361,17 @@ export default function AdminProducts() {
                   multiple
                 />
               </div>
+              {/* Featured toggle */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, padding: "12px 14px", background: form.featured ? "rgba(15,91,70,0.08)" : theme.surfaceMuted, borderRadius: theme.radius, border: `1px solid ${form.featured ? "rgba(15,91,70,0.3)" : theme.hairlineOnLight}`, cursor: "pointer" }} onClick={() => upd("featured", !form.featured)}>
+                <div style={{ width: 36, height: 20, borderRadius: 10, background: form.featured ? theme.accent : theme.hairlineOnLight, position: "relative", transition: "background 0.2s", flexShrink: 0 }}>
+                  <div style={{ position: "absolute", top: 2, left: form.featured ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.2s" }} />
+                </div>
+                <div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: form.featured ? theme.accent : theme.textOnLight }}>Featured on homepage</span>
+                  <p style={{ fontSize: 11, color: theme.textOnLightMuted, margin: "2px 0 0" }}>Shows in "This season" section (max 4)</p>
+                </div>
+              </div>
+
               <div style={s.modalActions}>
                 <button type="submit" style={s.saveBtn} disabled={saving}>{saving ? "Saving…" : "Save"}</button>
                 <button type="button" style={s.cancelBtn} onClick={() => setShowForm(false)}>Cancel</button>

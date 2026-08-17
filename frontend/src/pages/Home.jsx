@@ -302,7 +302,10 @@ export default function Home() {
 
         {!error && products.length > 0 && (
           <div style={s.grid}>
-            {products.slice(0, 4).map((product) => (
+            {(products.filter((p) => p.featured).length > 0
+              ? products.filter((p) => p.featured)
+              : products
+            ).slice(0, 4).map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
