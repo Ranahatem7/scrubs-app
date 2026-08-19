@@ -3,8 +3,7 @@ import PulseDivider from "../components/PulseDivider";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
-import { images } from "../data/images";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnGhost } from "../theme";
 import LoadingPage from "../components/LoadingPage";
 import Footer from "../components/Footer";
 
@@ -28,38 +27,6 @@ export default function Men() {
       : menProducts.filter((p) => p.category === activeFilter);
 
   const s = {
-    hero: {
-      position: "relative",
-      minHeight: "72vh",
-      display: "flex",
-      alignItems: "flex-end",
-      padding: `0 ${theme.pad}px 64px`,
-      overflow: "hidden",
-    },
-    heroBg: {
-      position: "absolute",
-      inset: 0,
-      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,31,24,0.80) 34%, rgba(11,31,24,0.38) 100%),
-        radial-gradient(90% 60% at 20% 30%, rgba(15,91,70,0.35), transparent 60%),
-        url(${images.menHero ?? images.hero}) center 30% / cover no-repeat`,
-    },
-    heroInner: { position: "relative", zIndex: 1, maxWidth: 480 },
-    heroTitle: {
-      ...display,
-      margin: "14px 0 0",
-      fontSize: "clamp(40px, 12vw, 62px)",
-      color: theme.textOnDark,
-    },
-    heroEm: { ...strongText("dark"), fontStyle: "normal" },
-    heroSub: {
-      margin: "16px 0 0",
-      maxWidth: "32ch",
-      fontSize: 14,
-      color: theme.textOnDarkMuted,
-    },
-    heroActions: { display: "flex", gap: 10, marginTop: 28 },
-    heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
-
     filterBar: {
       display: "flex",
       gap: 8,
@@ -112,7 +79,7 @@ export default function Men() {
     retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
     statement: {
-      padding: `64px ${theme.pad}px 0`,  // bottom padding removed — Footer sits flush
+      padding: `64px ${theme.pad}px 0`,
       textAlign: "center",
       background: theme.surfaceLight,
     },
@@ -129,28 +96,6 @@ export default function Men() {
 
   return (
     <main id="top">
-      {/* Hero */}
-      <section style={s.hero}>
-        <div style={s.heroBg} aria-hidden="true" />
-        <div style={s.heroInner}>
-          <span style={label("dark")}>Men&rsquo;s collection</span>
-          <h1 style={s.heroTitle}>
-            Dressed for the
-            <br />
-            <em style={s.heroEm}>long call</em>
-          </h1>
-          <p style={s.heroSub}>
-            Performance scrubs cut for movement, built to last a twelve-hour shift and beyond.
-          </p>
-          <div style={s.heroActions}>
-            <a href="#products" style={{ ...btnSolid, ...s.heroBtn }}>Shop now</a>
-            <a href="/women" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop women</a>
-          </div>
-        </div>
-      </section>
-
-      <PulseDivider />
-
       {/* Filter bar */}
       <div style={s.filterBar} className="no-scrollbar" role="group" aria-label="Filter by category">
         {MEN_FILTERS.map((f) => (

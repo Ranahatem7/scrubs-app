@@ -3,8 +3,7 @@ import PulseDivider from "../components/PulseDivider";
 import ProductCard from "../components/ProductCard";
 import useIsDesktop from "../hooks/useIsDesktop";
 import useProducts from "../hooks/useProducts";
-import { images } from "../data/images";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnGhost } from "../theme";
 import LoadingPage from "../components/LoadingPage";
 import Footer from "../components/Footer";
 
@@ -28,38 +27,6 @@ export default function Women() {
       : womenProducts.filter((p) => p.category === activeFilter);
 
   const s = {
-    hero: {
-      position: "relative",
-      minHeight: "72vh",
-      display: "flex",
-      alignItems: "flex-end",
-      padding: `0 ${theme.pad}px 64px`,
-      overflow: "hidden",
-    },
-    heroBg: {
-      position: "absolute",
-      inset: 0,
-      background: `linear-gradient(to top, ${theme.ink} 4%, rgba(11,31,24,0.80) 34%, rgba(11,31,24,0.38) 100%),
-        radial-gradient(90% 60% at 75% 25%, rgba(15,91,70,0.35), transparent 60%),
-        url(${images.womenHero ?? images.hero}) center 25% / cover no-repeat`,
-    },
-    heroInner: { position: "relative", zIndex: 1, maxWidth: 480 },
-    heroTitle: {
-      ...display,
-      margin: "14px 0 0",
-      fontSize: "clamp(40px, 12vw, 62px)",
-      color: theme.textOnDark,
-    },
-    heroEm: { ...strongText("dark"), fontStyle: "normal" },
-    heroSub: {
-      margin: "16px 0 0",
-      maxWidth: "32ch",
-      fontSize: 14,
-      color: theme.textOnDarkMuted,
-    },
-    heroActions: { display: "flex", gap: 10, marginTop: 28 },
-    heroBtn: isDesktop ? { paddingInline: 30 } : { flex: 1, paddingInline: 12 },
-
     filterBar: {
       display: "flex",
       gap: 8,
@@ -111,7 +78,11 @@ export default function Women() {
     errorText: { margin: "0 0 18px", color: "#c0524a", letterSpacing: "0.02em" },
     retryBtn: { ...btnGhost("light"), display: "inline-flex" },
 
-    statement: { padding: `64px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
+    statement: {
+      padding: `64px ${theme.pad}px 0`,
+      textAlign: "center",
+      background: theme.surfaceLight,
+    },
     statementText: {
       ...display,
       margin: "0 auto 18px",
@@ -121,64 +92,10 @@ export default function Women() {
       maxWidth: isDesktop ? "20ch" : "none",
       color: theme.accent,
     },
-
-    footer: {
-      padding: `44px ${theme.pad}px 32px`,
-      background: "#092a1f",
-    },
-    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px",
-      fontSize: 10,
-      fontWeight: 500,
-      letterSpacing: "0.28em",
-      textTransform: "uppercase",
-      color: theme.textOnDark,
-    },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 6,
-      paddingTop: 24,
-      borderTop: `1px solid ${theme.hairlineOnDark}`,
-    },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
-    legal: {
-      margin: "28px 0 0",
-      fontSize: 10,
-      letterSpacing: "0.18em",
-      textTransform: "uppercase",
-      color: theme.textOnDarkMuted,
-    },
   };
 
   return (
     <main id="top">
-      {/* Hero */}
-      <section style={s.hero}>
-        <div style={s.heroBg} aria-hidden="true" />
-        <div style={s.heroInner}>
-          <span style={label("dark")}>Women&rsquo;s collection</span>
-          <h1 style={s.heroTitle}>
-            Cut for the
-            <br />
-            <em style={s.heroEm}>way you work</em>
-          </h1>
-          <p style={s.heroSub}>
-            Tailored scrubs that move with you — from morning rounds to midnight calls.
-          </p>
-          <div style={s.heroActions}>
-            <a href="#products" style={{ ...btnSolid, ...s.heroBtn }}>Shop now</a>
-            <a href="/men" style={{ ...btnGhost("dark"), ...s.heroBtn }}>Shop men</a>
-          </div>
-        </div>
-      </section>
-
-      <PulseDivider />
-
       {/* Filter bar */}
       <div style={s.filterBar} className="no-scrollbar" role="group" aria-label="Filter by category">
         {WOMEN_FILTERS.map((f) => (
@@ -238,8 +155,7 @@ export default function Women() {
         <span style={label("light")}>MedTrack · Cairo</span>
       </section>
 
-     
-     <Footer />
+      <Footer />
     </main>
   );
 }
