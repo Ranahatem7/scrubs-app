@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-// ── PUT /api/admin/credentials (change email/password) ────────────────────
+// ── PUT /api/admin/credentials ────────────────────────────────────────────
 router.put("/credentials", adminAuth, async (req, res) => {
   const { email, currentPassword, newPassword } = req.body;
   const admin = await Admin.findOne();
@@ -29,7 +29,7 @@ router.put("/credentials", adminAuth, async (req, res) => {
     return res.status(401).json({ message: "Current password is incorrect" });
   }
   if (email) admin.email = email;
-  if (newPassword) admin.password = newPassword; // pre-save hook will hash it
+  if (newPassword) admin.password = newPassword;
   await admin.save();
   res.json({ message: "Credentials updated" });
 });
@@ -96,6 +96,11 @@ router.put("/orders/:id", adminAuth, async (req, res) => {
   res.json(order);
 });
 
+router.delete("/orders/:id", adminAuth, async (req, res) => {
+  await Order.findByIdAndDelete(req.params.id);
+  res.json({ ok: true });
+});
+
 // ── USERS ─────────────────────────────────────────────────────────────────
 router.get("/users", adminAuth, async (req, res) => {
   try {
@@ -112,14 +117,34 @@ router.get("/users", adminAuth, async (req, res) => {
   }
 });
 
+router.put("/users/:id/role", adminAuth, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role: req.body.role },
+      { new: true }
+    ).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.delete("/users/:id", adminAuth, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── CATEGORIES ───────────────────────────────────────────────────────────
-// Public: used by Home page
 router.get("/categories/public", async (req, res) => {
   const cats = await Category.find().sort({ order: 1, createdAt: 1 }).lean();
   res.json(cats);
 });
 
-// Admin CRUD
 router.get("/categories", adminAuth, async (req, res) => {
   const cats = await Category.find().sort({ order: 1, createdAt: 1 }).lean();
   res.json(cats);
@@ -149,7 +174,6 @@ router.delete("/categories/:id", adminAuth, async (req, res) => {
 });
 
 // ── SITE SETTINGS ─────────────────────────────────────────────────────────
-// Public — used by Home page (no auth needed)
 router.get("/settings/public", async (req, res) => {
   try {
     const s = await SiteSettings.findOne();
@@ -159,7 +183,6 @@ router.get("/settings/public", async (req, res) => {
   }
 });
 
-// Admin — update hero image/title/subtitle
 router.put("/settings", adminAuth, async (req, res) => {
   try {
     const s = await SiteSettings.findOneAndUpdate(
@@ -171,21 +194,6 @@ router.put("/settings", adminAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-  // Make / remove admin
-router.put("/:id/role", adminAuth, async (req, res) => {
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { role: req.body.role },
-    { new: true }
-  );
-  res.json(user);
-});
-
-// Delete user
-router.delete("/:id", adminAuth, async (req, res) => {
-  await User.findByIdAndDelete(req.params.id);
-  res.json({ ok: true });
-});
 });
 
 module.exports = router;
