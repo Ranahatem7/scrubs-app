@@ -21,7 +21,16 @@ const GOVERNORATES = [
 ];
 
 const LOW_SHIPPING = ["Cairo", "Giza"];
-function getShipping(gov) { return gov ? (LOW_SHIPPING.includes(gov) ? 75 : 85) : null; }
+const HIGH_SHIPPING = ["Aswan", "Luxor", "North Sinai", "South Sinai"];
+const MID_SHIPPING = ["Faiyum", "Beni Suef", "Minya", "Asyut", "Sohag"];
+
+function getShipping(gov) {
+  if (!gov) return null;
+  if (LOW_SHIPPING.includes(gov)) return 75;
+  if (HIGH_SHIPPING.includes(gov)) return 145;
+  if (MID_SHIPPING.includes(gov)) return 100;
+  return 85;
+}
 
 export default function Checkout() {
   const isDesktop = useIsDesktop(700);
