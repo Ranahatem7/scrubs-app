@@ -77,8 +77,8 @@ export default function Home() {
       inset: 0,
       width: "100%",
       height: "100%",
-      objectFit: "contain",         // was "contain" — now fills the panel properly
-      objectPosition: "50% 10%",  // shows upper body / faces
+      objectFit: "cover",         // was "contain" — now fills the panel properly
+      objectPosition: "50% 0%",  // shows upper body / faces
     },
     heroOverlay: {
       position: "absolute",
