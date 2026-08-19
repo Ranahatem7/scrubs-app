@@ -42,6 +42,15 @@ export default function AdminOrders() {
     setOrders((prev) => prev.map((o) => o._id === id ? { ...o, status } : o));
   };
 
+  const deleteOrder = async (id) => {
+    if (!confirm("Delete this order? This cannot be undone.")) return;
+    await fetch(`${import.meta.env.VITE_API_URL}/admin/orders/${id}`, {
+      method: "DELETE", headers: getHeaders(),
+    });
+    setOrders((prev) => prev.filter((o) => o._id !== id));
+    if (expanded === id) setExpanded(null);
+  };
+
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
 
   const s = {
@@ -84,6 +93,11 @@ export default function AdminOrders() {
       borderRadius: theme.radius, background: "transparent", color: theme.textOnLightMuted,
       cursor: "pointer", fontFamily: theme.fontBody,
     },
+    deleteBtn: {
+      padding: "4px 10px", fontSize: 11, border: `1px solid rgba(180,60,60,0.3)`,
+      borderRadius: theme.radius, background: "transparent", color: "#b43c3c",
+      cursor: "pointer", fontFamily: theme.fontBody, marginTop: 6,
+    },
     expandCell: {
       padding: "14px 16px", background: theme.surfaceMuted,
       fontSize: 12, color: theme.textOnLightMuted,
@@ -104,79 +118,87 @@ export default function AdminOrders() {
         ))}
       </div>
 
-      <table style={s.table}>
-        <thead>
-          <tr>
-            <th style={s.th}>Customer</th>
-            <th style={s.th}>Phone</th>
-            <th style={s.th}>Address</th>
-            <th style={s.th}>Payment</th>
-            <th style={s.th}>Total</th>
-            <th style={s.th}>Status</th>
-            <th style={s.th}>Date</th>
-            <th style={s.th}>Items</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr><td style={s.td} colSpan={8}>Loading…</td></tr>
-          ) : filtered.length === 0 ? (
-            <tr><td style={s.td} colSpan={8}>No orders found.</td></tr>
-          ) : filtered.map((order) => (
-            <>
-              <tr key={order._id}>
-                <td style={{ ...s.td }}>
-                  <div style={{ fontWeight: 600 }}>{order.shipping?.name}</div>
-                  <div style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 }}>{order.shipping?.email}</div>
-                </td>
-                <td style={s.td}>{order.shipping?.phone}</td>
-                <td style={s.td}>{order.shipping?.street}, {order.shipping?.city}, {order.shipping?.governorate}</td>
-                <td style={s.td}>{order.paymentMethod}</td>
-                <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>
-                  LE {order.total?.toLocaleString()}
-                </td>
-                <td style={s.td}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <span style={s.badge(order.status)}>{order.status}</span>
-                    <select
-                      style={s.select}
-                      value={order.status}
-                      onChange={(e) => updateStatus(order._id, e.target.value)}
-                    >
-                      {STATUSES.map((st) => <option key={st} value={st}>{st}</option>)}
-                    </select>
-                  </div>
-                </td>
-                <td style={{ ...s.td, color: theme.textOnLightMuted }}>
-                  {new Date(order.createdAt).toLocaleDateString("en-EG")}
-                </td>
-                <td style={s.td}>
-                  <button
-                    style={s.expandBtn}
-                    onClick={() => setExpanded(expanded === order._id ? null : order._id)}
-                  >
-                    {expanded === order._id ? "Hide" : `View (${order.items?.length ?? 0})`}
-                  </button>
-                </td>
-              </tr>
-              {expanded === order._id && (
-                <tr key={`${order._id}-items`}>
-                  <td colSpan={8} style={{ padding: 0 }}>
-                    <div style={s.expandCell}>
-                      {order.items?.map((item, i) => (
-                        <div key={i} style={s.itemLine}>
-                          <span>{item.name} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>
-                          <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
-                        </div>
-                      ))}
+      <div style={{ overflowX: "auto" }}>
+        <table style={s.table}>
+          <thead>
+            <tr>
+              <th style={s.th}>Customer</th>
+              <th style={s.th}>Phone</th>
+              <th style={s.th}>Address</th>
+              <th style={s.th}>Payment</th>
+              <th style={s.th}>Total</th>
+              <th style={s.th}>Status</th>
+              <th style={s.th}>Date</th>
+              <th style={s.th}>Items</th>
+              <th style={s.th}>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr><td style={s.td} colSpan={9}>Loading…</td></tr>
+            ) : filtered.length === 0 ? (
+              <tr><td style={s.td} colSpan={9}>No orders found.</td></tr>
+            ) : filtered.map((order) => (
+              <>
+                <tr key={order._id}>
+                  <td style={s.td}>
+                    <div style={{ fontWeight: 600 }}>{order.shipping?.name}</div>
+                    <div style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 }}>{order.shipping?.email}</div>
+                  </td>
+                  <td style={s.td}>{order.shipping?.phone}</td>
+                  <td style={s.td}>{order.shipping?.street}, {order.shipping?.city}, {order.shipping?.governorate}</td>
+                  <td style={s.td}>{order.paymentMethod}</td>
+                  <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>
+                    LE {order.total?.toLocaleString()}
+                  </td>
+                  <td style={s.td}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      <span style={s.badge(order.status)}>{order.status}</span>
+                      <select
+                        style={s.select}
+                        value={order.status}
+                        onChange={(e) => updateStatus(order._id, e.target.value)}
+                      >
+                        {STATUSES.map((st) => <option key={st} value={st}>{st}</option>)}
+                      </select>
                     </div>
                   </td>
+                  <td style={{ ...s.td, color: theme.textOnLightMuted }}>
+                    {new Date(order.createdAt).toLocaleDateString("en-EG")}
+                  </td>
+                  <td style={s.td}>
+                    <button
+                      style={s.expandBtn}
+                      onClick={() => setExpanded(expanded === order._id ? null : order._id)}
+                    >
+                      {expanded === order._id ? "Hide" : `View (${order.items?.length ?? 0})`}
+                    </button>
+                  </td>
+                  <td style={s.td}>
+                    <button style={s.deleteBtn} onClick={() => deleteOrder(order._id)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
-              )}
-            </>
-          ))}
-        </tbody>
-      </table>
+                {expanded === order._id && (
+                  <tr key={`${order._id}-items`}>
+                    <td colSpan={9} style={{ padding: 0 }}>
+                      <div style={s.expandCell}>
+                        {order.items?.map((item, i) => (
+                          <div key={i} style={s.itemLine}>
+                            <span>{item.name} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>
+                            <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

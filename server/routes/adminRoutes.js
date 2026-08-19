@@ -171,6 +171,21 @@ router.put("/settings", adminAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  // Make / remove admin
+router.put("/:id/role", adminAuth, async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { role: req.body.role },
+    { new: true }
+  );
+  res.json(user);
+});
+
+// Delete user
+router.delete("/:id", adminAuth, async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.json({ ok: true });
+});
 });
 
 module.exports = router;

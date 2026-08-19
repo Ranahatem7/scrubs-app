@@ -155,14 +155,18 @@ export default function ProductPage() {
       outlineOffset: 2, cursor: "pointer",
     }),
     sizeRow: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 6 },
-    sizePill: (active) => ({
+    sizePill: (active, outOfStock) => ({
       padding: "8px 16px", fontSize: 12, letterSpacing: "0.1em",
-      textTransform: "uppercase", cursor: "pointer", fontFamily: theme.fontBody,
-      border: `1px solid ${active ? theme.accent : theme.hairlineOnLight}`,
+      textTransform: "uppercase", cursor: outOfStock ? "not-allowed" : "pointer",
+      fontFamily: theme.fontBody,
+      border: `1px solid ${active ? theme.accent : outOfStock ? theme.hairlineOnLight : theme.hairlineOnLight}`,
       borderRadius: theme.radius,
       background: active ? theme.accent : theme.surfaceLight,
-      color: active ? theme.textOnDark : theme.textOnLight,
+      color: active ? theme.textOnDark : outOfStock ? theme.textOnLightMuted : theme.textOnLight,
+      opacity: outOfStock ? 0.4 : 1,
+      textDecoration: outOfStock ? "line-through" : "none",
       transition: "all 0.15s",
+      position: "relative",
     }),
     sizeGuideBtn: {
       background: "none", border: "none", padding: 0, cursor: "pointer",
@@ -279,11 +283,24 @@ export default function ProductPage() {
           {/* Sizes */}
           <span style={s.label}>Size</span>
           <div style={s.sizeRow}>
-            {sizes.map((sz) => (
-              <button key={sz} style={s.sizePill(selectedSize === sz)} onClick={() => { setSelectedSize(sz); setQuantity(1); }}>
-                {sz}
-              </button>
-            ))}
+            {sizes.map((sz) => {
+              const szStock = product.stock && typeof product.stock === "object"
+                ? (product.stock[sz] ?? 0)
+                : typeof product.stock === "number"
+                ? product.stock
+                : null;
+              const szOutOfStock = szStock !== null && szStock === 0;
+              return (
+                <button
+                  key={sz}
+                  style={s.sizePill(selectedSize === sz, szOutOfStock)}
+                  onClick={() => { if (!szOutOfStock) { setSelectedSize(sz); setQuantity(1); } }}
+                  title={szOutOfStock ? "Out of stock" : undefined}
+                >
+                  {sz}
+                </button>
+              );
+            })}
           </div>
           <button style={s.sizeGuideBtn} onClick={() => setShowSizeGuide(!showSizeGuide)}>
             {showSizeGuide ? "Hide size guide" : "Size guide"}
