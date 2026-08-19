@@ -206,7 +206,6 @@ export default function Cart() {
         <div style={s.footCol}>
           <h3 style={s.footHead}>Help</h3>
           <a href="#sizing" style={s.footLink}>Size guide</a>
-          <a href="#fabric" style={s.footLink}>Our fabric</a>
           <a href="#returns" style={s.footLink}>Returns</a>
         </div>
       </div>
