@@ -6,6 +6,7 @@ import { theme, label, display, btnSolid, btnGhost } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../services/orders";
+import Footer from "../components/Footer";
 
 const PAYMENT_METHODS = [
   { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
@@ -13,43 +14,14 @@ const PAYMENT_METHODS = [
 ];
 
 const GOVERNORATES = [
-  "6th of October",
-  "Al Sharqia",
-  "Alexandria",
-  "Aswan",
-  "Asyut",
-  "Beheira",
-  "Beni Suef",
-  "Cairo",
-  "Dakahlia",
-  "Damietta",
-  "Faiyum",
-  "Gharbia",
-  "Giza",
-  "Helwan",
-  "Ismailia",
-  "Kafr el-Sheikh",
-  "Luxor",
-  "Matrouh",
-  "Minya",
-  "Monufia",
-  "New Valley",
-  "North Sinai",
-  "Port Said",
-  "Qalyubia",
-  "Qena",
-  "Red Sea",
-  "Sohag",
-  "South Sinai",
-  "Suez",
+  "6th of October","Al Sharqia","Alexandria","Aswan","Asyut","Beheira","Beni Suef",
+  "Cairo","Dakahlia","Damietta","Faiyum","Gharbia","Giza","Helwan","Ismailia",
+  "Kafr el-Sheikh","Luxor","Matrouh","Minya","Monufia","New Valley","North Sinai",
+  "Port Said","Qalyubia","Qena","Red Sea","Sohag","South Sinai","Suez",
 ];
 
 const LOW_SHIPPING = ["Cairo", "Giza"];
-
-function getShipping(governorate) {
-  if (!governorate) return null;
-  return LOW_SHIPPING.includes(governorate) ? 75 : 85;
-}
+function getShipping(gov) { return gov ? (LOW_SHIPPING.includes(gov) ? 75 : 85) : null; }
 
 export default function Checkout() {
   const isDesktop = useIsDesktop(700);
@@ -58,14 +30,9 @@ export default function Checkout() {
   const { items, totalItems, totalPrice, clearCart } = useCart();
 
   const [form, setForm] = useState({
-    name: user?.name ?? "",
-    phone: "",
-    email: user?.email ?? "",
-    street: "",
-    city: "",
-    governorate: "",
+    name: user?.name ?? "", phone: "", email: user?.email ?? "",
+    street: "", city: "", governorate: "",
   });
-
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -82,8 +49,7 @@ export default function Checkout() {
     const e = {};
     if (!form.name.trim()) e.name = "Required";
     if (!form.phone.trim()) e.phone = "Required";
-    else if (!/^\d{10,13}$/.test(form.phone.replace(/[\s\-\+]/g, "")))
-      e.phone = "Enter a valid Egyptian phone number";
+    else if (!/^\d{10,13}$/.test(form.phone.replace(/[\s\-\+]/g, ""))) e.phone = "Enter a valid Egyptian phone number";
     if (!form.email.trim()) e.email = "Required";
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
     if (!form.street.trim()) e.street = "Required";
@@ -95,22 +61,12 @@ export default function Checkout() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setSubmitting(true);
     try {
       const order = await createOrder({
-        items: items.map((i) => ({
-          product: i.id,
-          size: i.size,
-          color: i.color,
-          quantity: i.quantity,
-        })),
-        shipping: form,
-        paymentMethod,
-        shippingFee: shippingFee ?? 85,
+        items: items.map((i) => ({ product: i.id, size: i.size, color: i.color, quantity: i.quantity })),
+        shipping: form, paymentMethod, shippingFee: shippingFee ?? 85,
       });
       clearCart();
       navigate("/payment", { state: { form, paymentMethod, order, shippingFee: shippingFee ?? 85 } });
@@ -122,36 +78,18 @@ export default function Checkout() {
   };
 
   const s = {
-    page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
-
-    pageHead: {
-      padding: `48px ${theme.pad}px 32px`,
-      borderBottom: `1px solid ${theme.hairlineOnLight}`,
-    },
+    page: { minHeight: "100vh", background: theme.surfaceLight },
+    pageHead: { padding: `48px ${theme.pad}px 32px`, borderBottom: `1px solid ${theme.hairlineOnLight}` },
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
-
     layout: {
-      display: "grid",
-      gridTemplateColumns: isDesktop ? "1fr 380px" : "1fr",
-      gap: 24,
-      maxWidth: 1080,
-      margin: "0 auto",
-      padding: `32px ${theme.pad}px 0`,
-      alignItems: "start",
+      display: "grid", gridTemplateColumns: isDesktop ? "1fr 380px" : "1fr",
+      gap: 24, maxWidth: 1080, margin: "0 auto", padding: `32px ${theme.pad}px 40px`, alignItems: "start",
     },
-
     card: {
-      background: theme.surfaceLight,
-      border: `1px solid ${theme.hairlineOnLight}`,
-      borderRadius: theme.radius,
-      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
-      padding: isDesktop ? 36 : 20,
+      background: theme.surfaceLight, border: `1px solid ${theme.hairlineOnLight}`,
+      borderRadius: theme.radius, boxShadow: "0 1px 3px rgba(34,37,42,0.06)", padding: isDesktop ? 36 : 20,
     },
-    cardTitle: {
-      margin: "0 0 24px", fontSize: 11, fontWeight: 500,
-      letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent,
-    },
-
+    cardTitle: { margin: "0 0 24px", fontSize: 11, fontWeight: 500, letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent },
     fieldGroup: { display: "flex", flexDirection: "column", gap: 16 },
     row: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
     field: { display: "flex", flexDirection: "column", gap: 6 },
@@ -160,29 +98,23 @@ export default function Checkout() {
       padding: "11px 14px", background: theme.surfaceMuted,
       border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
       borderRadius: 8, color: theme.textOnLight, fontSize: 14,
-      fontFamily: theme.fontBody, outline: "none", transition: "border-color 0.18s",
-      width: "100%", boxSizing: "border-box",
+      fontFamily: theme.fontBody, outline: "none", width: "100%", boxSizing: "border-box",
     }),
     select: (hasError) => ({
       padding: "11px 14px", background: theme.surfaceMuted,
       border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
       borderRadius: 8, color: theme.textOnLight, fontSize: 14,
-      fontFamily: theme.fontBody, outline: "none", transition: "border-color 0.18s",
-      width: "100%", boxSizing: "border-box", cursor: "pointer",
-      appearance: "none",
+      fontFamily: theme.fontBody, outline: "none", width: "100%", boxSizing: "border-box",
+      cursor: "pointer", appearance: "none",
       backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: "right 14px center",
-      paddingRight: 36,
+      backgroundRepeat: "no-repeat", backgroundPosition: "right 14px center", paddingRight: 36,
     }),
     fieldError: { fontSize: 11, color: "#c0524a", letterSpacing: "0.06em" },
-
     methodList: { display: "flex", flexDirection: "column", gap: 10 },
     methodPill: (active) => ({
       display: "flex", alignItems: "center", gap: 14, padding: "14px 16px",
       border: `1px solid ${active ? theme.accent : theme.lightGray}`,
-      borderRadius: 10, background: active ? "rgba(15, 91, 70, 0.08)" : "transparent",
-      cursor: "pointer", transition: "border-color 0.18s, background 0.18s",
+      borderRadius: 10, background: active ? "rgba(15,91,70,0.08)" : "transparent", cursor: "pointer",
     }),
     methodIcon: { fontSize: 20, lineHeight: 1 },
     methodInfo: { flex: 1 },
@@ -191,63 +123,35 @@ export default function Checkout() {
     methodRadio: (active) => ({
       width: 16, height: 16, borderRadius: "50%",
       border: `2px solid ${active ? theme.accent : theme.lightGray}`,
-      background: active ? theme.accent : "transparent",
-      flexShrink: 0, transition: "background 0.18s, border-color 0.18s",
+      background: active ? theme.accent : "transparent", flexShrink: 0,
     }),
-
     summary: {
-      background: theme.surfaceLight,
-      border: `1px solid ${theme.hairlineOnLight}`,
-      borderRadius: theme.radius,
-      boxShadow: "0 1px 3px rgba(34, 37, 42, 0.06)",
-      padding: isDesktop ? 28 : 20,
-      position: isDesktop ? "sticky" : "static",
-      top: theme.barH + 20,
+      background: theme.surfaceLight, border: `1px solid ${theme.hairlineOnLight}`,
+      borderRadius: theme.radius, boxShadow: "0 1px 3px rgba(34,37,42,0.06)",
+      padding: isDesktop ? 28 : 20, position: isDesktop ? "sticky" : "static", top: theme.barH + 20,
     },
-    summaryTitle: {
-      margin: "0 0 20px", fontSize: 11, fontWeight: 500,
-      letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent,
-    },
-    summaryRow: {
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-      marginBottom: 12, fontSize: 13, color: theme.textOnLightMuted,
-    },
+    summaryTitle: { margin: "0 0 20px", fontSize: 11, fontWeight: 500, letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent },
+    summaryRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, fontSize: 13, color: theme.textOnLightMuted },
     summaryTotal: {
       display: "flex", justifyContent: "space-between", alignItems: "center",
       paddingTop: 16, marginTop: 8, borderTop: `1px solid ${theme.hairlineOnLight}`,
       fontSize: 15, color: theme.textOnLight, fontFamily: theme.fontDisplay,
     },
     totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
-
     submitBtn: {
       ...btnSolid, width: "100%", marginTop: 20, padding: "14px 0",
       fontSize: 13, letterSpacing: "0.14em", justifyContent: "center",
       opacity: submitting ? 0.6 : 1, cursor: submitting ? "default" : "pointer",
     },
-
     formError: {
       padding: "12px 14px", marginBottom: 20,
       background: "rgba(192,82,74,0.1)", border: "1px solid rgba(192,82,74,0.35)",
       borderRadius: 8, color: "#a23b34", fontSize: 13,
     },
-
     empty: { padding: `80px ${theme.pad}px`, textAlign: "center" },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
     emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
-    backLink: {
-      ...btnGhost("light"), display: "inline-flex", marginTop: 14,
-      width: "100%", justifyContent: "center", fontSize: 12,
-    },
-
-    footer: { padding: `44px ${theme.pad}px 32px`, background: "#092a1f", marginTop: 70 },
-    footBrand: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, marginBottom: 34 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: { margin: "0 0 4px", fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: { display: "flex", flexDirection: "column", gap: 6, paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}` },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
+    backLink: { ...btnGhost("light"), display: "inline-flex", marginTop: 14, width: "100%", justifyContent: "center", fontSize: 12 },
   };
 
   const OrderSummary = () => (
@@ -291,6 +195,7 @@ export default function Checkout() {
           {"  "}
           <a href="/women" style={{ ...btnGhost("light"), paddingInline: 32, marginLeft: 10 }}>Shop women</a>
         </div>
+        <Footer />
       </main>
     );
   }
@@ -301,17 +206,12 @@ export default function Checkout() {
         <span style={label("light")}>Almost there</span>
         <h1 style={s.pageTitle}>Checkout</h1>
       </div>
-
       <PulseDivider />
-
       <form onSubmit={handleSubmit} noValidate>
         <div style={s.layout}>
-
           {!isDesktop && <OrderSummary />}
-
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {errors.form && <p style={s.formError}>{errors.form}</p>}
-
             <div style={s.card}>
               <p style={s.cardTitle}>Contact information</p>
               <div style={s.fieldGroup}>
@@ -334,7 +234,6 @@ export default function Checkout() {
                 </div>
               </div>
             </div>
-
             <div style={s.card}>
               <p style={s.cardTitle}>Delivery address</p>
               <div style={s.fieldGroup}>
@@ -351,22 +250,15 @@ export default function Checkout() {
                   </div>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>Governorate</label>
-                    <select
-                      style={s.select(!!errors.governorate)}
-                      value={form.governorate}
-                      onChange={(e) => update("governorate", e.target.value)}
-                    >
+                    <select style={s.select(!!errors.governorate)} value={form.governorate} onChange={(e) => update("governorate", e.target.value)}>
                       <option value="">Select governorate…</option>
-                      {GOVERNORATES.map((g) => (
-                        <option key={g} value={g}>{g}</option>
-                      ))}
+                      {GOVERNORATES.map((g) => <option key={g} value={g}>{g}</option>)}
                     </select>
                     {errors.governorate && <span style={s.fieldError}>{errors.governorate}</span>}
                   </div>
                 </div>
               </div>
             </div>
-
             <div style={s.card}>
               <p style={s.cardTitle}>Payment method</p>
               <div style={s.methodList}>
@@ -384,44 +276,16 @@ export default function Checkout() {
                 ))}
               </div>
             </div>
-
             {!isDesktop && (
               <button type="submit" style={s.submitBtn} disabled={submitting}>
                 {submitting ? "Placing order…" : "Place order"}
               </button>
             )}
           </div>
-
           {isDesktop && <OrderSummary />}
-
         </div>
       </form>
-
-      <footer style={s.footer}>
-        <div style={s.footBrand}>
-          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", maxWidth: 160, display: "block" }} />
-          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
-        </div>
-        <div style={s.footCols}>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Shop</h3>
-            <a href="/men" style={s.footLink}>Men</a>
-            <a href="/women" style={s.footLink}>Women</a>
-            <a href="#lab-coats" style={s.footLink}>Lab coats</a>
-          </div>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Help</h3>
-            <a href="#sizing" style={s.footLink}>Size guide</a>
-            <a href="#fabric" style={s.footLink}>Our fabric</a>
-            <a href="#returns" style={s.footLink}>Returns</a>
-          </div>
-        </div>
-        <div style={s.footContact}>
-          <p style={s.footText}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
-        </div>
-        <p style={s.legal}>© 2026 MedTrack</p>
-      </footer>
+      <Footer />
     </main>
   );
 }

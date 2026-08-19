@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
+import Footer from "../components/Footer";
 
 export default function Cart() {
   const isDesktop = useIsDesktop(700);
@@ -100,10 +101,7 @@ export default function Cart() {
       transition: "color 0.15s",
     },
 
-    empty: {
-      padding: `80px ${theme.pad}px`,
-      textAlign: "center",
-    },
+    empty: { padding: `80px ${theme.pad}px`, textAlign: "center" },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
     emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
 
@@ -168,56 +166,8 @@ export default function Cart() {
       textAlign: "center",
       letterSpacing: "0.06em",
     },
-
-    footer: {
-      padding: `44px ${theme.pad}px 32px`,
-      background: "#092a1f",
-      marginTop: 80,
-    },
-    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
-    },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
-    },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
-  const footerJSX = (
-    <footer style={s.footer}>
-      <div style={s.footLogo}>
-        <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
-        <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
-      </div>
-      <div style={s.footCols}>
-        <div style={s.footCol}>
-          <h3 style={s.footHead}>Shop</h3>
-          <a href="/men" style={s.footLink}>Men</a>
-          <a href="/women" style={s.footLink}>Women</a>
-          <a href="#lab-coats" style={s.footLink}>Lab coats</a>
-        </div>
-        <div style={s.footCol}>
-          <h3 style={s.footHead}>Help</h3>
-          <a href="#sizing" style={s.footLink}>Size guide</a>
-          <a href="#returns" style={s.footLink}>Returns</a>
-        </div>
-      </div>
-      <div style={s.footContact}>
-        <p style={s.footText}>New Cairo, Cairo</p>
-        <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
-      </div>
-      <p style={s.legal}>© 2026 MedTrack</p>
-    </footer>
-  );
-
-  // ── Empty cart ──────────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
       <main style={s.page}>
@@ -233,12 +183,11 @@ export default function Cart() {
           {"  "}
           <a href="/women" style={{ ...btnGhost("light"), paddingInline: 32, marginLeft: 10 }}>Shop women</a>
         </div>
-        {footerJSX}
+        <Footer />
       </main>
     );
   }
 
-  // ── Cart with items ─────────────────────────────────────────────────────
   return (
     <main style={s.page}>
       <div style={s.pageHead}>
@@ -250,12 +199,10 @@ export default function Cart() {
       <PulseDivider />
 
       <div style={s.layout}>
-        {/* ── Left: items ── */}
         <div style={s.itemsList}>
           {items.map((item) => (
             <div key={`${item.id}__${item.size}__${item.color}`} style={s.itemCard}>
               <img src={item.image} alt={item.name} style={s.itemImage} />
-
               <div style={s.itemInfo}>
                 <p style={s.itemName}>{item.name}</p>
                 <span style={s.itemMeta}>
@@ -263,44 +210,20 @@ export default function Cart() {
                   {item.size && item.color && " · "}
                   {item.color && `Color: ${item.color}`}
                 </span>
-
                 <div style={s.qtyRow}>
-                  <button
-                    style={s.qtyBtn}
-                    onClick={() => updateQty(item.id, item.size, item.color, item.quantity - 1)}
-                    aria-label="Decrease quantity"
-                  >
-                    −
-                  </button>
+                  <button style={s.qtyBtn} onClick={() => updateQty(item.id, item.size, item.color, item.quantity - 1)} aria-label="Decrease quantity">−</button>
                   <span style={s.qtyNum}>{item.quantity}</span>
-                  <button
-                    style={s.qtyBtn}
-                    onClick={() => updateQty(item.id, item.size, item.color, item.quantity + 1)}
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+                  <button style={s.qtyBtn} onClick={() => updateQty(item.id, item.size, item.color, item.quantity + 1)} aria-label="Increase quantity">+</button>
                 </div>
-
-                <span style={s.itemPrice}>
-                  EGP {(item.price * item.quantity).toLocaleString()}
-                </span>
-
-                <button
-                  style={s.removeBtn}
-                  onClick={() => removeItem(item.id, item.size, item.color)}
-                >
-                  Remove
-                </button>
+                <span style={s.itemPrice}>EGP {(item.price * item.quantity).toLocaleString()}</span>
+                <button style={s.removeBtn} onClick={() => removeItem(item.id, item.size, item.color)}>Remove</button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* ── Right: summary ── */}
         <div style={s.summary}>
           <p style={s.summaryTitle}>Order summary</p>
-
           <div style={s.summaryRow}>
             <span>Subtotal ({totalItems} items)</span>
             <span>EGP {totalPrice.toLocaleString()}</span>
@@ -309,23 +232,17 @@ export default function Cart() {
             <span>Shipping</span>
             <span>Calculated at checkout</span>
           </div>
-
           <div style={s.summaryTotal}>
             <span>Total</span>
             <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
           </div>
-
-          <button style={s.checkoutBtn} onClick={() => navigate("/checkout")}>
-            Proceed to checkout
-          </button>
-
+          <button style={s.checkoutBtn} onClick={() => navigate("/checkout")}>Proceed to checkout</button>
           <a href="/men" style={s.continueBtn}>← Continue shopping</a>
-
-          <p style={s.shippingNote}>Free delivery on orders over EGP 500</p>
+          <p style={s.shippingNote}>Shipping calculated at checkout</p>
         </div>
       </div>
 
-      {footerJSX}
+      <Footer />
     </main>
   );
 }

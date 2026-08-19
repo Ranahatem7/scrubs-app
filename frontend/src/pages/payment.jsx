@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
 import { theme, label, display, btnSolid, btnGhost } from "../theme";
+import Footer from "../components/Footer";
 
 const METHOD_DETAILS = {
   cod: {
@@ -274,32 +275,7 @@ export default function Payment() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer style={s.footer}>
-        <div style={s.footLogo}>
-          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
-          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
-        </div>
-        <div style={s.footCols}>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Shop</h3>
-            <a href="/men" style={s.footLink}>Men</a>
-            <a href="/women" style={s.footLink}>Women</a>
-            <a href="#lab-coats" style={s.footLink}>Lab coats</a>
-          </div>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Help</h3>
-            <a href="#sizing" style={s.footLink}>Size guide</a>
-            <a href="#fabric" style={s.footLink}>Our fabric</a>
-            <a href="#returns" style={s.footLink}>Returns</a>
-          </div>
-        </div>
-        <div style={s.footContact}>
-          <p style={s.footText}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
-        </div>
-        <p style={s.legal}>© 2026 MedTrack</p>
-      </footer>
+         <Footer />
     </main>
   );
 }

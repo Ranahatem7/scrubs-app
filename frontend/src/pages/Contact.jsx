@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useIsDesktop from "../hooks/useIsDesktop";
 import Footer from "../components/Footer";
-import { theme, label, display, btnSolid, btnGhost } from "../theme";
+import { theme, label, display, btnSolid } from "../theme";
 
 export default function Contact() {
   const isDesktop = useIsDesktop(700);
@@ -14,7 +14,6 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
-    // Replace with your actual contact endpoint if you have one
     await new Promise((r) => setTimeout(r, 800));
     setSent(true);
     setSending(false);
@@ -28,7 +27,6 @@ export default function Contact() {
     },
     heroTitle: { ...display, margin: "8px 0 12px", fontSize: isDesktop ? 48 : 34, color: theme.accent },
     heroSub: { fontSize: 14, color: theme.textOnLightMuted, maxWidth: "44ch", lineHeight: 1.7, margin: 0 },
-
     body: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
@@ -37,8 +35,6 @@ export default function Contact() {
       margin: "0 auto",
       padding: isDesktop ? "56px 80px" : "32px 20px",
     },
-
-    // ── Form ──
     formWrap: { paddingRight: isDesktop ? 60 : 0, borderRight: isDesktop ? `1px solid ${theme.hairlineOnLight}` : "none" },
     formTitle: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.accent, marginBottom: 24 },
     field: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 },
@@ -71,8 +67,6 @@ export default function Contact() {
       borderRadius: theme.radius,
       fontSize: 13, color: theme.accent,
     },
-
-    // ── Info ──
     infoWrap: { paddingLeft: isDesktop ? 60 : 0, marginTop: isDesktop ? 0 : 40 },
     infoTitle: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.accent, marginBottom: 24 },
     infoBlock: { marginBottom: 32 },
@@ -98,13 +92,10 @@ export default function Contact() {
       </div>
 
       <div style={s.body}>
-        {/* Form */}
         <div style={s.formWrap}>
           <p style={s.formTitle}>Send a message</p>
           {sent ? (
-            <div style={s.successMsg}>
-              Message sent — we'll get back to you within 24 hours.
-            </div>
+            <div style={s.successMsg}>Message sent — we'll get back to you within 24 hours.</div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
               <div style={s.field}>
@@ -130,31 +121,25 @@ export default function Contact() {
           )}
         </div>
 
-        {/* Info */}
         <div style={s.infoWrap}>
           <p style={s.infoTitle}>Our details</p>
-
           <div style={s.infoBlock}>
             <p style={s.infoHead}>Address</p>
             <p style={s.infoText}>New Cairo, Cairo, Egypt</p>
           </div>
-
           <div style={s.infoBlock}>
             <p style={s.infoHead}>Email</p>
             <a href="mailto:hello@medtrack.com" style={s.infoLink}>hello@medtrack.com</a>
           </div>
-
           <div style={s.infoBlock}>
             <p style={s.infoHead}>Hours</p>
             <p style={s.infoText}>Sunday – Thursday: 9am – 6pm<br />Friday – Saturday: Closed</p>
           </div>
-
           <div style={s.infoBlock}>
             <p style={s.infoHead}>Follow us</p>
             <div style={s.social}>
-              <a href="#instagram" style={s.socialLink}>Instagram</a>
-              <a href="#tiktok" style={s.socialLink}>TikTok</a>
-              <a href="#facebook" style={s.socialLink}>Facebook</a>
+              <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={s.socialLink}>Instagram</a>
+              <a href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH" target="_blank" rel="noopener noreferrer" style={s.socialLink}>TikTok</a>
             </div>
           </div>
         </div>

@@ -1,78 +1,132 @@
-import PulseDivider from "./PulseDivider";
-import { theme, label, display, strongText } from "../theme";
+import { useEffect, useState } from "react";
+import { theme } from "../theme";
 
 export default function Footer() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/admin/categories/public`)
+      .then((r) => r.json())
+      .then((data) => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
   const s = {
-    statement: { padding: `20px ${theme.pad}px`, textAlign: "center", background: theme.surfaceLight },
-    statementText: {
-      fontFamily: theme.fontDisplay,
-      fontWeight: 700,
-      lineHeight: 0.95,
-      letterSpacing: "-0.01em",
-      margin: "0 auto 18px",
-      fontSize: 20,
-      fontStyle: "italic",
-      color: theme.accent,
+    footer: {
+      padding: `44px ${theme.pad}px 32px`,
+      background: "#092a1f",
+      marginTop: "auto",
     },
-    footer: { padding: `44px ${theme.pad}px 32px`, background: theme.surfaceDark },
-    footBrand: { display: "flex", flexDirection: "column", gap: 6, marginBottom: 34 },
-    footMt: { ...strongText("dark"), fontFamily: theme.fontDisplay, fontSize: 26, fontWeight: 700, lineHeight: 1 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
+    brand: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      marginBottom: 36,
     },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
+    cols: {
+      display: "grid",
+      gridTemplateColumns: "repeat(2, 1fr)",
+      gap: 28,
+      marginBottom: 32,
     },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
+    col: { display: "flex", flexDirection: "column", gap: 9 },
+    colHead: {
+      margin: "0 0 4px",
+      fontSize: 10,
+      fontWeight: 500,
+      letterSpacing: "0.28em",
+      textTransform: "uppercase",
+      color: theme.textOnDark,
+    },
+    link: { fontSize: 13, color: theme.textOnDarkMuted, textDecoration: "none" },
+    contact: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 6,
+      paddingTop: 24,
+      borderTop: `1px solid ${theme.hairlineOnDark}`,
+    },
+    contactText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
     legal: {
-      margin: "28px 0 0", fontSize: 10,
-      letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted,
+      margin: "28px 0 0",
+      fontSize: 10,
+      letterSpacing: "0.18em",
+      textTransform: "uppercase",
+      color: theme.textOnDarkMuted,
     },
   };
 
   return (
-    <>
-      <PulseDivider />
+    <footer style={s.footer}>
+      <div style={s.brand}>
+        <img
+          src="/logo.png"
+          alt="MedTrack"
+          style={{ height: 80, width: "auto", display: "block" }}
+        />
+        <span
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.28em",
+            textTransform: "uppercase",
+            color: theme.textOnDarkMuted,
+            marginTop: -25,
+          }}
+        >
+          MedTrack
+        </span>
+      </div>
 
-      <section style={s.statement} id="story">
-        <p style={s.statementText}>
-          Every stitch is measured against a shift that doesn't end when you're tired.
-        </p>
-        <span style={label("light")}>MedTrack · Cairo</span>
-      </section>
-
-      <footer style={s.footer} id="contact">
-        <div style={s.footBrand}>
-          <span style={s.footMt}>MT</span>
-          <span style={label("dark")}>Medical Wear</span>
+      <div style={s.cols}>
+        {/* Shop — dynamic categories */}
+        <div style={s.col}>
+          <h3 style={s.colHead}>Shop</h3>
+          {categories.length > 0 ? (
+            categories.map((cat) => (
+              <a key={cat._id} href={`/category/${cat.slug}`} style={s.link}>
+                {cat.name}
+              </a>
+            ))
+          ) : (
+            <>
+              <a href="/men" style={s.link}>Men</a>
+              <a href="/women" style={s.link}>Women</a>
+            </>
+          )}
         </div>
 
-        <div style={s.footCols}>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Shop</h3>
-            <a href="/men" style={s.footLink}>Men</a>
-            <a href="/women" style={s.footLink}>Women</a>
-            <a href="/category/lab-coats" style={s.footLink}>Lab coats</a>
-          </div>
-          <div style={s.footCol}>
-            <h3 style={s.footHead}>Help</h3>
-            <a href="#sizing" style={s.footLink}>Size guide</a>
-            <a href="#returns" style={s.footLink}>Returns</a>
-          </div>
+        {/* Help */}
+        <div style={s.col}>
+          <h3 style={s.colHead}>Help</h3>
+          <a href="#sizing" style={s.link}>Size guide</a>
+          <a href="#returns" style={s.link}>Returns</a>
         </div>
+      </div>
 
-        <div style={s.footContact}>
-          <p style={s.footText}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={s.footLink}>hello@medtrack.com</a>
+      <div style={s.contact}>
+        <p style={s.contactText}>New Cairo, Cairo</p>
+        <a href="mailto:hello@medtrack.com" style={s.link}>hello@medtrack.com</a>
+        <div style={{ display: "flex", gap: 16, marginTop: 4 }}>
+          <a
+            href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ=="
+            target="_blank"
+            rel="noopener noreferrer"
+            style={s.link}
+          >
+            Instagram
+          </a>
+          <a
+            href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={s.link}
+          >
+            TikTok
+          </a>
         </div>
+      </div>
 
-        <p style={s.legal}>© 2026 MedTrack</p>
-      </footer>
-    </>
+      <p style={s.legal}>© 2026 MedTrack</p>
+    </footer>
   );
 }
