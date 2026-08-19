@@ -5,6 +5,7 @@ import useCategories from "../hooks/useCategories";
 import useIsDesktop from "../hooks/useIsDesktop";
 import LoadingPage from "../components/LoadingPage";
 import { theme, label, display, btnGhost } from "../theme";
+import Footer from "../components/Footer";
 
 export default function CategoryPage() {
   const { slug } = useParams();
@@ -81,32 +82,7 @@ export default function CategoryPage() {
         </div>
       )}
 
-      <footer style={{ padding: `44px ${theme.pad}px 32px`, background: "#092a1f", marginTop: "auto" }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 }}>
-          <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", display: "block" }} />
-          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-            <h3 style={{ margin: "0 0 4px", fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark }}>Shop</h3>
-            <a href="/men" style={{ fontSize: 13, color: theme.textOnDarkMuted }}>Men</a>
-            <a href="/women" style={{ fontSize: 13, color: theme.textOnDarkMuted }}>Women</a>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-            <h3 style={{ margin: "0 0 4px", fontSize: 10, fontWeight: 500, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark }}>Help</h3>
-            <a href="#sizing" style={{ fontSize: 13, color: theme.textOnDarkMuted }}>Size guide</a>
-            <a href="#returns" style={{ fontSize: 13, color: theme.textOnDarkMuted }}>Returns</a>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}` }}>
-          <p style={{ margin: 0, fontSize: 13, color: theme.textOnDarkMuted }}>New Cairo, Cairo</p>
-          <a href="mailto:hello@medtrack.com" style={{ fontSize: 13, color: theme.textOnDarkMuted }}>hello@medtrack.com</a>
-        </div>
-
-        <p style={{ margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted }}>© 2026 MedTrack</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
