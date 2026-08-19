@@ -57,7 +57,7 @@ export default function Home() {
       gap: 3,
     },
     heroRightTop: {
-      ...heroPanel("#c8cac8"),
+      ...heroPanel("#theme.ink"),
       minHeight: isDesktop ? 0 : "45vw",
       display: "flex",
       flexDirection: "column",
@@ -65,7 +65,7 @@ export default function Home() {
       padding: isDesktop ? "32px 28px" : "20px 16px",
     },
     heroRightBottom: {
-      ...heroPanel("#c8cac8"),
+      ...heroPanel("#theme.ink"),
       minHeight: isDesktop ? 0 : "45vw",
       display: "flex",
       flexDirection: "column",
