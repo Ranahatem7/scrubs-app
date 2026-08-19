@@ -9,6 +9,7 @@ const orderItemSchema = new mongoose.Schema(
     size: { type: String, trim: true },
     color: { type: String, trim: true },
     quantity: { type: Number, required: true, min: 1 },
+     category: { type: String, trim: true, default: null },
   },
   { _id: false }
 );
@@ -60,5 +61,6 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 module.exports = mongoose.model("Order", orderSchema);
