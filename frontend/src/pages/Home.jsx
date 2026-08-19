@@ -48,7 +48,7 @@ export default function Home() {
       width: "100%",
       height: "100%",
       objectFit: "cover",
-      objectPosition: "50% 10%",  // shows faces — not anchored at very top which wastes headroom
+      objectPosition: "50% 0%",  // shows faces — not anchored at very top which wastes headroom
     },
     heroRight: {
       display: "grid",
