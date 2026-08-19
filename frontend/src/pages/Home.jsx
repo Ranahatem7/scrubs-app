@@ -47,7 +47,7 @@ export default function Home() {
       inset: 0,
       width: "100%",
       height: "100%",
-      objectFit: "cover",
+      objectFit: "contain",
       objectPosition: "50% 0%",  // shows faces — not anchored at very top which wastes headroom
     },
     heroRight: {
@@ -77,7 +77,7 @@ export default function Home() {
       inset: 0,
       width: "100%",
       height: "100%",
-      objectFit: "cover",         // was "contain" — now fills the panel properly
+      objectFit: "contain",         // was "contain" — now fills the panel properly
       objectPosition: "50% 20%",  // shows upper body / faces
     },
     heroOverlay: {
