@@ -186,8 +186,7 @@ export default function AdminOrders() {
                       <div style={s.expandCell}>
                         {order.items?.map((item, i) => (
                           <div key={i} style={s.itemLine}>
-                            <span>{item.name} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>
-                            <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
+<span>{item.name}{item.category ? ` (${item.category})` : ""} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>                            <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
                           </div>
                         ))}
                       </div>

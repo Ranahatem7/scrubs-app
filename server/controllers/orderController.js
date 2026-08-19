@@ -33,6 +33,7 @@ const createOrder = asyncHandler(async (req, res) => {
       size: item.size,
       color: item.color,
       quantity: item.quantity,
+      category: product.category ?? null,
     };
   });
 

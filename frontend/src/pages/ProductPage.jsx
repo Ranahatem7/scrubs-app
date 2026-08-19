@@ -5,13 +5,6 @@ import { useCart } from "../context/CartContext";
 import useIsDesktop from "../hooks/useIsDesktop";
 import LoadingPage from "../components/LoadingPage";
 
-const SIZE_GUIDE = [
-  { size: "S",  chest: "86–91",  waist: "71–76",  hip: "91–96",  length: "68" },
-  { size: "M",  chest: "96–101", waist: "81–86",  hip: "101–106", length: "70" },
-  { size: "L",  chest: "106–111", waist: "91–96",  hip: "111–116", length: "72" },
-  { size: "XL", chest: "116–121", waist: "101–106", hip: "121–126", length: "74" },
-];
-
 export default function ProductPage() {
   const { slug } = useParams();
   const { addItem } = useCart();
@@ -159,7 +152,7 @@ export default function ProductPage() {
       padding: "8px 16px", fontSize: 12, letterSpacing: "0.1em",
       textTransform: "uppercase", cursor: outOfStock ? "not-allowed" : "pointer",
       fontFamily: theme.fontBody,
-      border: `1px solid ${active ? theme.accent : outOfStock ? theme.hairlineOnLight : theme.hairlineOnLight}`,
+      border: `1px solid ${active ? theme.accent : theme.hairlineOnLight}`,
       borderRadius: theme.radius,
       background: active ? theme.accent : theme.surfaceLight,
       color: active ? theme.textOnDark : outOfStock ? theme.textOnLightMuted : theme.textOnLight,
@@ -208,17 +201,6 @@ export default function ProductPage() {
       transition: "opacity 0.2s",
     },
     desc: { fontSize: 14, lineHeight: 1.7, color: theme.textOnLight },
-    sizeTable: { width: "100%", borderCollapse: "collapse", marginTop: 12 },
-    sTh: {
-      padding: "8px 12px", fontSize: 10, letterSpacing: "0.16em",
-      textTransform: "uppercase", color: theme.textOnLightMuted,
-      borderBottom: `1px solid ${theme.hairlineOnLight}`, textAlign: "left",
-      background: theme.surfaceMuted,
-    },
-    sTd: {
-      padding: "10px 12px", fontSize: 13, color: theme.textOnLight,
-      borderBottom: `1px solid ${theme.hairlineOnLight}`,
-    },
   };
 
   return (
@@ -306,30 +288,13 @@ export default function ProductPage() {
             {showSizeGuide ? "Hide size guide" : "Size guide"}
           </button>
 
-          {/* Size guide table */}
+          {/* Size guide image */}
           {showSizeGuide && (
-            <table style={s.sizeTable}>
-              <thead>
-                <tr>
-                  <th style={s.sTh}>Size</th>
-                  <th style={s.sTh}>Chest (cm)</th>
-                  <th style={s.sTh}>Waist (cm)</th>
-                  <th style={s.sTh}>Hip (cm)</th>
-                  <th style={s.sTh}>Length (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SIZE_GUIDE.map((row) => (
-                  <tr key={row.size}>
-                    <td style={{ ...s.sTd, fontWeight: 600 }}>{row.size}</td>
-                    <td style={s.sTd}>{row.chest}</td>
-                    <td style={s.sTd}>{row.waist}</td>
-                    <td style={s.sTd}>{row.hip}</td>
-                    <td style={s.sTd}>{row.length}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <img
+              src="/size-chart.png"
+              alt="MedTrack Size Chart"
+              style={{ width: "100%", borderRadius: 8, marginBottom: 16 }}
+            />
           )}
 
           <hr style={s.divider} />

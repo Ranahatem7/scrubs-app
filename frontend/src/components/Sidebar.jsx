@@ -131,7 +131,7 @@ export default function Sidebar({ open, onClose }) {
           </a>
           <div style={s.social}>
             <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={{ color: theme.textOnDarkMuted }}>Instagram</a>
-            
+            <a href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH" target="_blank" rel="noopener noreferrer" style={{ color: theme.textOnDarkMuted }}>TikTok</a>
           </div>
         </div>
       </nav>

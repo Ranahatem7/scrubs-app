@@ -12,6 +12,45 @@ const PAYMENT_METHODS = [
   { id: "instapay", title: "Instapay", note: "Transfer via Instapay", icon: "⚡" },
 ];
 
+const GOVERNORATES = [
+  "6th of October",
+  "Al Sharqia",
+  "Alexandria",
+  "Aswan",
+  "Asyut",
+  "Beheira",
+  "Beni Suef",
+  "Cairo",
+  "Dakahlia",
+  "Damietta",
+  "Faiyum",
+  "Gharbia",
+  "Giza",
+  "Helwan",
+  "Ismailia",
+  "Kafr el-Sheikh",
+  "Luxor",
+  "Matrouh",
+  "Minya",
+  "Monufia",
+  "New Valley",
+  "North Sinai",
+  "Port Said",
+  "Qalyubia",
+  "Qena",
+  "Red Sea",
+  "Sohag",
+  "South Sinai",
+  "Suez",
+];
+
+const LOW_SHIPPING = ["Cairo", "Giza"];
+
+function getShipping(governorate) {
+  if (!governorate) return null;
+  return LOW_SHIPPING.includes(governorate) ? 75 : 85;
+}
+
 export default function Checkout() {
   const isDesktop = useIsDesktop(700);
   const navigate = useNavigate();
@@ -30,6 +69,9 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+
+  const shippingFee = getShipping(form.governorate);
+  const grandTotal = shippingFee !== null ? totalPrice + shippingFee : totalPrice;
 
   const update = (field, value) => {
     setForm((f) => ({ ...f, [field]: value }));
@@ -68,9 +110,10 @@ export default function Checkout() {
         })),
         shipping: form,
         paymentMethod,
+        shippingFee: shippingFee ?? 85,
       });
       clearCart();
-      navigate("/payment", { state: { form, paymentMethod, order } });
+      navigate("/payment", { state: { form, paymentMethod, order, shippingFee: shippingFee ?? 85 } });
     } catch (err) {
       setErrors({ form: err.message });
     } finally {
@@ -120,6 +163,18 @@ export default function Checkout() {
       fontFamily: theme.fontBody, outline: "none", transition: "border-color 0.18s",
       width: "100%", boxSizing: "border-box",
     }),
+    select: (hasError) => ({
+      padding: "11px 14px", background: theme.surfaceMuted,
+      border: `1px solid ${hasError ? "#c0524a" : theme.lightGray}`,
+      borderRadius: 8, color: theme.textOnLight, fontSize: 14,
+      fontFamily: theme.fontBody, outline: "none", transition: "border-color 0.18s",
+      width: "100%", boxSizing: "border-box", cursor: "pointer",
+      appearance: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "right 14px center",
+      paddingRight: 36,
+    }),
     fieldError: { fontSize: 11, color: "#c0524a", letterSpacing: "0.06em" },
 
     methodList: { display: "flex", flexDirection: "column", gap: 10 },
@@ -140,7 +195,6 @@ export default function Checkout() {
       flexShrink: 0, transition: "background 0.18s, border-color 0.18s",
     }),
 
-    // Order summary — shown ABOVE form on mobile, sidebar on desktop
     summary: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
@@ -205,11 +259,11 @@ export default function Checkout() {
       </div>
       <div style={s.summaryRow}>
         <span>Shipping</span>
-        <span>Calculated at checkout</span>
+        <span>{shippingFee !== null ? `EGP ${shippingFee}` : "Select governorate"}</span>
       </div>
       <div style={s.summaryTotal}>
         <span>Total</span>
-        <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
+        <span style={s.totalAmount}>EGP {grandTotal.toLocaleString()}</span>
       </div>
       {isDesktop && (
         <>
@@ -253,10 +307,8 @@ export default function Checkout() {
       <form onSubmit={handleSubmit} noValidate>
         <div style={s.layout}>
 
-          {/* On mobile: summary first, then form. On desktop: form left, summary right */}
           {!isDesktop && <OrderSummary />}
 
-          {/* Form */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {errors.form && <p style={s.formError}>{errors.form}</p>}
 
@@ -299,7 +351,16 @@ export default function Checkout() {
                   </div>
                   <div style={s.field}>
                     <label style={s.fieldLabel}>Governorate</label>
-                    <input style={s.input(!!errors.governorate)} value={form.governorate} onChange={(e) => update("governorate", e.target.value)} placeholder="Cairo" />
+                    <select
+                      style={s.select(!!errors.governorate)}
+                      value={form.governorate}
+                      onChange={(e) => update("governorate", e.target.value)}
+                    >
+                      <option value="">Select governorate…</option>
+                      {GOVERNORATES.map((g) => (
+                        <option key={g} value={g}>{g}</option>
+                      ))}
+                    </select>
                     {errors.governorate && <span style={s.fieldError}>{errors.governorate}</span>}
                   </div>
                 </div>
@@ -324,7 +385,6 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Mobile: Place order button at bottom of form */}
             {!isDesktop && (
               <button type="submit" style={s.submitBtn} disabled={submitting}>
                 {submitting ? "Placing order…" : "Place order"}
@@ -332,7 +392,6 @@ export default function Checkout() {
             )}
           </div>
 
-          {/* Desktop: summary sidebar */}
           {isDesktop && <OrderSummary />}
 
         </div>
@@ -341,7 +400,7 @@ export default function Checkout() {
       <footer style={s.footer}>
         <div style={s.footBrand}>
           <img src="/logo.png" alt="MedTrack" style={{ height: 80, width: "auto", maxWidth: 160, display: "block" }} />
-        <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
+          <span style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDarkMuted, marginTop: -25 }}>MedTrack</span>
         </div>
         <div style={s.footCols}>
           <div style={s.footCol}>
