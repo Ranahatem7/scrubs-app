@@ -6,7 +6,7 @@ import useCategories from "../hooks/useCategories";
 import useSiteSettings from "../hooks/useSiteSettings";
 import LoadingPage from "../components/LoadingPage";
 import { Link } from "react-router-dom";
-import { theme, label, display, btnSolid, btnGhost, strongText } from "../theme";
+import { theme, label, display, btnSolid, btnGhost } from "../theme";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -48,7 +48,7 @@ export default function Home() {
       width: "100%",
       height: "100%",
       objectFit: "cover",
-      objectPosition: "center top",
+      objectPosition: "50% 20%",  // shows faces — not anchored at very top which wastes headroom
     },
     heroRight: {
       display: "grid",
@@ -77,8 +77,8 @@ export default function Home() {
       inset: 0,
       width: "100%",
       height: "100%",
-      objectFit: "contain",
-      objectPosition: "center top",
+      objectFit: "cover",         // was "contain" — now fills the panel properly
+      objectPosition: "50% 20%",  // shows upper body / faces
     },
     heroOverlay: {
       position: "absolute",
@@ -176,38 +176,6 @@ export default function Home() {
       lineHeight: 0.95,
       maxWidth: isDesktop ? "18ch" : "none",
       color: theme.accent,
-    },
-
-    footer: {
-      padding: `44px ${theme.pad}px 32px`,
-      background: "#092a1f",
-    },
-    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px",
-      fontSize: 10,
-      fontWeight: 500,
-      letterSpacing: "0.28em",
-      textTransform: "uppercase",
-      color: theme.textOnDark,
-    },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 6,
-      paddingTop: 24,
-      borderTop: `1px solid ${theme.hairlineOnDark}`,
-    },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
-    legal: {
-      margin: "28px 0 0",
-      fontSize: 10,
-      letterSpacing: "0.18em",
-      textTransform: "uppercase",
-      color: theme.textOnDarkMuted,
     },
   };
 
@@ -325,8 +293,7 @@ export default function Home() {
         <span style={label("light")}>MedTrack · Cairo</span>
       </section>
 
-    <Footer />
-          
+      <Footer />
     </main>
   );
 }
