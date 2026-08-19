@@ -9,7 +9,7 @@ const orderItemSchema = new mongoose.Schema(
     size: { type: String, trim: true },
     color: { type: String, trim: true },
     quantity: { type: Number, required: true, min: 1 },
-     category: { type: String, trim: true, default: null },
+     category: product.gender ?? product.category ?? null,
   },
   { _id: false }
 );
