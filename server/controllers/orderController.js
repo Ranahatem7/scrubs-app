@@ -36,7 +36,16 @@ const createOrder = asyncHandler(async (req, res) => {
       category: product.category ?? null,
     };
   });
-
+// Deduct stock for each item
+for (const item of orderItems) {
+  const product = productMap.get(item.product.toString());
+  if (product && typeof product.stock === "object" && item.size) {
+    const current = product.stock[item.size] ?? 0;
+    product.stock[item.size] = Math.max(0, current - item.quantity);
+    product.markModified("stock");
+    await product.save();
+  }
+}
   const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   const order = await Order.create({
