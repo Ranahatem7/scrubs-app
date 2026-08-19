@@ -58,7 +58,7 @@ export default function Home() {
     },
     heroRightTop: {
       ...heroPanel("#theme.ink"),
-      minHeight: isDesktop ? 0 : "45vw",
+      minHeight: isDesktop ? 0 : "35vw",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-end",
@@ -66,7 +66,7 @@ export default function Home() {
     },
     heroRightBottom: {
       ...heroPanel("#theme.ink"),
-      minHeight: isDesktop ? 0 : "45vw",
+      minHeight: isDesktop ? 0 : "35vw",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-end",
