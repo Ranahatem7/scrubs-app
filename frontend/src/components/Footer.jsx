@@ -31,7 +31,7 @@ export default function Footer() {
     brandLogoRow: {
       display: "flex",
       alignItems: "center",
-      gap: 10,
+      gap: 5,
     },
     brandName: {
       fontSize: 13,
@@ -110,7 +110,7 @@ export default function Footer() {
         {/* Brand */}
         <div style={s.brand}>
           <div style={s.brandLogoRow}>
-            <img src="/logo.png" alt="MedTrack" style={{ height: 40, width: "auto" }} />
+            <img src="/logo.png" alt="MedTrack" style={{ height: 50, width: "auto" }} />
             <span style={s.brandName}>MedTrack</span>
           </div>
           <p style={s.brandTagline}>

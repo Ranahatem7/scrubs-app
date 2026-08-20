@@ -46,8 +46,46 @@ export default function Checkout() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  // Discount state
+  const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(null); // { code, percentage }
+  const [discountError, setDiscountError] = useState("");
+  const [applyingDiscount, setApplyingDiscount] = useState(false);
+
   const shippingFee = getShipping(form.governorate);
-  const grandTotal = shippingFee !== null ? totalPrice + shippingFee : totalPrice;
+  const discountAmount = appliedDiscount
+    ? Math.round(totalPrice * (appliedDiscount.percentage / 100))
+    : 0;
+  const grandTotal = shippingFee !== null
+    ? totalPrice - discountAmount + shippingFee
+    : totalPrice - discountAmount;
+
+  const applyDiscount = async () => {
+    if (!discountCode.trim()) return;
+    setDiscountError("");
+    setApplyingDiscount(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/discounts/validate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: discountCode.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Invalid code");
+      setAppliedDiscount(data);
+    } catch (err) {
+      setDiscountError(err.message);
+      setAppliedDiscount(null);
+    } finally {
+      setApplyingDiscount(false);
+    }
+  };
+
+  const removeDiscount = () => {
+    setAppliedDiscount(null);
+    setDiscountCode("");
+    setDiscountError("");
+  };
 
   const update = (field, value) => {
     setForm((f) => ({ ...f, [field]: value }));
@@ -75,10 +113,13 @@ export default function Checkout() {
     try {
       const order = await createOrder({
         items: items.map((i) => ({ product: i.id, size: i.size, color: i.color, quantity: i.quantity })),
-        shipping: form, paymentMethod, shippingFee: shippingFee ?? 85,
+        shipping: form, paymentMethod,
+        shippingFee: shippingFee ?? 85,
+        discountCode: appliedDiscount?.code ?? null,
+        discountAmount,
       });
       clearCart();
-      navigate("/payment", { state: { form, paymentMethod, order, shippingFee: shippingFee ?? 85 } });
+      navigate("/payment", { state: { form, paymentMethod, order, shippingFee: shippingFee ?? 85, discountAmount, discountCode: appliedDiscount?.code } });
     } catch (err) {
       setErrors({ form: err.message });
     } finally {
@@ -147,6 +188,31 @@ export default function Checkout() {
       fontSize: 15, color: theme.textOnLight, fontFamily: theme.fontDisplay,
     },
     totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
+    // Discount field styles
+    discountWrap: { marginTop: 16, paddingTop: 16, borderTop: `1px solid ${theme.hairlineOnLight}` },
+    discountLabel: { fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: theme.textOnLightMuted, marginBottom: 8, display: "block" },
+    discountRow: { display: "flex", gap: 8 },
+    discountInput: {
+      flex: 1, padding: "9px 12px", background: theme.surfaceMuted,
+      border: `1px solid ${theme.lightGray}`, borderRadius: 8,
+      color: theme.textOnLight, fontSize: 13, fontFamily: theme.fontBody,
+      outline: "none", textTransform: "uppercase", letterSpacing: "0.06em",
+    },
+    applyBtn: {
+      padding: "9px 16px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em",
+      textTransform: "uppercase", background: theme.accent, color: theme.textOnDark,
+      border: "none", borderRadius: 8, cursor: "pointer", fontFamily: theme.fontBody,
+      whiteSpace: "nowrap",
+    },
+    discountSuccess: {
+      marginTop: 8, fontSize: 12, color: theme.accent,
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+    },
+    removeBtn: {
+      fontSize: 11, color: theme.textOnLightMuted, background: "none",
+      border: "none", cursor: "pointer", fontFamily: theme.fontBody, padding: 0,
+    },
+    discountErr: { marginTop: 6, fontSize: 11, color: "#c0524a" },
     submitBtn: {
       ...btnSolid, width: "100%", marginTop: 20, padding: "14px 0",
       fontSize: 13, letterSpacing: "0.14em", justifyContent: "center",
@@ -170,6 +236,12 @@ export default function Checkout() {
         <span>Subtotal ({totalItems} items)</span>
         <span>EGP {totalPrice.toLocaleString()}</span>
       </div>
+      {appliedDiscount && (
+        <div style={{ ...s.summaryRow, color: theme.accent }}>
+          <span>Discount ({appliedDiscount.percentage}% off)</span>
+          <span>− EGP {discountAmount.toLocaleString()}</span>
+        </div>
+      )}
       <div style={s.summaryRow}>
         <span>Shipping</span>
         <span>{shippingFee !== null ? `EGP ${shippingFee}` : "Select governorate"}</span>
@@ -178,6 +250,39 @@ export default function Checkout() {
         <span>Total</span>
         <span style={s.totalAmount}>EGP {grandTotal.toLocaleString()}</span>
       </div>
+
+      {/* Discount code field */}
+      <div style={s.discountWrap}>
+        <span style={s.discountLabel}>Discount code</span>
+        {appliedDiscount ? (
+          <div style={s.discountSuccess}>
+            <span>✓ <strong>{appliedDiscount.code}</strong> — {appliedDiscount.percentage}% off applied</span>
+            <button style={s.removeBtn} onClick={removeDiscount}>Remove</button>
+          </div>
+        ) : (
+          <>
+            <div style={s.discountRow}>
+              <input
+                style={s.discountInput}
+                placeholder="Enter code"
+                value={discountCode}
+                onChange={(e) => { setDiscountCode(e.target.value); setDiscountError(""); }}
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyDiscount())}
+              />
+              <button
+                type="button"
+                style={s.applyBtn}
+                onClick={applyDiscount}
+                disabled={applyingDiscount}
+              >
+                {applyingDiscount ? "…" : "Apply"}
+              </button>
+            </div>
+            {discountError && <p style={s.discountErr}>{discountError}</p>}
+          </>
+        )}
+      </div>
+
       {isDesktop && (
         <>
           <button type="submit" style={s.submitBtn} disabled={submitting}>

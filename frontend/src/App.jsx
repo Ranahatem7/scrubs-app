@@ -32,6 +32,7 @@ import AdminOrders from "./pages/Admin/AdminOrders";
 import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminSettings from "./pages/Admin/AdminSettings";
 import AdminCategories from "./pages/Admin/AdminCategories";
+import AdminDiscounts from "./pages/Admin/AdminDiscounts";
 
 import { theme } from "./theme";
 
@@ -60,6 +61,7 @@ export default function App() {
               <Route path="/Admin/orders" element={<AdminPage><AdminOrders /></AdminPage>} />
               <Route path="/Admin/users" element={<AdminPage><AdminUsers /></AdminPage>} />
               <Route path="/Admin/categories" element={<AdminPage><AdminCategories /></AdminPage>} />
+              <Route path="/Admin/discounts" element={<AdminPage><AdminDiscounts /></AdminPage>} />
               <Route path="/Admin/settings" element={<AdminPage><AdminSettings /></AdminPage>} />
 
               {/* ── Shop routes (with header + sidebar) ── */}

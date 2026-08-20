@@ -10,6 +10,7 @@ const NAV = [
   { path: "/admin/orders", label: "Orders", icon: "◎" },
   { path: "/admin/users", label: "Users", icon: "◯" },
   { path: "/admin/categories", label: "Categories", icon: "◧" },
+  { path: "/admin/discounts", label: "Discounts", icon: "%" },
   { path: "/admin/settings", label: "Settings", icon: "⚙" },
 ];
 
@@ -34,7 +35,6 @@ export default function AdminLayout({ children }) {
   const s = {
     shell: { display: "flex", minHeight: "100vh", background: theme.surfaceLight },
 
-    // Desktop sidebar
     sidebar: {
       width: 220,
       flexShrink: 0,
@@ -47,7 +47,6 @@ export default function AdminLayout({ children }) {
       height: "100vh",
     },
 
-    // Mobile overlay behind drawer
     overlay: {
       position: "fixed",
       inset: 0,
@@ -55,7 +54,6 @@ export default function AdminLayout({ children }) {
       zIndex: 200,
     },
 
-    // Mobile slide-in drawer
     drawer: {
       position: "fixed",
       top: 0,
@@ -162,8 +160,8 @@ export default function AdminLayout({ children }) {
   const SidebarContent = () => (
     <>
       <div style={s.brand}>
-      <span style={s.brandMt}>MT</span>
-<span style={s.brandSub}>Admin panel</span>
+        <span style={s.brandMt}>MT</span>
+        <span style={s.brandSub}>Admin panel</span>
       </div>
       <nav style={s.nav}>
         {NAV.map((item) => {
@@ -184,14 +182,12 @@ export default function AdminLayout({ children }) {
 
   return (
     <div style={s.shell}>
-      {/* Desktop: inline sidebar */}
       {isDesktop && (
         <aside style={s.sidebar}>
           <SidebarContent />
         </aside>
       )}
 
-      {/* Mobile: slide-in drawer */}
       {!isDesktop && (
         <>
           {drawerOpen && (
@@ -203,7 +199,6 @@ export default function AdminLayout({ children }) {
         </>
       )}
 
-      {/* Main content */}
       <main style={s.main}>
         <div style={s.topBar}>
           <div style={s.topLeft}>
