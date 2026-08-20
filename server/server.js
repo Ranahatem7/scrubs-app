@@ -9,6 +9,8 @@ const { notFound, errorHandler } = require("./middleware/errorHandler");
 const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 const path = require("path");
+const discountRoutes = require("./routes/discountRoutes");
+
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -28,7 +30,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use("/api/discounts", discountRoutes);
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));

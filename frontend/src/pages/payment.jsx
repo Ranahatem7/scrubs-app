@@ -26,7 +26,7 @@ const METHOD_DETAILS = {
       "Send a screenshot of the transfer to hello@medtrack.com to confirm.",
     ],
     accountLabel: "Instapay username",
-    accountNumber: "medtrack@instapay", // ← replace with your real username
+    accountNumber: "mfabe@instapay", 
   },
 };
 

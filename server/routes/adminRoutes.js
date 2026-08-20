@@ -8,6 +8,7 @@ const Order = require("../models/Order");
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const SiteSettings = require("../models/SiteSettings");
+const Discount = require("../models/Discount");
 
 // ── POST /api/admin/login ──────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -171,6 +172,34 @@ router.put("/categories/:id", adminAuth, async (req, res) => {
 router.delete("/categories/:id", adminAuth, async (req, res) => {
   await Category.findByIdAndDelete(req.params.id);
   res.json({ success: true });
+});
+
+// GET all discounts
+router.get("/discounts", adminAuth, async (req, res) => {
+  const discounts = await Discount.find().sort({ createdAt: -1 });
+  res.json(discounts);
+});
+
+// POST create discount
+router.post("/discounts", adminAuth, async (req, res) => {
+  try {
+    const discount = await Discount.create(req.body);
+    res.status(201).json(discount);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// PUT toggle active
+router.put("/discounts/:id", adminAuth, async (req, res) => {
+  const discount = await Discount.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(discount);
+});
+
+// DELETE
+router.delete("/discounts/:id", adminAuth, async (req, res) => {
+  await Discount.findByIdAndDelete(req.params.id);
+  res.json({ message: "Deleted" });
 });
 
 // ── SITE SETTINGS ─────────────────────────────────────────────────────────
