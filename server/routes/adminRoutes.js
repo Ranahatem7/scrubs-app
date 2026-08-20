@@ -8,7 +8,6 @@ const Order = require("../models/Order");
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const SiteSettings = require("../models/SiteSettings");
-const Discount = require("../models/Discount");
 
 // ── POST /api/admin/login ──────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -98,7 +97,22 @@ router.put("/orders/:id", adminAuth, async (req, res) => {
 });
 
 router.delete("/orders/:id", adminAuth, async (req, res) => {
-  await Order.findByIdAndDelete(req.params.id);
+  const order = await Order.findById(req.params.id);
+  if (!order) return res.status(404).json({ message: "Order not found" });
+
+  // Restore stock for each item
+  for (const item of order.items) {
+    if (!item.size || !item.product) continue;
+    const product = await Product.findById(item.product);
+    if (product && typeof product.stock === "object") {
+      const current = product.stock[item.size] ?? 0;
+      product.stock[item.size] = current + item.quantity;
+      product.markModified("stock");
+      await product.save();
+    }
+  }
+
+  await order.deleteOne();
   res.json({ ok: true });
 });
 
@@ -172,34 +186,6 @@ router.put("/categories/:id", adminAuth, async (req, res) => {
 router.delete("/categories/:id", adminAuth, async (req, res) => {
   await Category.findByIdAndDelete(req.params.id);
   res.json({ success: true });
-});
-
-// GET all discounts
-router.get("/discounts", adminAuth, async (req, res) => {
-  const discounts = await Discount.find().sort({ createdAt: -1 });
-  res.json(discounts);
-});
-
-// POST create discount
-router.post("/discounts", adminAuth, async (req, res) => {
-  try {
-    const discount = await Discount.create(req.body);
-    res.status(201).json(discount);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-// PUT toggle active
-router.put("/discounts/:id", adminAuth, async (req, res) => {
-  const discount = await Discount.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(discount);
-});
-
-// DELETE
-router.delete("/discounts/:id", adminAuth, async (req, res) => {
-  await Discount.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
 });
 
 // ── SITE SETTINGS ─────────────────────────────────────────────────────────

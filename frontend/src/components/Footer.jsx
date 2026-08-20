@@ -31,7 +31,8 @@ export default function Footer() {
     brandLogoRow: {
       display: "flex",
       alignItems: "center",
-      gap: 5,
+      gap: 10,
+      marginTop: -16,
     },
     brandName: {
       fontSize: 13,
@@ -110,7 +111,7 @@ export default function Footer() {
         {/* Brand */}
         <div style={s.brand}>
           <div style={s.brandLogoRow}>
-            <img src="/logo.png" alt="MedTrack" style={{ height: 50, width: "auto" }} />
+            <img src="/logo.png" alt="MedTrack" style={{ height: 40, width: "auto" }} />
             <span style={s.brandName}>MedTrack</span>
           </div>
           <p style={s.brandTagline}>
@@ -153,7 +154,17 @@ export default function Footer() {
         {/* Help */}
         <div style={s.col}>
           <h3 style={s.colHead}>Help</h3>
+          <a href="#sizing" style={s.link}>Size guide</a>
           <a href="#returns" style={s.link}>Returns</a>
+          <a href="/contact" style={s.link}>Contact us</a>
+        </div>
+
+        {/* Contact */}
+        <div style={s.col}>
+          <h3 style={s.colHead}>Contact</h3>
+          <a href="mailto:hello@medtrack.com" style={s.link}>hello@medtrack.com</a>
+          <span style={s.link}>New Cairo, Cairo, Egypt</span>
+          <span style={s.link}>Sun – Thu: 9am – 6pm</span>
         </div>
       </div>
 
