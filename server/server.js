@@ -7,10 +7,9 @@ const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const adminRoutes = require("./routes/adminRoutes");
+const discountRoutes = require("./routes/discountRoutes");
 const app = express();
 const path = require("path");
-const discountRoutes = require("./routes/discountRoutes");
-
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -20,7 +19,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, Render health checks)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -30,7 +28,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api/discounts", discountRoutes);
+
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
@@ -39,6 +37,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/discounts", discountRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use(notFound);
