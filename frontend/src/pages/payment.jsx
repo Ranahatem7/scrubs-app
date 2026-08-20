@@ -23,7 +23,6 @@ const METHOD_DETAILS = {
       "Open your bank app and go to Instapay.",
       "Enter our Instapay username or phone number below.",
       "Transfer the exact total amount.",
-      "Send a screenshot of the transfer to hello@medtrack.com to confirm.",
     ],
     accountLabel: "Instapay username",
     accountNumber: "mfabe@instapay", 

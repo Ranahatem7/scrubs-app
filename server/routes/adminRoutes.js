@@ -8,6 +8,7 @@ const Order = require("../models/Order");
 const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const SiteSettings = require("../models/SiteSettings");
+const Discount = require("../models/Discount");
 
 // ── POST /api/admin/login ──────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -206,6 +207,44 @@ router.put("/settings", adminAuth, async (req, res) => {
       { new: true, upsert: true }
     );
     res.json(s);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── DISCOUNTS ─────────────────────────────────────────────────────────────
+router.get("/discounts", adminAuth, async (req, res) => {
+  try {
+    const discounts = await Discount.find().sort({ createdAt: -1 });
+    res.json(discounts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.post("/discounts", adminAuth, async (req, res) => {
+  try {
+    const { code, percentage } = req.body;
+    const discount = await Discount.create({ code: code.toUpperCase().trim(), percentage });
+    res.status(201).json(discount);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.put("/discounts/:id", adminAuth, async (req, res) => {
+  try {
+    const discount = await Discount.findByIdAndUpdate(req.params.id, { active: req.body.active }, { new: true });
+    res.json(discount);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+router.delete("/discounts/:id", adminAuth, async (req, res) => {
+  try {
+    await Discount.findByIdAndDelete(req.params.id);
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
