@@ -32,6 +32,74 @@ function getShipping(gov) {
   return 85;
 }
 
+// ── Defined OUTSIDE Checkout to prevent remount on every keystroke ──
+function OrderSummary({
+  s, totalItems, totalPrice, appliedDiscount, discountAmount,
+  shippingFee, grandTotal, discountCode, setDiscountCode,
+  discountError, setDiscountError, applyDiscount, applyingDiscount,
+  removeDiscount, submitting, isDesktop,
+}) {
+  return (
+    <div style={s.summary}>
+      <p style={s.summaryTitle}>Order summary</p>
+      <div style={s.summaryRow}>
+        <span>Subtotal ({totalItems} items)</span>
+        <span>EGP {totalPrice.toLocaleString()}</span>
+      </div>
+      {appliedDiscount && (
+        <div style={{ ...s.summaryRow, color: theme.accent }}>
+          <span>Discount ({appliedDiscount.percentage}% off)</span>
+          <span>− EGP {discountAmount.toLocaleString()}</span>
+        </div>
+      )}
+      <div style={s.summaryRow}>
+        <span>Shipping</span>
+        <span>{shippingFee !== null ? `EGP ${shippingFee}` : "Select governorate"}</span>
+      </div>
+      <div style={s.summaryTotal}>
+        <span>Total</span>
+        <span style={s.totalAmount}>EGP {grandTotal.toLocaleString()}</span>
+      </div>
+
+      {/* Discount code field */}
+      <div style={s.discountWrap}>
+        <span style={s.discountLabel}>Discount code</span>
+        {appliedDiscount ? (
+          <div style={s.discountSuccess}>
+            <span>✓ <strong>{appliedDiscount.code}</strong> — {appliedDiscount.percentage}% off applied</span>
+            <button style={s.removeBtn} onClick={removeDiscount}>Remove</button>
+          </div>
+        ) : (
+          <>
+            <div style={s.discountRow}>
+              <input
+                style={s.discountInput}
+                placeholder="Enter code"
+                value={discountCode}
+                onChange={(e) => { setDiscountCode(e.target.value); setDiscountError(""); }}
+                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyDiscount())}
+              />
+              <button type="button" style={s.applyBtn} onClick={applyDiscount} disabled={applyingDiscount}>
+                {applyingDiscount ? "…" : "Apply"}
+              </button>
+            </div>
+            {discountError && <p style={s.discountErr}>{discountError}</p>}
+          </>
+        )}
+      </div>
+
+      {isDesktop && (
+        <>
+          <button type="submit" style={s.submitBtn} disabled={submitting}>
+            {submitting ? "Placing order…" : "Place order"}
+          </button>
+          <a href="/men" style={s.backLink}>← Continue shopping</a>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function Checkout() {
   const isDesktop = useIsDesktop(700);
   const navigate = useNavigate();
@@ -46,9 +114,8 @@ export default function Checkout() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Discount state
   const [discountCode, setDiscountCode] = useState("");
-  const [appliedDiscount, setAppliedDiscount] = useState(null); // { code, percentage }
+  const [appliedDiscount, setAppliedDiscount] = useState(null);
   const [discountError, setDiscountError] = useState("");
   const [applyingDiscount, setApplyingDiscount] = useState(false);
 
@@ -188,7 +255,6 @@ export default function Checkout() {
       fontSize: 15, color: theme.textOnLight, fontFamily: theme.fontDisplay,
     },
     totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
-    // Discount field styles
     discountWrap: { marginTop: 16, paddingTop: 16, borderTop: `1px solid ${theme.hairlineOnLight}` },
     discountLabel: { fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: theme.textOnLightMuted, marginBottom: 8, display: "block" },
     discountRow: { display: "flex", gap: 8 },
@@ -229,70 +295,12 @@ export default function Checkout() {
     backLink: { ...btnGhost("light"), display: "inline-flex", marginTop: 14, width: "100%", justifyContent: "center", fontSize: 12 },
   };
 
-  const OrderSummary = () => (
-    <div style={s.summary}>
-      <p style={s.summaryTitle}>Order summary</p>
-      <div style={s.summaryRow}>
-        <span>Subtotal ({totalItems} items)</span>
-        <span>EGP {totalPrice.toLocaleString()}</span>
-      </div>
-      {appliedDiscount && (
-        <div style={{ ...s.summaryRow, color: theme.accent }}>
-          <span>Discount ({appliedDiscount.percentage}% off)</span>
-          <span>− EGP {discountAmount.toLocaleString()}</span>
-        </div>
-      )}
-      <div style={s.summaryRow}>
-        <span>Shipping</span>
-        <span>{shippingFee !== null ? `EGP ${shippingFee}` : "Select governorate"}</span>
-      </div>
-      <div style={s.summaryTotal}>
-        <span>Total</span>
-        <span style={s.totalAmount}>EGP {grandTotal.toLocaleString()}</span>
-      </div>
-
-      {/* Discount code field */}
-      <div style={s.discountWrap}>
-        <span style={s.discountLabel}>Discount code</span>
-        {appliedDiscount ? (
-          <div style={s.discountSuccess}>
-            <span>✓ <strong>{appliedDiscount.code}</strong> — {appliedDiscount.percentage}% off applied</span>
-            <button style={s.removeBtn} onClick={removeDiscount}>Remove</button>
-          </div>
-        ) : (
-          <>
-            <div style={s.discountRow}>
-              <input
-                style={s.discountInput}
-                placeholder="Enter code"
-                value={discountCode}
-                onChange={(e) => { setDiscountCode(e.target.value); setDiscountError(""); }}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyDiscount())}
-              />
-              <button
-                type="button"
-                style={s.applyBtn}
-                onClick={applyDiscount}
-                disabled={applyingDiscount}
-              >
-                {applyingDiscount ? "…" : "Apply"}
-              </button>
-            </div>
-            {discountError && <p style={s.discountErr}>{discountError}</p>}
-          </>
-        )}
-      </div>
-
-      {isDesktop && (
-        <>
-          <button type="submit" style={s.submitBtn} disabled={submitting}>
-            {submitting ? "Placing order…" : "Place order"}
-          </button>
-          <a href="/men" style={s.backLink}>← Continue shopping</a>
-        </>
-      )}
-    </div>
-  );
+  const summaryProps = {
+    s, totalItems, totalPrice, appliedDiscount, discountAmount,
+    shippingFee, grandTotal, discountCode, setDiscountCode,
+    discountError, setDiscountError, applyDiscount, applyingDiscount,
+    removeDiscount, submitting, isDesktop,
+  };
 
   if (items.length === 0) {
     return (
@@ -323,7 +331,7 @@ export default function Checkout() {
       <PulseDivider />
       <form onSubmit={handleSubmit} noValidate>
         <div style={s.layout}>
-          {!isDesktop && <OrderSummary />}
+          {!isDesktop && <OrderSummary {...summaryProps} />}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {errors.form && <p style={s.formError}>{errors.form}</p>}
             <div style={s.card}>
@@ -396,7 +404,7 @@ export default function Checkout() {
               </button>
             )}
           </div>
-          {isDesktop && <OrderSummary />}
+          {isDesktop && <OrderSummary {...summaryProps} />}
         </div>
       </form>
       <Footer />
