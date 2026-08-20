@@ -8,6 +8,7 @@ import AdminLayout from "./pages/Admin/AdminLayout";
 import GlobalStyles from "./GlobalStyles";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // Shop pages
 import Home from "./pages/Home";
@@ -53,6 +54,7 @@ export default function App() {
         <AuthProvider>
           <CartProvider>
             <Routes>
+             
 
               {/* ── Admin routes (no shop header) ── */}
               <Route path="/Admin/login" element={<AdminLogin />} />
@@ -93,6 +95,7 @@ export default function App() {
           </CartProvider>
         </AuthProvider>
       </AdminProvider>
+       <SpeedInsights />
     </BrowserRouter>
   );
 }
