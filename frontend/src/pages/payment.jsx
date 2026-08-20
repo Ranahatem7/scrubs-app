@@ -25,7 +25,7 @@ const METHOD_DETAILS = {
       "Transfer the exact total amount.",
     ],
     accountLabel: "Instapay username",
-    accountNumber: "mfabe@instapay", 
+    accountNumber: "https://ipn.eg/S/mfabe/instapay/9LaOOR", 
   },
 };
 
