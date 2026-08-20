@@ -119,31 +119,14 @@ export default function Contact() {
               </button>
             </form>
           )}
-        </div>
-
-        <div style={s.infoWrap}>
-          <p style={s.infoTitle}>Our details</p>
-          <div style={s.infoBlock}>
-            <p style={s.infoHead}>Address</p>
-            <p style={s.infoText}>New Cairo, Cairo, Egypt</p>
-          </div>
-          <div style={s.infoBlock}>
-            <p style={s.infoHead}>Email</p>
-            <a href="mailto:hello@medtrack.com" style={s.infoLink}>hello@medtrack.com</a>
-          </div>
-          <div style={s.infoBlock}>
-            <p style={s.infoHead}>Hours</p>
-            <p style={s.infoText}>Sunday – Thursday: 9am – 6pm<br />Friday – Saturday: Closed</p>
-          </div>
-          <div style={s.infoBlock}>
-            <p style={s.infoHead}>Follow us</p>
+      
             <div style={s.social}>
               <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={s.socialLink}>Instagram</a>
               <a href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH" target="_blank" rel="noopener noreferrer" style={s.socialLink}>TikTok</a>
             </div>
           </div>
-        </div>
       </div>
+     
 
       <Footer />
     </div>

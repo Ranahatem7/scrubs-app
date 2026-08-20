@@ -15,18 +15,7 @@ const METHOD_DETAILS = {
       "Hand the cash to the courier upon delivery.",
     ],
   },
-  instapay: {
-    icon: "⚡",
-    title: "Instapay",
-    instruction: "Complete your payment via Instapay using the details below.",
-    steps: [
-      "Open your bank app and go to Instapay.",
-      "Enter our Instapay username or phone number below.",
-      "Transfer the exact total amount.",
-    ],
-    accountLabel: "Instapay username",
-    accountNumber: "https://ipn.eg/S/mfabe/instapay/9LaOOR", 
-  },
+ 
 };
 
 export default function Payment() {
