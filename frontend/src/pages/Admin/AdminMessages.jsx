@@ -124,6 +124,9 @@ export default function AdminMessages() {
                     <td style={s.td(!m.read)}>
                       {!m.read && <span style={s.unreadDot} />}
                       {m.name}
+                      <span style={{ marginLeft: 8, fontSize: 10, color: theme.textOnLightMuted }}>
+                        {expanded === m._id ? "▲" : "▼"}
+                      </span>
                     </td>
                     <td style={s.td(!m.read)}>{m.email}</td>
                     <td style={s.td(false)}>{m.phone || "—"}</td>
