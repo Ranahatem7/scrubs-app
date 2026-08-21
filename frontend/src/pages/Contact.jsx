@@ -8,15 +8,28 @@ export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const upd = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSent(true);
-    setSending(false);
+    setError("");
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to send");
+      setSent(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSending(false);
+    }
   };
 
   const s = {
@@ -67,6 +80,13 @@ export default function Contact() {
       borderRadius: theme.radius,
       fontSize: 13, color: theme.accent,
     },
+    errorMsg: {
+      marginBottom: 12, padding: "10px 14px",
+      background: "rgba(192,82,74,0.1)",
+      border: "1px solid rgba(192,82,74,0.3)",
+      borderRadius: theme.radius,
+      fontSize: 13, color: "#a23b34",
+    },
     infoWrap: { paddingLeft: isDesktop ? 60 : 0, marginTop: isDesktop ? 0 : 40 },
     infoTitle: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.accent, marginBottom: 24 },
     infoBlock: { marginBottom: 32 },
@@ -98,6 +118,7 @@ export default function Contact() {
             <div style={s.successMsg}>Message sent — we'll get back to you within 24 hours.</div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
+              {error && <div style={s.errorMsg}>{error}</div>}
               <div style={s.field}>
                 <label style={s.fieldLabel}>Name</label>
                 <input style={s.input} required value={form.name} onChange={(e) => upd("name", e.target.value)} placeholder="Your name" />
@@ -119,14 +140,12 @@ export default function Contact() {
               </button>
             </form>
           )}
-      
-            <div style={s.social}>
-              <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={s.socialLink}>Instagram</a>
-              <a href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH" target="_blank" rel="noopener noreferrer" style={s.socialLink}>TikTok</a>
-            </div>
+          <div style={s.social}>
+            <a href="https://www.instagram.com/medtrack.wear?igsh=MWppMmp6YmpocXl3MQ==" target="_blank" rel="noopener noreferrer" style={s.socialLink}>Instagram</a>
+            <a href="https://www.tiktok.com/@medtrack.wear?_r=1&_t=ZS-9918BfOV5SH" target="_blank" rel="noopener noreferrer" style={s.socialLink}>TikTok</a>
           </div>
+        </div>
       </div>
-     
 
       <Footer />
     </div>

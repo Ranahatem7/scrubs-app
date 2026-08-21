@@ -9,6 +9,7 @@ const Admin = require("../models/Admin");
 const Category = require("../models/Category");
 const SiteSettings = require("../models/SiteSettings");
 const Discount = require("../models/Discount");
+const Message = require("../models/Message");
 
 // ── POST /api/admin/login ──────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
@@ -207,6 +208,34 @@ router.put("/settings", adminAuth, async (req, res) => {
       { new: true, upsert: true }
     );
     res.json(s);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── MESSAGES ─────────────────────────────────────────────────────────────
+router.get("/messages", adminAuth, async (req, res) => {
+  try {
+    const messages = await Message.find().sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.put("/messages/:id/read", adminAuth, async (req, res) => {
+  try {
+    const msg = await Message.findByIdAndUpdate(req.params.id, { read: true }, { new: true });
+    res.json(msg);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.delete("/messages/:id", adminAuth, async (req, res) => {
+  try {
+    await Message.findByIdAndDelete(req.params.id);
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

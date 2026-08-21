@@ -33,6 +33,7 @@ import AdminUsers from "./pages/Admin/AdminUsers";
 import AdminSettings from "./pages/Admin/AdminSettings";
 import AdminCategories from "./pages/Admin/AdminCategories";
 import AdminDiscounts from "./pages/Admin/AdminDiscounts";
+import AdminMessages from "./pages/Admin/AdminMessages";
 
 import { theme } from "./theme";
 
@@ -53,7 +54,6 @@ export default function App() {
         <AuthProvider>
           <CartProvider>
             <Routes>
-             
 
               {/* ── Admin routes (no shop header) ── */}
               <Route path="/Admin/login" element={<AdminLogin />} />
@@ -63,6 +63,7 @@ export default function App() {
               <Route path="/Admin/users" element={<AdminPage><AdminUsers /></AdminPage>} />
               <Route path="/Admin/categories" element={<AdminPage><AdminCategories /></AdminPage>} />
               <Route path="/Admin/discounts" element={<AdminPage><AdminDiscounts /></AdminPage>} />
+              <Route path="/Admin/messages" element={<AdminPage><AdminMessages /></AdminPage>} />
               <Route path="/Admin/settings" element={<AdminPage><AdminSettings /></AdminPage>} />
 
               {/* ── Shop routes (with header + sidebar) ── */}

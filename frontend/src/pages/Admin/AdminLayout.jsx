@@ -11,6 +11,7 @@ const NAV = [
   { path: "/admin/users", label: "Users", icon: "◯" },
   { path: "/admin/categories", label: "Categories", icon: "◧" },
   { path: "/admin/discounts", label: "Discounts", icon: "%" },
+  { path: "/admin/messages", label: "Messages", icon: "✉" },
   { path: "/admin/settings", label: "Settings", icon: "⚙" },
 ];
 

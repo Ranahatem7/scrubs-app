@@ -8,6 +8,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const adminRoutes = require("./routes/adminRoutes");
 const discountRoutes = require("./routes/discountRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 const app = express();
 const path = require("path");
 
@@ -38,6 +39,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/discounts", discountRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use(notFound);
