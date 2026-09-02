@@ -29,7 +29,7 @@ function getShipping(gov) {
   if (LOW_SHIPPING.includes(gov)) return 80;
   if (HIGH_SHIPPING.includes(gov)) return 150;
   if (MID_SHIPPING.includes(gov)) return 105;
-  return 85;
+  return 90;
 }
 
 // ── Defined OUTSIDE Checkout to prevent remount on every keystroke ──
