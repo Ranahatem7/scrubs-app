@@ -26,9 +26,9 @@ const MID_SHIPPING = ["Faiyum", "Beni Suef", "Minya", "Asyut", "Sohag"];
 
 function getShipping(gov) {
   if (!gov) return null;
-  if (LOW_SHIPPING.includes(gov)) return 75;
-  if (HIGH_SHIPPING.includes(gov)) return 145;
-  if (MID_SHIPPING.includes(gov)) return 100;
+  if (LOW_SHIPPING.includes(gov)) return 80;
+  if (HIGH_SHIPPING.includes(gov)) return 150;
+  if (MID_SHIPPING.includes(gov)) return 105;
   return 85;
 }
 
