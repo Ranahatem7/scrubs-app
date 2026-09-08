@@ -4,7 +4,7 @@ const asyncHandler = require("../utils/asyncHandler");
 
 // POST /api/orders
 const createOrder = asyncHandler(async (req, res) => {
-  const { items, shipping, paymentMethod } = req.body;
+  const { items, shipping, paymentMethod, shippingFee = 0, discountAmount = 0, discountCode = null } = req.body;
 
   if (!Array.isArray(items) || items.length === 0) {
     res.status(400);
@@ -36,17 +36,20 @@ const createOrder = asyncHandler(async (req, res) => {
       category: product.gender ?? product.category ?? null,
     };
   });
-// Deduct stock for each item
-for (const item of orderItems) {
-  const product = productMap.get(item.product.toString());
-  if (product && typeof product.stock === "object" && item.size) {
-    const current = product.stock[item.size] ?? 0;
-    product.stock[item.size] = Math.max(0, current - item.quantity);
-    product.markModified("stock");
-    await product.save();
+
+  // Deduct stock for each item
+  for (const item of orderItems) {
+    const product = productMap.get(item.product.toString());
+    if (product && typeof product.stock === "object" && item.size) {
+      const current = product.stock[item.size] ?? 0;
+      product.stock[item.size] = Math.max(0, current - item.quantity);
+      product.markModified("stock");
+      await product.save();
+    }
   }
-}
+
   const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const total = subtotal - discountAmount + shippingFee;
 
   const order = await Order.create({
     user: req.user?._id ?? null,
@@ -54,7 +57,10 @@ for (const item of orderItems) {
     shipping,
     paymentMethod,
     subtotal,
-    total: subtotal,
+    shippingFee,
+    discountAmount,
+    discountCode,
+    total,
   });
 
   res.status(201).json(order);

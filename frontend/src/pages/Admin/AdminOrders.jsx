@@ -104,6 +104,13 @@ export default function AdminOrders() {
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
     itemLine: { display: "flex", justifyContent: "space-between", marginBottom: 4 },
+    summaryLine: { display: "flex", justifyContent: "space-between", marginBottom: 3, fontSize: 12 },
+    summaryTotal: {
+      display: "flex", justifyContent: "space-between",
+      paddingTop: 8, marginTop: 8,
+      borderTop: `1px solid ${theme.hairlineOnLight}`,
+      fontWeight: 600, color: theme.textOnLight, fontSize: 13,
+    },
   };
 
   return (
@@ -148,8 +155,20 @@ export default function AdminOrders() {
                   <td style={s.td}>{order.shipping?.phone}</td>
                   <td style={s.td}>{order.shipping?.street}, {order.shipping?.city}, {order.shipping?.governorate}</td>
                   <td style={s.td}>{order.paymentMethod}</td>
-                  <td style={{ ...s.td, color: theme.accent, fontWeight: 600 }}>
-                    LE {order.total?.toLocaleString()}
+                  <td style={{ ...s.td }}>
+                    <div style={{ fontWeight: 600, color: theme.accent }}>
+                      LE {order.total?.toLocaleString()}
+                    </div>
+                    {order.discountAmount > 0 && (
+                      <div style={{ fontSize: 11, color: theme.textOnLightMuted, marginTop: 2 }}>
+                        -{order.discountAmount} discount
+                      </div>
+                    )}
+                    {order.shippingFee > 0 && (
+                      <div style={{ fontSize: 11, color: theme.textOnLightMuted }}>
+                        +{order.shippingFee} shipping
+                      </div>
+                    )}
                   </td>
                   <td style={s.td}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -186,9 +205,30 @@ export default function AdminOrders() {
                       <div style={s.expandCell}>
                         {order.items?.map((item, i) => (
                           <div key={i} style={s.itemLine}>
-<span>{item.name}{item.category ? ` (${item.category})` : ""} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>                            <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
+                            <span>{item.name}{item.category ? ` (${item.category})` : ""} — {item.size}{item.color ? ` / ${item.color}` : ""} × {item.quantity ?? item.qty}</span>
+                            <span style={{ color: theme.accent }}>LE {(item.price * (item.quantity ?? item.qty)).toLocaleString()}</span>
                           </div>
                         ))}
+                        <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${theme.hairlineOnLight}` }}>
+                          <div style={s.summaryLine}>
+                            <span>Subtotal</span>
+                            <span>LE {order.subtotal?.toLocaleString()}</span>
+                          </div>
+                          {order.discountAmount > 0 && (
+                            <div style={{ ...s.summaryLine, color: theme.accent }}>
+                              <span>Discount{order.discountCode ? ` (${order.discountCode})` : ""}</span>
+                              <span>− LE {order.discountAmount?.toLocaleString()}</span>
+                            </div>
+                          )}
+                          <div style={s.summaryLine}>
+                            <span>Shipping to {order.shipping?.governorate}</span>
+                            <span>LE {order.shippingFee?.toLocaleString() ?? "—"}</span>
+                          </div>
+                          <div style={s.summaryTotal}>
+                            <span>Total</span>
+                            <span>LE {order.total?.toLocaleString()}</span>
+                          </div>
+                        </div>
                       </div>
                     </td>
                   </tr>
