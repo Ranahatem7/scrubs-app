@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PulseDivider from "../components/PulseDivider";
 import useIsDesktop from "../hooks/useIsDesktop";
@@ -15,7 +16,6 @@ const METHOD_DETAILS = {
       "Hand the cash to the courier upon delivery.",
     ],
   },
- 
 };
 
 export default function Payment() {
@@ -23,10 +23,20 @@ export default function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Data passed from checkout page
-  const { form, paymentMethod } = location.state ?? {};
+  const { form, paymentMethod, order, shippingFee, discountAmount } = location.state ?? {};
 
-  // If someone lands here directly without checkout data, redirect
+  // Fire Facebook Pixel Purchase event
+  useEffect(() => {
+    if (!order || typeof window.fbq !== "function") return;
+    const value = order.total ?? (order.subtotal - (discountAmount ?? 0) + (shippingFee ?? 0));
+    window.fbq("track", "Purchase", {
+      value: value,
+      currency: "EGP",
+      content_type: "product",
+      content_ids: order.items?.map((i) => i.product?.toString() ?? i.name) ?? [],
+    });
+  }, []);
+
   if (!form || !paymentMethod) {
     return (
       <main style={{ minHeight: "100vh", background: theme.surfaceLight, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
@@ -40,13 +50,11 @@ export default function Payment() {
 
   const s = {
     page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
-
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
-
     layout: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 360px" : "1fr",
@@ -56,7 +64,6 @@ export default function Payment() {
       padding: `40px ${theme.pad}px 0`,
       alignItems: "start",
     },
-
     card: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
@@ -73,7 +80,6 @@ export default function Payment() {
       textTransform: "uppercase",
       color: theme.accent,
     },
-
     successBanner: {
       display: "flex",
       alignItems: "center",
@@ -87,7 +93,6 @@ export default function Payment() {
     successIcon: { fontSize: 26 },
     successText: { fontSize: 14, color: theme.textOnLight, lineHeight: 1.5 },
     successSub: { fontSize: 12, color: theme.textOnLightMuted, marginTop: 3 },
-
     methodHeader: {
       display: "flex",
       alignItems: "center",
@@ -97,7 +102,6 @@ export default function Payment() {
     methodIcon: { fontSize: 28 },
     methodTitle: { ...display, fontSize: 20, margin: 0, color: theme.textOnLight },
     instruction: { fontSize: 14, color: theme.textOnLightMuted, lineHeight: 1.7, marginBottom: 24 },
-
     accountBox: {
       padding: "14px 18px",
       background: "rgba(15,91,70,0.08)",
@@ -107,30 +111,17 @@ export default function Payment() {
     },
     accountLabel: { fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: theme.textOnLightMuted, marginBottom: 6 },
     accountNumber: { color: theme.accent, fontWeight: 700, fontFamily: theme.fontDisplay, fontSize: 22 },
-
     stepList: { display: "flex", flexDirection: "column", gap: 12 },
     step: { display: "flex", gap: 12, alignItems: "flex-start" },
     stepNum: {
-      flexShrink: 0,
-      width: 24,
-      height: 24,
-      borderRadius: "50%",
-      background: theme.accent,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: 11,
-      color: theme.textOnDark,
-      marginTop: 1,
+      flexShrink: 0, width: 24, height: 24, borderRadius: "50%",
+      background: theme.accent, display: "flex", alignItems: "center",
+      justifyContent: "center", fontSize: 11, color: theme.textOnDark, marginTop: 1,
     },
     stepText: { fontSize: 13, color: theme.textOnLightMuted, lineHeight: 1.6 },
-
     sidebar: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 20,
-      position: isDesktop ? "sticky" : "static",
-      top: theme.barH + 20,
+      display: "flex", flexDirection: "column", gap: 20,
+      position: isDesktop ? "sticky" : "static", top: theme.barH + 20,
     },
     sideCard: {
       background: theme.surfaceLight,
@@ -140,45 +131,15 @@ export default function Payment() {
       padding: 24,
     },
     sideTitle: {
-      margin: "0 0 16px",
-      fontSize: 11,
-      fontWeight: 500,
-      letterSpacing: "0.26em",
-      textTransform: "uppercase",
-      color: theme.accent,
+      margin: "0 0 16px", fontSize: 11, fontWeight: 500,
+      letterSpacing: "0.26em", textTransform: "uppercase", color: theme.accent,
     },
-    detailRow: {
-      display: "flex",
-      justifyContent: "space-between",
-      marginBottom: 10,
-      fontSize: 13,
-    },
+    detailRow: { display: "flex", justifyContent: "space-between", marginBottom: 10, fontSize: 13 },
     detailKey: { color: theme.textOnLightMuted },
     detailVal: { color: theme.textOnLight, textAlign: "right", maxWidth: "60%" },
-
     actions: { display: "flex", flexDirection: "column", gap: 10, marginTop: 4 },
     continueBtn: { ...btnSolid, justifyContent: "center", padding: "13px 0" },
     backBtn: { ...btnGhost("light"), justifyContent: "center", padding: "13px 0", fontSize: 12 },
-
-    footer: {
-      padding: `44px ${theme.pad}px 32px`,
-      background: "#092a1f",
-      marginTop: 80,
-    },
-    footLogo: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 },
-    footCols: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 28, marginBottom: 32 },
-    footCol: { display: "flex", flexDirection: "column", gap: 9 },
-    footHead: {
-      margin: "0 0 4px", fontSize: 10, fontWeight: 500,
-      letterSpacing: "0.28em", textTransform: "uppercase", color: theme.textOnDark,
-    },
-    footLink: { fontSize: 13, color: theme.textOnDarkMuted },
-    footContact: {
-      display: "flex", flexDirection: "column", gap: 6,
-      paddingTop: 24, borderTop: `1px solid ${theme.hairlineOnDark}`,
-    },
-    footText: { margin: 0, fontSize: 13, color: theme.textOnDarkMuted },
-    legal: { margin: "28px 0 0", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: theme.textOnDarkMuted },
   };
 
   return (
@@ -191,7 +152,6 @@ export default function Payment() {
       <PulseDivider />
 
       <div style={s.layout}>
-        {/* ── Left: payment instructions ── */}
         <div>
           <div style={s.successBanner}>
             <span style={s.successIcon}>✓</span>
@@ -229,7 +189,6 @@ export default function Payment() {
           </div>
         </div>
 
-        {/* ── Right: order summary sidebar ── */}
         <div style={s.sidebar}>
           <div style={s.sideCard}>
             <p style={s.sideTitle}>Delivery details</p>
@@ -263,7 +222,7 @@ export default function Payment() {
         </div>
       </div>
 
-         <Footer />
+      <Footer />
     </main>
   );
 }

@@ -10,16 +10,26 @@ export default function Cart() {
   const { items, removeItem, updateQty, totalItems, totalPrice } = useCart();
   const navigate = useNavigate();
 
+  const handleCheckout = () => {
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "InitiateCheckout", {
+        value: totalPrice,
+        currency: "EGP",
+        num_items: totalItems,
+        content_ids: items.map((i) => i.id),
+      });
+    }
+    navigate("/checkout");
+  };
+
   const s = {
     page: { minHeight: "100vh", background: theme.surfaceLight, paddingBottom: 80 },
-
     pageHead: {
       padding: `48px ${theme.pad}px 32px`,
       borderBottom: `1px solid ${theme.hairlineOnLight}`,
     },
     pageTitle: { ...display, margin: "8px 0 0", fontSize: isDesktop ? 40 : 30, color: theme.textOnLight },
     itemCount: { fontSize: 13, color: theme.textOnLightMuted, marginTop: 6 },
-
     layout: {
       display: "grid",
       gridTemplateColumns: isDesktop ? "1fr 340px" : "1fr",
@@ -29,9 +39,7 @@ export default function Cart() {
       padding: `40px ${theme.pad}px 0`,
       alignItems: "start",
     },
-
     itemsList: { display: "flex", flexDirection: "column", gap: 14 },
-
     itemCard: {
       display: "flex",
       gap: 16,
@@ -64,7 +72,6 @@ export default function Cart() {
       textTransform: "uppercase",
     },
     itemPrice: { color: theme.accent, fontWeight: 600, fontSize: 15, marginTop: "auto" },
-
     qtyRow: { display: "flex", alignItems: "center", gap: 0, marginTop: 8 },
     qtyBtn: {
       width: 30,
@@ -100,11 +107,9 @@ export default function Cart() {
       alignSelf: "flex-start",
       transition: "color 0.15s",
     },
-
     empty: { padding: `80px ${theme.pad}px`, textAlign: "center" },
     emptyTitle: { ...display, fontSize: 26, margin: "0 0 12px", color: theme.textOnLight },
     emptyText: { fontSize: 14, color: theme.textOnLightMuted, margin: "0 0 28px" },
-
     summary: {
       background: theme.surfaceLight,
       border: `1px solid ${theme.hairlineOnLight}`,
@@ -140,7 +145,6 @@ export default function Cart() {
       color: theme.textOnLight,
     },
     totalAmount: { color: theme.accent, fontWeight: 700, fontSize: 18 },
-
     checkoutBtn: {
       ...btnSolid,
       width: "100%",
@@ -158,7 +162,6 @@ export default function Cart() {
       justifyContent: "center",
       fontSize: 12,
     },
-
     shippingNote: {
       marginTop: 14,
       fontSize: 11,
@@ -236,7 +239,7 @@ export default function Cart() {
             <span>Total</span>
             <span style={s.totalAmount}>EGP {totalPrice.toLocaleString()}</span>
           </div>
-          <button style={s.checkoutBtn} onClick={() => navigate("/checkout")}>Proceed to checkout</button>
+          <button style={s.checkoutBtn} onClick={handleCheckout}>Proceed to checkout</button>
           <a href="/men" style={s.continueBtn}>← Continue shopping</a>
           <p style={s.shippingNote}>Shipping calculated at checkout</p>
         </div>
