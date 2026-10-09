@@ -10,6 +10,7 @@ import Footer from "../components/Footer";
 
 const PAYMENT_METHODS = [
   { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
+
 ];
 
 const GOVERNORATES = [
@@ -25,10 +26,10 @@ const MID_SHIPPING = ["Faiyum", "Beni Suef", "Minya", "Asyut", "Sohag"];
 
 function getShipping(gov) {
   if (!gov) return null;
-  if (LOW_SHIPPING.includes(gov)) return 75;
-  if (HIGH_SHIPPING.includes(gov)) return 145;
-  if (MID_SHIPPING.includes(gov)) return 100;
-  return 85;
+  if (LOW_SHIPPING.includes(gov)) return 80;
+  if (HIGH_SHIPPING.includes(gov)) return 150;
+  if (MID_SHIPPING.includes(gov)) return 105;
+  return 90;
 }
 
 // ── Defined OUTSIDE Checkout to prevent remount on every keystroke ──
@@ -382,7 +383,12 @@ export default function Checkout() {
               </div>
             </div>
             <div style={s.card}>
-              <p style={s.cardTitle}>Body measurements <span style={{ color: theme.textOnLightMuted, fontWeight: 400, textTransform: "none", letterSpacing: 0, fontSize: 11 }}>(optional — helps us recommend the right size)</span></p>
+              <p style={s.cardTitle}>
+                Body measurements{" "}
+                <span style={{ color: theme.textOnLightMuted, fontWeight: 400, textTransform: "none", letterSpacing: 0, fontSize: 11 }}>
+                  (optional)
+                </span>
+              </p>
               <div style={s.row}>
                 <div style={s.field}>
                   <label style={s.fieldLabel}>Height (cm)</label>
