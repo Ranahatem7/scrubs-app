@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const Discount = require("../models/Discount");
 const asyncHandler = require("../utils/asyncHandler");
 
 // POST /api/orders
@@ -62,6 +63,14 @@ const createOrder = asyncHandler(async (req, res) => {
     discountCode,
     total,
   });
+
+  // Increment discount code usage counter
+  if (discountCode) {
+    await Discount.findOneAndUpdate(
+      { code: discountCode.toUpperCase().trim() },
+      { $inc: { usedCount: 1 } }
+    );
+  }
 
   res.status(201).json(order);
 });
