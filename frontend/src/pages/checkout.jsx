@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 
 const PAYMENT_METHODS = [
   { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
- 
+  { id: "instapay", title: "Instapay", note: "Transfer via Instapay", icon: "⚡" },
 ];
 
 const GOVERNORATES = [
@@ -26,10 +26,10 @@ const MID_SHIPPING = ["Faiyum", "Beni Suef", "Minya", "Asyut", "Sohag"];
 
 function getShipping(gov) {
   if (!gov) return null;
-  if (LOW_SHIPPING.includes(gov)) return 80;
-  if (HIGH_SHIPPING.includes(gov)) return 150;
-  if (MID_SHIPPING.includes(gov)) return 105;
-  return 90;
+  if (LOW_SHIPPING.includes(gov)) return 75;
+  if (HIGH_SHIPPING.includes(gov)) return 145;
+  if (MID_SHIPPING.includes(gov)) return 100;
+  return 85;
 }
 
 // ── Defined OUTSIDE Checkout to prevent remount on every keystroke ──
@@ -109,6 +109,7 @@ export default function Checkout() {
   const [form, setForm] = useState({
     name: user?.name ?? "", phone: "", email: user?.email ?? "",
     street: "", city: "", governorate: "",
+    height: "", weight: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [errors, setErrors] = useState({});
@@ -378,6 +379,19 @@ export default function Checkout() {
                     </select>
                     {errors.governorate && <span style={s.fieldError}>{errors.governorate}</span>}
                   </div>
+                </div>
+              </div>
+            </div>
+            <div style={s.card}>
+              <p style={s.cardTitle}>Body measurements <span style={{ color: theme.textOnLightMuted, fontWeight: 400, textTransform: "none", letterSpacing: 0, fontSize: 11 }}>(optional — helps us recommend the right size)</span></p>
+              <div style={s.row}>
+                <div style={s.field}>
+                  <label style={s.fieldLabel}>Height (cm)</label>
+                  <input style={s.input(false)} value={form.height} onChange={(e) => update("height", e.target.value)} placeholder="e.g. 175" type="number" min="100" max="250" />
+                </div>
+                <div style={s.field}>
+                  <label style={s.fieldLabel}>Weight (kg)</label>
+                  <input style={s.input(false)} value={form.weight} onChange={(e) => update("weight", e.target.value)} placeholder="e.g. 70" type="number" min="30" max="300" />
                 </div>
               </div>
             </div>
