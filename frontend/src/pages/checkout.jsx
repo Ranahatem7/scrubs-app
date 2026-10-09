@@ -10,7 +10,6 @@ import Footer from "../components/Footer";
 
 const PAYMENT_METHODS = [
   { id: "cod", title: "Cash on Delivery", note: "Pay when your order arrives", icon: "💵" },
-  { id: "instapay", title: "Instapay", note: "Transfer via Instapay", icon: "⚡" },
 ];
 
 const GOVERNORATES = [
